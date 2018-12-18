@@ -1,0 +1,29 @@
+apply plugin: 'com.github.ben-manes.versions'
+
+buildscript {
+    apply from: "$rootDir/gradle/dependencies.gradle"
+
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+        gradlePluginPortal()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    }
+
+    dependencies {
+        classpath deps.plugins.kotlin
+        classpath deps.plugins.dokka
+        classpath deps.plugins.android
+        classpath deps.plugins.versions
+    }
+}
+
+
+allprojects {
+    repositorie {
+        mavenCentral()
+        jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    }
+}
