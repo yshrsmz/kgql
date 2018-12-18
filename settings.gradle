@@ -16,6 +16,8 @@ pluginManagement {
     }
 }
 
+include ':core'
+include ':dsl'
 include ':library'
 
 rootProject.name = 'kgql'
