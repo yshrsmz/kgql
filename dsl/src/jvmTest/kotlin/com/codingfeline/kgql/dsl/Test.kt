@@ -1,9 +1,15 @@
 package com.codingfeline.kgql.dsl
 
-fun main() {
-    val q = query("users") {
+import kotlin.test.Test
 
+class Test {
+
+    @Test
+    fun test() {
+        val q = query("users") {
+
+        }
+
+        println(q.print())
     }
-
-    println(q.print())
 }
