@@ -24,6 +24,7 @@ ext.deps = [
                 ]
         ],
         graphql           : "com.graphql-java:graphql-java:11.0",
+        kotlinPoet        : 'com.squareup:kotlinpoet:1.0.0',
         moshi             : "com.squareup.moshi:moshi:$versions.moshi",
         moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
 

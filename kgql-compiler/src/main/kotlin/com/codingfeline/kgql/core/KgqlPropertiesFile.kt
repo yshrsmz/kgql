@@ -1,4 +1,4 @@
-package com.codingfeline.kgql.compiler
+package com.codingfeline.kgql.core
 
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
@@ -23,7 +23,7 @@ class KgqlPropertiesFile(
             moshi.adapter(KgqlPropertiesFile::class.java)
         }
 
-        fun fromText(text:String)= adapter.fromJson(text)
-        fun fromFile(file:File):KgqlPropertiesFile = fromText(file.readText())!!
+        fun fromText(text: String) = adapter.fromJson(text)
+        fun fromFile(file: File): KgqlPropertiesFile = fromText(file.readText())!!
     }
 }

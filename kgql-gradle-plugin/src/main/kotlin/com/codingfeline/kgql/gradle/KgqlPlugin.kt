@@ -7,12 +7,22 @@ import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.errors.SyncIssueHandlerImpl
 import com.android.build.gradle.options.SyncOptions
 import com.android.builder.core.DefaultManifestParser
-import com.codingfeline.kgql.compiler.KgqlFileType
-import com.codingfeline.kgql.compiler.KgqlPropertiesFile
+import com.codingfeline.kgql.core.KgqlFileType
+import com.codingfeline.kgql.core.KgqlPropertiesFile
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.internal.HasConvention
+import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.SourceSetContainer
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeCompilation
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
+import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
 class KgqlPlugin : Plugin<Project> {
@@ -60,6 +70,73 @@ class KgqlPlugin : Plugin<Project> {
     }
 
     private fun configureKotlin(project: Project, extension: KgqlExtension, isMultiplatform: Boolean) {
+        val outputDirectory = File(project.buildDir, "kgql")
+
+        val kotlinSrcs = if (isMultiplatform) {
+            val sourceSets = project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
+            val sourceSet = sourceSets.getByName("commonMain") as DefaultKotlinSourceSet
+            // add runtime dependency
+//            project.configurations.getByName("sourceSet.apiConfigurationName").dependencies.add(project.dependencies.create())
+            sourceSet.kotlin
+        } else {
+            val sourceSets = project.property("sourceSets") as SourceSetContainer
+            sourceSets.getByName("main").kotlin!!
+        }
+        kotlinSrcs.srcDirs(outputDirectory.toRelativeString(project.projectDir))
+
+        project.afterEvaluate { project ->
+            val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
+            val sourceSet = extension.sourceSet ?: project.files("src/main/kgql")
+
+            val ideaDir = File(project.rootDir, ".idea")
+            if (ideaDir.exists()) {
+                val propsDir = File(ideaDir, "kgql/${project.projectDir.toRelativeString(project.rootDir)}")
+                propsDir.mkdirs()
+
+                val properties = KgqlPropertiesFile(
+                    packageName = packageName,
+                    sourceSets = listOf(sourceSet.map { it.toRelativeString(project.projectDir) }),
+                    outputDirectory = outputDirectory.toRelativeString(project.projectDir)
+                )
+                properties.toFile(File(propsDir, KgqlPropertiesFile.NAME))
+            }
+
+            val task = project.tasks.register("generateKgqlInterface", KgqlTask::class.java) { task ->
+                task.apply {
+                    this.packageName = packageName
+                    sourceFolders = sourceSet.files
+                    this.outputDirectory = outputDirectory
+                    source(sourceSet)
+                    include("**$${File.separatorChar}*.${KgqlFileType.EXTENSION}")
+                    group = "kgql"
+                    description = "Generate Kotlin interfaces for .gql files"
+                }
+            }
+
+            if (isMultiplatform) {
+                project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach { target ->
+                    target.compilations.forEach { compilationUnit ->
+                        if (compilationUnit is KotlinNativeCompilation) {
+                            // Honestly the way native compiles kotlin seems completely arbitrary and some order
+                            // of the following tasks, so just set the dependency for all of them and let gradle
+                            // figure it out.
+                            project.tasks.named(compilationUnit.compileAllTaskName).configure { it.dependsOn(task) }
+                            project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
+                            project.tasks.named(compilationUnit.linkAllTaskName).configure { it.dependsOn(task) }
+                            NativeOutputKind.values().forEach { kind ->
+                                NativeBuildType.values().forEach { buildType ->
+                                    compilationUnit.findLinkTask(kind, buildType)?.dependsOn(task)
+                                }
+                            }
+                        } else {
+                            project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
+                        }
+                    }
+                }
+            } else {
+                project.tasks.named("compileKotlin").configure { it.dependsOn(task) }
+            }
+        }
     }
 
     private fun configureAndroid(project: Project, extension: KgqlExtension) {
@@ -126,4 +203,15 @@ class KgqlPlugin : Plugin<Project> {
             }
             .first()
     }
+
+    // Copied from kotlin plugin
+    private val SourceSet.kotlin: SourceDirectorySet?
+        get() {
+            val convention = (getConvention("kotlin") ?: getConvention("kotlin2js")) ?: return null
+            val kotlinSourceSetIface = convention.javaClass.interfaces.find { it.name == KotlinSourceSet::class.qualifiedName }
+            val getKotlin = kotlinSourceSetIface?.methods?.find { it.name == "getKotlin" } ?: return null
+            return getKotlin(convention) as? SourceDirectorySet
+        }
+
+    private fun Any.getConvention(name: String): Any? = (this as HasConvention).convention.plugins[name]
 }

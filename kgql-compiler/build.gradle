@@ -11,6 +11,8 @@ dependencies {
 
     implementation deps.graphql
 
+    implementation deps.kotlinPoet
+
     implementation deps.moshi
     kapt deps.moshiKotlinCodegen
 }

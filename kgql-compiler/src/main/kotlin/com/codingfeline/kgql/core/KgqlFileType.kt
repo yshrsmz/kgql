@@ -1,4 +1,4 @@
-package com.codingfeline.kgql.compiler
+package com.codingfeline.kgql.core
 
 object KgqlFileType {
     const val EXTENSION = "gql"
