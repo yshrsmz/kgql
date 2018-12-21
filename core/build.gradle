@@ -10,6 +10,7 @@ apply plugin: 'maven-publish'
 
 kotlin {
     jvm()
+    js()
     // This is for iPhone emulator
     // Switch here to iosArm64 (or iosArm32) to build library for iPhone device
     iosX64("ios") {
@@ -18,24 +19,34 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation kotlin('stdlib-common')
+                implementation deps.kotlin.stdlib.common
             }
         }
         commonTest {
             dependencies {
-                implementation kotlin('test-common')
-                implementation kotlin('test-annotations-common')
+                implementation deps.kotlin.test.common
+                implementation deps.kotlin.test.commonAnnotations
             }
         }
         jvmMain {
             dependencies {
-                implementation kotlin('stdlib')
+                implementation deps.kotlin.stdlib.jdk7
             }
         }
         jvmTest {
             dependencies {
-                implementation kotlin('test')
-                implementation kotlin('test-junit')
+                implementation deps.kotlin.test.jvm
+                implementation deps.kotlin.test.junit
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation deps.kotlin.stdlib.js
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation deps.kotlin.test.js
             }
         }
         iosMain {

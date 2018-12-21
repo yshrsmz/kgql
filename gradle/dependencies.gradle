@@ -22,7 +22,9 @@ ext.deps = [
                 test  : [
                         common           : "org.jetbrains.kotlin:kotlin-test-common:${versions.kotlin}",
                         commonAnnotations: "org.jetbrains.kotlin:kotlin-test-annotations-common:${versions.kotlin}",
+                        jvm              : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}",
                         junit            : "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
+                        js               : "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
                 ]
         ],
         graphql           : "com.graphql-java:graphql-java:11.0",
