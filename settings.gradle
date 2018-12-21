@@ -18,7 +18,7 @@ pluginManagement {
 
 include ':kgql-compiler'
 include ':kgql-gradle-plugin'
-//include ':core'
+include ':core'
 //include ':library'
 
 rootProject.name = 'kgql'

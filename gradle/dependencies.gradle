@@ -1,6 +1,6 @@
 ext.versions = [
         compileSdk: 28,
-        kotlin    : '1.3.11',
+        kotlin    : '1.3.20-eap-52',
         dokka     : '0.9.17',
         moshi     : '1.8.0'
 ]
@@ -15,7 +15,7 @@ ext.deps = [
         kotlin            : [
                 stdlib: [
                         common: "org.jetbrains.kotlin:kotlin-stdlib-common:${versions.kotlin}",
-                        jdk   : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
+                        jdk7  : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
                         jdk8  : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
                         js    : "org.jetbrains.kotlin:kotlin-stdlib-js:${versions.kotlin}"
                 ],
