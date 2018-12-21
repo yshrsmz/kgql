@@ -1,0 +1,21 @@
+plugins {
+    id 'com.android.library'
+    id 'com.codingfeline.kgql'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+repositories {
+    maven {
+        url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+
+    lintOptions {
+        textReport true
+    }
+}

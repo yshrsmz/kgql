@@ -25,9 +25,9 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import java.io.File
 
+@Suppress("unused")
 class KgqlPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        println("apply")
         val extension = project.extensions.create("kgql", KgqlExtension::class.java)
 
         var kotlin = false
@@ -45,9 +45,8 @@ class KgqlPlugin : Plugin<Project> {
         }
 
         val hasKotlinAndroidPlugin = project.plugins.run {
-            hasPlugin("com.android.application") ||
-                hasPlugin("com.android.library") &&
-                hasPlugin("org.jetbrains.kotlin.android")
+            (hasPlugin("com.android.application") || hasPlugin("com.android.library"))
+                && hasPlugin("org.jetbrains.kotlin.android")
         }
         if (hasKotlinAndroidPlugin) {
             // The kotlin plugin does it's own magic after evaluate, but it needs to know about our
@@ -84,57 +83,57 @@ class KgqlPlugin : Plugin<Project> {
         }
         kotlinSrcs.srcDirs(outputDirectory.toRelativeString(project.projectDir))
 
-        project.afterEvaluate { project ->
+        project.afterEvaluate { p ->
             val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
-            val sourceSet = extension.sourceSet ?: project.files("src/main/kgql")
+            val sourceSet = extension.sourceSet ?: p.files("src/main/kgql")
 
-            val ideaDir = File(project.rootDir, ".idea")
+            val ideaDir = File(p.rootDir, ".idea")
             if (ideaDir.exists()) {
-                val propsDir = File(ideaDir, "kgql/${project.projectDir.toRelativeString(project.rootDir)}")
+                val propsDir = File(ideaDir, "kgql/${p.projectDir.toRelativeString(p.rootDir)}")
                 propsDir.mkdirs()
 
                 val properties = KgqlPropertiesFile(
                     packageName = packageName,
-                    sourceSets = listOf(sourceSet.map { it.toRelativeString(project.projectDir) }),
-                    outputDirectory = outputDirectory.toRelativeString(project.projectDir)
+                    sourceSets = listOf(sourceSet.map { it.toRelativeString(p.projectDir) }),
+                    outputDirectory = outputDirectory.toRelativeString(p.projectDir)
                 )
                 properties.toFile(File(propsDir, KgqlPropertiesFile.NAME))
             }
 
-            val task = project.tasks.register("generateKgqlInterface", KgqlTask::class.java) { task ->
-                task.apply {
-                    this.packageName = packageName
-                    sourceFolders = sourceSet.files
-                    this.outputDirectory = outputDirectory
-                    source(sourceSet)
-                    include("**$${File.separatorChar}*.${KgqlFileType.EXTENSION}")
-                    group = "kgql"
-                    description = "Generate Kotlin interfaces for .gql files"
-                }
+            val task = p.tasks.register("generateKgqlInterface", KgqlTask::class.java) { task ->
+                println("register task: $packageName, ${sourceSet.files}, $outputDirectory")
+                task.packageName = packageName
+                task.sourceFolders = sourceSet.files
+                task.outputDirectory = outputDirectory
+                task.source(sourceSet)
+                task.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
+                task.group = "kgql"
+                task.description = "Generate Kotlin interfaces for .gql files"
+
             }
 
             if (isMultiplatform) {
-                project.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach { target ->
+                p.extensions.getByType(KotlinMultiplatformExtension::class.java).targets.forEach { target ->
                     target.compilations.forEach { compilationUnit ->
                         if (compilationUnit is KotlinNativeCompilation) {
                             // Honestly the way native compiles kotlin seems completely arbitrary and some order
                             // of the following tasks, so just set the dependency for all of them and let gradle
                             // figure it out.
-                            project.tasks.named(compilationUnit.compileAllTaskName).configure { it.dependsOn(task) }
-                            project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
-                            project.tasks.named(compilationUnit.linkAllTaskName).configure { it.dependsOn(task) }
+                            p.tasks.named(compilationUnit.compileAllTaskName).configure { it.dependsOn(task) }
+                            p.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
+                            p.tasks.named(compilationUnit.linkAllTaskName).configure { it.dependsOn(task) }
                             NativeOutputKind.values().forEach { kind ->
                                 NativeBuildType.values().forEach { buildType ->
                                     compilationUnit.findLinkTask(kind, buildType)?.dependsOn(task)
                                 }
                             }
                         } else {
-                            project.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
+                            p.tasks.named(compilationUnit.compileKotlinTaskName).configure { it.dependsOn(task) }
                         }
                     }
                 }
             } else {
-                project.tasks.named("compileKotlin").configure { it.dependsOn(task) }
+                p.tasks.named("compileKotlin").configure { it.dependsOn(task) }
             }
         }
     }

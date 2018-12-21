@@ -1,0 +1,24 @@
+plugins {
+    id 'com.android.application'
+    id 'com.codingfeline.kgql'
+}
+
+apply from: '../../../../gradle/dependencies.gradle'
+
+repositories {
+    maven {
+        url "file://${projectDir.absolutePath}/../../../../build/localMaven"
+    }
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+
+    lintOptions {
+        textReport true
+    }
+}
+
+kgql {
+    schemaOutputDirectory = file('src/main/kgql/documents')
+}

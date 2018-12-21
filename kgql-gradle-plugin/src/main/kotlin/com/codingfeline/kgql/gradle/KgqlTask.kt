@@ -10,7 +10,7 @@ import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-class KgqlTask : SourceTask() {
+open class KgqlTask : SourceTask() {
     @Input
     fun pluginVersion() = VERSION
 
@@ -22,13 +22,22 @@ class KgqlTask : SourceTask() {
 
     @TaskAction
     fun generateKgqlFiles() {
+        println("generateKgqlFiles")
         outputDirectory?.deleteRecursively()
 
         val environment = KgqlEnvironment(
             sourceFolders = sourceFolders.filter { it.exists() },
+            sourceFiles = getSource().toList(),
             packageName = packageName,
             outputDirectory = outputDirectory!!
         )
+
+        println("includes: ${includes}")
+        println("source: ${getSource().map { it.toString() }}")
+
+        logger.log(LogLevel.INFO, "KgqlTask-sourceFolders: $sourceFolders")
+        logger.log(LogLevel.INFO, "kgqlTask-packageName: $packageName")
+        logger.log(LogLevel.INFO, "kgqlTask-outputDirectory: $outputDirectory")
 
         val generationStatus = environment.generateKgqlFiles { info -> logger.log(LogLevel.INFO, info) }
 
