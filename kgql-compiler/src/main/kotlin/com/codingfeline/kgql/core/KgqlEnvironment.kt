@@ -17,7 +17,8 @@ class KgqlEnvironment(
     /**
      * An output directory to place the generated class files
      */
-    private val outputDirectory: File? = null
+    private val outputDirectory: File? = null,
+    private val typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
 ) {
 
     sealed class CompilationStatus {
@@ -42,7 +43,7 @@ class KgqlEnvironment(
                 packageName = packageName!!,
                 outputDirectory = outputDirectory!!,
                 sourceFile = it)
-            KgqlCompiler.compile(file, writer)
+            KgqlCompiler.compile(file, typeMap, writer)
         }
 
         return CompilationStatus.Success()

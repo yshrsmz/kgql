@@ -86,6 +86,7 @@ class KgqlPlugin : Plugin<Project> {
         project.afterEvaluate { p ->
             val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
             val sourceSet = extension.sourceSet ?: p.files("src/main/kgql")
+            val typeMap = extension.typeMapper ?: emptyMap()
 
             val ideaDir = File(p.rootDir, ".idea")
             if (ideaDir.exists()) {
@@ -105,6 +106,7 @@ class KgqlPlugin : Plugin<Project> {
                 task.packageName = packageName
                 task.sourceFolders = sourceSet.files
                 task.outputDirectory = outputDirectory
+                task.typeMap = typeMap
                 task.source(sourceSet)
                 task.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
                 task.group = "kgql"
@@ -159,21 +161,21 @@ class KgqlPlugin : Plugin<Project> {
         var packageName: String? = null
         val sourceSets = mutableListOf<List<String>>()
         val buildDirectory = listOf("generated", "source", "kgql").fold(project.buildDir, ::File)
+        val typeMap = extension.typeMapper ?: emptyMap()
 
         variants.all { variant ->
             val taskName = "generate${variant.name.capitalize()}KgqlInterface"
             val taskProvider = project.tasks.register(taskName, KgqlTask::class.java) { task ->
-                task.apply {
-                    group = "kgql"
-                    outputDirectory = buildDirectory
-                    description = "Generate Android interfaces for working with GraphQL documents"
-                    source(variant.sourceSets.map { "src/${it.name}/${KgqlFileType.FOLDER_NAME}" })
-                    include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
-                    this.packageName = variant.packageName(project)
-                    sourceFolders = variant.sourceSets.map { File("${project.projectDir}/src/${it.name}/${KgqlFileType.FOLDER_NAME}") }
-                    sourceSets.add(sourceFolders.map { it.toRelativeString(project.projectDir) })
-                    packageName = this.packageName
-                }
+                task.group = "kgql"
+                task.outputDirectory = buildDirectory
+                task.typeMap = typeMap
+                task.description = "Generate Android interfaces for working with GraphQL documents"
+                task.source(variant.sourceSets.map { "src/${it.name}/${KgqlFileType.FOLDER_NAME}" })
+                task.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
+                task.packageName = variant.packageName(project)
+                task.sourceFolders = variant.sourceSets.map { File("${project.projectDir}/src/${it.name}/${KgqlFileType.FOLDER_NAME}") }
+                sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
+                packageName = task.packageName
             }
             variant.registerJavaGeneratingTask(taskProvider.get(), taskProvider.get().outputDirectory)
         }

@@ -19,6 +19,7 @@ open class KgqlTask : SourceTask() {
 
     lateinit var sourceFolders: Iterable<File>
     lateinit var packageName: String
+    lateinit var typeMap: Map<String, String>
 
     @TaskAction
     fun generateKgqlFiles() {
@@ -29,7 +30,8 @@ open class KgqlTask : SourceTask() {
             sourceFolders = sourceFolders.filter { it.exists() },
             sourceFiles = getSource().toList(),
             packageName = packageName,
-            outputDirectory = outputDirectory!!
+            outputDirectory = outputDirectory!!,
+            typeMap = typeMap
         )
 
         println("includes: ${includes}")
