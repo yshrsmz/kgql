@@ -24,6 +24,11 @@ configurations {
 tasks.getByName('pluginUnderTestMetadata').
         getPluginClasspath().
         from(configurations.fixtureClasspath)
+//tasks.getByName('pluginUnderTestMetadata')
+//        .setPluginClasspath(
+//        tasks.getByName('pluginUnderTestMetadata')
+//                .getPluginClasspath().plus(configurations.fixtureClasspath)
+//)
 
 
 dependencies {
