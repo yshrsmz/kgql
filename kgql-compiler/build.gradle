@@ -7,6 +7,7 @@ sourceSets {
 }
 
 dependencies {
+    implementation project(':core')
     implementation deps.kotlin.stdlib.jdk8
 
     implementation deps.graphql

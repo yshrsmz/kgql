@@ -1,15 +1,7 @@
 package com.codingfeline.kgql.core.compiler
 
-import com.codingfeline.kgql.core.DOCUMENT_WRAPPER_SUFFIX
-import com.codingfeline.kgql.core.GraphQLCustomTypeFQName
-import com.codingfeline.kgql.core.GraphQLCustomTypeName
-import com.codingfeline.kgql.core.KgqlCustomTypeMapper
-import com.codingfeline.kgql.core.KgqlFile
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
+import com.codingfeline.kgql.core.*
+import com.squareup.kotlinpoet.*
 import graphql.language.OperationDefinition
 import graphql.language.VariableDefinition
 import graphql.parser.Parser
@@ -27,8 +19,6 @@ class DocumentWrapperGenerator(
         val capitalizedName = sourceFile.sourceFile.nameWithoutExtension.capitalize()
         val objectType = TypeSpec.objectBuilder("$capitalizedName$DOCUMENT_WRAPPER_SUFFIX")
 
-        println(document)
-
         // add raw document property
         val documentProp = PropertySpec.builder("document", String::class)
             .addModifiers(KModifier.PRIVATE)
@@ -38,17 +28,27 @@ class DocumentWrapperGenerator(
         objectType.addProperty(documentProp)
 
         val operations = document.definitions.filter { it is OperationDefinition }
-            .map { generateOperationFunction(it as OperationDefinition) }
+            .map { generateOperationFunction(it as OperationDefinition, documentProp) }
 
         objectType.addFunctions(operations)
 
         return objectType.build()
     }
 
-    fun generateOperationFunction(operation: OperationDefinition): FunSpec {
+    fun generateOperationFunction(operation: OperationDefinition, documentProp: PropertySpec): FunSpec {
         val spec = FunSpec.builder("${operation.name}${operation.operation.name.toLowerCase().capitalize()}".decapitalize())
+                .returns(returnType = KgqlRequestBody::class)
 
         spec.addParameters(operation.variableDefinitions.map { generateParameterSpecFromVariable(it) })
+
+        val operationName = if (operation.name != null) {
+            "\"${operation.name}\""
+        } else "null"
+
+        spec.addStatement(
+                "return KgqlRequestBody(operationName=%L, query=%N, variables=null)",
+                operationName,
+                documentProp)
 
         return spec.build()
     }

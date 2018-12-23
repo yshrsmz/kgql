@@ -28,7 +28,7 @@ kotlin {
         }
         jvmMain {
             dependencies {
-                implementation deps.kotlin.stdlib.jdk
+                implementation deps.kotlin.stdlib.jdk7
             }
         }
         jsMain {

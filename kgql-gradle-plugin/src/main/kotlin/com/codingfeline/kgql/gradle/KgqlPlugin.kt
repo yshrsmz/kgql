@@ -7,6 +7,7 @@ import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.errors.SyncIssueHandlerImpl
 import com.android.build.gradle.options.SyncOptions
 import com.android.builder.core.DefaultManifestParser
+import com.codingfeline.kgql.VERSION
 import com.codingfeline.kgql.core.KgqlFileType
 import com.codingfeline.kgql.core.KgqlPropertiesFile
 import org.gradle.api.DomainObjectSet
@@ -73,9 +74,12 @@ class KgqlPlugin : Plugin<Project> {
 
         val kotlinSrcs = if (isMultiplatform) {
             val sourceSets = project.extensions.getByType(KotlinMultiplatformExtension::class.java).sourceSets
-            val sourceSet = sourceSets.getByName("commonMain") as DefaultKotlinSourceSet
+            val sourceSet = (sourceSets.getByName("commonMain") as DefaultKotlinSourceSet)
+            println("sourceSet2: ${sourceSet.apiConfigurationName}")
             // add runtime dependency
-//            project.configurations.getByName("sourceSet.apiConfigurationName").dependencies.add(project.dependencies.create())
+            project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
+                    project.dependencies.create("com.codingfeline.kgql:core:${VERSION}")
+            )
             sourceSet.kotlin
         } else {
             val sourceSets = project.property("sourceSets") as SourceSetContainer

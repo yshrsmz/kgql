@@ -9,12 +9,20 @@ repositories {
 apply plugin: 'maven-publish'
 
 kotlin {
-    jvm()
-    js()
-    // This is for iPhone emulator
-    // Switch here to iosArm64 (or iosArm32) to build library for iPhone device
-    iosX64("ios") {
-        compilations.main.outputKinds("framework")
+//    jvm()
+//    js()
+//    // This is for iPhone emulator
+//    // Switch here to iosArm64 (or iosArm32) to build library for iPhone device
+//    iosX64("ios") {
+//        compilations.main.outputKinds("framework")
+//    }
+    targets {
+        fromPreset(presets.jvm, 'jvm')
+        fromPreset(presets.js, 'js')
+        fromPreset(presets.iosArm64, 'iosArm64')
+        fromPreset(presets.iosX64, 'iosX64') {
+            compilations.main.outputKinds('FRAMEWORK')
+        }
     }
     sourceSets {
         commonMain {
