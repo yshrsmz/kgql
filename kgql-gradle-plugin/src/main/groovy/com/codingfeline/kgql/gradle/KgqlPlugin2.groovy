@@ -6,6 +6,7 @@ import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.options.SyncOptions
 import com.codingfeline.kgql.core.KgqlFileType
+import com.codingfeline.kgql.core.KgqlPropertiesFile
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -16,6 +17,7 @@ import java.util.function.BooleanSupplier
 class KgqlPlugin2 implements Plugin<Project> {
     @Override
     void apply(Project project) {
+        println("KgqlPlugin2")
         def extension = project.extensions.create('kgql', KgqlExtension2)
 
         boolean kotlin = false
@@ -40,7 +42,25 @@ class KgqlPlugin2 implements Plugin<Project> {
         if (hasAndroidAndKotlinPlugin) {
             // The kotlin plugin does it's own magic after evaluate, but it needs to know about our
             // generated code. So run Now instead of after evaluations
+            configureAndroid(project, extension)
+            return
         }
+
+        project.afterEvaluate {
+            if (!kotlin) {
+                throw IllegalStateException("Kgql Gradle Plugin applied in project '${project.path}' but no supported Kotlin plugin was found")
+            }
+            boolean isMultiplatform = project.plugins.hasPlugin('org.jetbrains.kotlin.multiplatform')
+            if (android && !isMultiplatform) {
+                configureAndroid(project, extension)
+            } else {
+                configureKotlin(project, extension, isMultiplatform)
+            }
+        }
+    }
+
+    private void configureKotlin(Project project, KgqlExtension2 extension, boolean isMultiplatform) {
+        File outputDirectory = File(project.buildDir, 'kgql')
 
     }
 
@@ -53,7 +73,7 @@ class KgqlPlugin2 implements Plugin<Project> {
         } else {
             throw IllegalStateException("Unknown Android plugin in project ${project.path}")
         }
-
+        configureAndroid(project, extension, variants as DomainObjectSet<BaseVariant>)
     }
 
     private void configureAndroid(Project project, KgqlExtension2 extension, DomainObjectSet<BaseVariant> variants) {
@@ -81,7 +101,20 @@ class KgqlPlugin2 implements Plugin<Project> {
             variant.registerJavaGeneratingTask(task, task.outputDirectory)
         }
 
-        project.afterEvaluate {}
+        project.afterEvaluate {
+            File ideaDir = File(project.rootDir, '.idea')
+            if (ideaDir.exists()) {
+                File propsDir = File(ideaDir, "kgql/${project.projectDir.toPath().relativize(project.rootDir.toPath()).toString()}")
+                propsDir.mkdirs()
+
+                KgqlPropertiesFile properties = KgqlPropertiesFile(
+                        packageName,
+                        sourceSets,
+                        buildDirectory.toPath().relativize(project.rootDir.toPath()).toString()
+                )
+                properties.toFile(File(propsDir, KgqlPropertiesFile.NAME))
+            }
+        }
     }
 
     private String getPackageName(BaseVariant variant, Project project) {

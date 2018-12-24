@@ -1,6 +1,6 @@
-//apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'java-gradle-plugin'
 apply plugin: 'groovy'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'java-gradle-plugin'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -41,7 +41,7 @@ dependencies {
     implementation deps.plugins.kotlin
     implementation deps.plugins.android
 
-
+    testImplementation deps.kotlin.stdlib.jdk8
     testImplementation deps.junit
     testImplementation deps.truth
 
@@ -49,9 +49,9 @@ dependencies {
     fixtureClasspath deps.plugins.android
 }
 
-//compileKotlin {
-//    kotlinOptions.jvmTarget = "1.8"
-//}
-//compileTestKotlin {
-//    kotlinOptions.jvmTarget = "1.8"
-//}
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
