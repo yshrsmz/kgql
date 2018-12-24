@@ -1,5 +1,6 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+//apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
+apply plugin: 'groovy'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -8,7 +9,7 @@ gradlePlugin {
     plugins {
         kgql {
             id = "com.codingfeline.kgql"
-            implementationClass = "com.codingfeline.kgql.gradle.KgqlPlugin"
+            implementationClass = "com.codingfeline.kgql.gradle.KgqlPlugin2"
         }
     }
 }
@@ -21,21 +22,22 @@ configurations {
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
 // allows us to apply additional plugins in a fixture while still leveraging dependency resolution
 // and de-duplication semantics.
-tasks.getByName('pluginUnderTestMetadata').
-        getPluginClasspath().
-        from(configurations.fixtureClasspath)
-//tasks.getByName('pluginUnderTestMetadata')
-//        .setPluginClasspath(
-//        tasks.getByName('pluginUnderTestMetadata')
-//                .getPluginClasspath().plus(configurations.fixtureClasspath)
-//)
+//tasks.getByName('pluginUnderTestMetadata').
+//        getPluginClasspath().
+//        from(configurations.fixtureClasspath)
+tasks.getByName('pluginUnderTestMetadata')
+        .setPluginClasspath(
+        tasks.getByName('pluginUnderTestMetadata')
+                .getPluginClasspath().plus(configurations.fixtureClasspath)
+)
 
 
 dependencies {
     implementation project(':kgql-compiler')
-    implementation deps.kotlin.stdlib.jdk8
+//    implementation deps.kotlin.stdlib.jdk8
 
     compileOnly gradleApi()
+    implementation localGroovy()
     implementation deps.plugins.kotlin
     implementation deps.plugins.android
 
@@ -47,9 +49,9 @@ dependencies {
     fixtureClasspath deps.plugins.android
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
+//compileKotlin {
+//    kotlinOptions.jvmTarget = "1.8"
+//}
+//compileTestKotlin {
+//    kotlinOptions.jvmTarget = "1.8"
+//}
