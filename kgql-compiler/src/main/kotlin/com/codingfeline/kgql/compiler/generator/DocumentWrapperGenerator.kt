@@ -1,19 +1,23 @@
-package com.codingfeline.kgql.core.compiler
+package com.codingfeline.kgql.compiler.generator
 
 import com.codingfeline.kgql.compiler.DOCUMENT_WRAPPER_SUFFIX
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.codingfeline.kgql.compiler.KgqlFile
-import com.codingfeline.kgql.core.*
-import com.squareup.kotlinpoet.*
+import com.codingfeline.kgql.core.KgqlRequestBody
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import graphql.language.OperationDefinition
 import graphql.language.VariableDefinition
 import graphql.parser.Parser
 
 class DocumentWrapperGenerator(
-        val sourceFile: KgqlFile,
-        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
+    val sourceFile: KgqlFile,
+    typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
 ) {
 
     val rawDocument = sourceFile.sourceFile.readText()
@@ -26,19 +30,19 @@ class DocumentWrapperGenerator(
 
         // add raw document property
         val documentProp = PropertySpec.builder("document", String::class)
-                .addModifiers(KModifier.PRIVATE)
-                .initializer("%S", rawDocument)
-                .build()
+            .addModifiers(KModifier.PRIVATE)
+            .initializer("%S", rawDocument)
+            .build()
 
         objectType.addProperty(documentProp)
 
         val operations = document.definitions.filter { it is OperationDefinition }
-                .map { it as OperationDefinition }
+            .map { it as OperationDefinition }
 
         objectType.addFunctions(operations.map { generateOperationFunction(it, documentProp) })
         objectType.addTypes(
-                operations.filter { it.variableDefinitions.isNotEmpty() }
-                        .map { generateVariableWrapper(it) }
+            operations.filter { it.variableDefinitions.isNotEmpty() }
+                .map { generateVariableWrapper(it) }
         )
 
         return objectType.build()
@@ -46,8 +50,8 @@ class DocumentWrapperGenerator(
 
     fun generateOperationFunction(operation: OperationDefinition, documentProp: PropertySpec): FunSpec {
         val spec = FunSpec.builder("${operation.name
-                ?: ""}${operation.operation.name.toLowerCase().capitalize()}".decapitalize())
-                .returns(returnType = KgqlRequestBody::class)
+            ?: ""}${operation.operation.name.toLowerCase().capitalize()}".decapitalize())
+            .returns(returnType = KgqlRequestBody::class)
 
         spec.addParameters(operation.variableDefinitions.map { generateParameterSpecFromVariable(it) })
 
@@ -56,19 +60,19 @@ class DocumentWrapperGenerator(
         } else "null"
 
         spec.addStatement(
-                "return KgqlRequestBody(operationName=%L, query=%N, variables=null)",
-                operationName,
-                documentProp)
+            "return KgqlRequestBody(operationName=%L, query=%N, variables=null)",
+            operationName,
+            documentProp)
 
         return spec.build()
     }
 
     fun generateParameterSpecFromVariable(variable: VariableDefinition): ParameterSpec {
         return ParameterSpec.builder(name = variable.name, type = typeMapper.get(variable.type))
-                .build()
+            .build()
     }
 
-    fun generateVariableWrapper(operation: OperationDefinition):TypeSpec {
+    fun generateVariableWrapper(operation: OperationDefinition): TypeSpec {
         return VariableWrapperGenerator(operation.name, operation.variableDefinitions, typeMapper).type()
     }
 }

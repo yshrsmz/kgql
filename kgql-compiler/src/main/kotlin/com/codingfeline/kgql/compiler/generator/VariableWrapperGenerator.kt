@@ -1,37 +1,41 @@
-package com.codingfeline.kgql.core.compiler
+package com.codingfeline.kgql.compiler.generator
 
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import graphql.language.VariableDefinition
 
 class VariableWrapperGenerator(
-        val operationName:String?,
-        val variables:List<VariableDefinition>,
-        val typeMapper: KgqlCustomTypeMapper
+    val operationName: String?,
+    val variables: List<VariableDefinition>,
+    val typeMapper: KgqlCustomTypeMapper
 ) {
 
-    fun type() : TypeSpec {
+    fun type(): TypeSpec {
         val classSpec = TypeSpec.classBuilder("${operationName?.capitalize() ?: ""}Variables")
-                .addModifiers(KModifier.DATA)
-                .primaryConstructor(generateConstructor(variables))
-                .addProperties(generateProperties(variables))
+            .addModifiers(KModifier.DATA)
+            .primaryConstructor(generateConstructor(variables))
+            .addProperties(generateProperties(variables))
 
         return classSpec.build()
     }
 
-    fun generateConstructor(variables: List<VariableDefinition>):FunSpec {
+    fun generateConstructor(variables: List<VariableDefinition>): FunSpec {
         return FunSpec.constructorBuilder()
-                .addParameters(variables.map {
-                    ParameterSpec.builder(it.name, typeMapper.get(it.type)).build()
-                })
-                .build()
+            .addParameters(variables.map {
+                ParameterSpec.builder(it.name, typeMapper.get(it.type)).build()
+            })
+            .build()
     }
 
-    fun generateProperties(variables:List<VariableDefinition>): List<PropertySpec> {
+    fun generateProperties(variables: List<VariableDefinition>): List<PropertySpec> {
         return variables.map {
             PropertySpec.builder(it.name, typeMapper.get(it.type))
-                    .initializer(it.name)
-                    .build()
+                .initializer(it.name)
+                .build()
         }
     }
 }

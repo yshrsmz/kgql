@@ -1,4 +1,4 @@
-package com.codingfeline.kgql.core.compiler
+package com.codingfeline.kgql.compiler.generator
 
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
