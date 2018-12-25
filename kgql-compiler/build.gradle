@@ -1,7 +1,6 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'org.jetbrains.kotlin.kapt'
 
-
 sourceSets {
     main.java.srcDir "src/generated/kotlin"
 }
@@ -9,6 +8,7 @@ sourceSets {
 dependencies {
     implementation project(':core')
     implementation deps.kotlin.stdlib.jdk8
+    implementation deps.kotlin.serialization.jvm
 
     implementation deps.graphql
 

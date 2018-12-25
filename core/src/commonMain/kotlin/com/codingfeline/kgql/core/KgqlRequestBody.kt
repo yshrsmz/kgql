@@ -1,7 +1,11 @@
 package com.codingfeline.kgql.core
 
+import kotlinx.serialization.Optional
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class KgqlRequestBody(
-    val operationName: String? = null,
+    @Optional val operationName: String? = null,
     val query: String,
-    val variables: Map<String, Any>
+    @Optional val variables: Map<String, Any>? = null
 )

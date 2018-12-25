@@ -7,6 +7,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import graphql.language.VariableDefinition
+import kotlinx.serialization.Serializable
 
 class VariableWrapperGenerator(
     val operationName: String?,
@@ -17,6 +18,7 @@ class VariableWrapperGenerator(
     fun type(): TypeSpec {
         val classSpec = TypeSpec.classBuilder("${operationName?.capitalize() ?: ""}Variables")
             .addModifiers(KModifier.DATA)
+            .addAnnotation(Serializable::class.java)
             .primaryConstructor(generateConstructor(variables))
             .addProperties(generateProperties(variables))
 

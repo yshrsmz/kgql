@@ -1,8 +1,9 @@
 plugins {
     id 'kotlin-multiplatform'
+    id 'kotlinx-serialization'
 }
 repositories {
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+//    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     mavenCentral()
 }
 
@@ -28,6 +29,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation deps.kotlin.stdlib.common
+                implementation deps.kotlin.serialization.common
             }
         }
         commonTest {
@@ -39,6 +41,7 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation deps.kotlin.stdlib.jdk7
+                implementation deps.kotlin.serialization.jvm
             }
         }
         jvmTest {
@@ -50,6 +53,7 @@ kotlin {
         jsMain {
             dependencies {
                 implementation deps.kotlin.stdlib.js
+                implementation deps.kotlin.serialization.js
             }
         }
         jsTest {
@@ -58,6 +62,9 @@ kotlin {
             }
         }
         iosMain {
+            dependencies {
+                implementation deps.kotlin.serialization.native
+            }
         }
         iosTest {
         }
