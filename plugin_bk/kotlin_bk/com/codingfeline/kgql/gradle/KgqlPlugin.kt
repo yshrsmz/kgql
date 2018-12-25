@@ -115,7 +115,6 @@ class KgqlPlugin : Plugin<Project> {
                 task.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
                 task.group = "kgql"
                 task.description = "Generate Kotlin interfaces for .gql files"
-
             }
 
             if (isMultiplatform) {
