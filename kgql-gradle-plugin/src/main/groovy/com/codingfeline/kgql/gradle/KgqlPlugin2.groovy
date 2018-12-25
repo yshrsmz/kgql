@@ -7,8 +7,8 @@ import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.errors.SyncIssueHandlerImpl
 import com.android.build.gradle.options.SyncOptions
 import com.android.builder.core.DefaultManifestParser
-import com.codingfeline.kgql.core.KgqlFileType
-import com.codingfeline.kgql.core.KgqlPropertiesFile
+import com.codingfeline.kgql.compiler.KgqlFileType
+import com.codingfeline.kgql.compiler.KgqlPropertiesFile
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project

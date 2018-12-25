@@ -1,5 +1,10 @@
 package com.codingfeline.kgql.core.compiler
 
+import com.codingfeline.kgql.compiler.DOCUMENT_WRAPPER_SUFFIX
+import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
+import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
+import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
+import com.codingfeline.kgql.compiler.KgqlFile
 import com.codingfeline.kgql.core.*
 import com.squareup.kotlinpoet.*
 import graphql.language.OperationDefinition

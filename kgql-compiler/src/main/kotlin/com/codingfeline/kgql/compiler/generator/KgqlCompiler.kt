@@ -1,8 +1,8 @@
 package com.codingfeline.kgql.core.compiler
 
-import com.codingfeline.kgql.core.GraphQLCustomTypeFQName
-import com.codingfeline.kgql.core.GraphQLCustomTypeName
-import com.codingfeline.kgql.core.KgqlFile
+import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
+import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
+import com.codingfeline.kgql.compiler.KgqlFile
 import com.squareup.kotlinpoet.FileSpec
 import graphql.parser.Parser
 import java.io.Closeable

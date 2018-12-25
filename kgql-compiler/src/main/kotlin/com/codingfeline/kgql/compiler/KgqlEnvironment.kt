@@ -1,6 +1,6 @@
-package com.codingfeline.kgql.core
+package com.codingfeline.kgql.compiler
 
-import com.codingfeline.kgql.core.compiler.KgqlCompiler
+import com.codingfeline.kgql.compiler.generator.KgqlCompiler
 import java.io.File
 
 class KgqlEnvironment(

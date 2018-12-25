@@ -1,4 +1,4 @@
-package com.codingfeline.kgql.core
+package com.codingfeline.kgql.compiler
 
 import java.io.File
 

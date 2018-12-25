@@ -1,4 +1,4 @@
-package com.codingfeline.kgql.core
+package com.codingfeline.kgql.compiler
 
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.ClassName

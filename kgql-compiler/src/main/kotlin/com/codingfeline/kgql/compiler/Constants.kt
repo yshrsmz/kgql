@@ -1,4 +1,4 @@
-package com.codingfeline.kgql.core
+package com.codingfeline.kgql.compiler
 
 const val DOCUMENT_WRAPPER_SUFFIX = "DocumentWrapper"
 

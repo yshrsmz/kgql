@@ -1,6 +1,6 @@
 package com.codingfeline.kgql.core.compiler
 
-import com.codingfeline.kgql.core.KgqlCustomTypeMapper
+import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.squareup.kotlinpoet.*
 import graphql.language.VariableDefinition
 

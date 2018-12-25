@@ -1,8 +1,8 @@
 package com.codingfeline.kgql.gradle
 
 import com.codingfeline.kgql.VersionKt
-import com.codingfeline.kgql.core.KgqlEnvironment
-import com.codingfeline.kgql.core.KgqlException
+import com.codingfeline.kgql.compiler.KgqlEnvironment
+import com.codingfeline.kgql.compiler.KgqlException
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
