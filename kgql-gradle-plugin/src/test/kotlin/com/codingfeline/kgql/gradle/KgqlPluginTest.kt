@@ -12,27 +12,41 @@ class KgqlPluginTest {
         val fixtureRoot = File("src/test/no-kotlin")
 
         val runner = GradleRunner.create()
-                .withProjectDir(fixtureRoot)
-                .withPluginClasspath()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
 
         val result = runner.withArguments("build", "--stacktrace")
-                .buildAndFail()
+            .buildAndFail()
 
         assertThat(result.output).contains("Kgql Gradle Plugin applied in project ':' but no supported Kotlin plugin was found")
+    }
+
+    @Test
+    fun `Applying the plugin without kotlinx-serialization applied throws`() {
+        val fixtureRoot = File("src/test/no-serialization")
+
+        val runner = GradleRunner.create()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
+
+        val result = runner.withArguments("build", "--stacktrace")
+            .buildAndFail()
+
+        assertThat(result.output).contains("Kgql Gradle Plugin applied in project ':' but no kotlinx-serialization plugin was found")
     }
 
     @Test
     fun `Applying the plugin without Kotlin applied throws for Android`() {
         val fixtureRoot = File("src/test/no-kotlin-android")
         val runner = GradleRunner.create()
-                .withProjectDir(fixtureRoot)
-                .withPluginClasspath()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
 
         val result = runner
-                .withArguments("build", "--stacktrace")
-                .buildAndFail()
+            .withArguments("build", "--stacktrace")
+            .buildAndFail()
         assertThat(result.output)
-                .contains("Kgql Gradle Plugin applied in project ':' but no supported Kotlin plugin was found")
+            .contains("Kgql Gradle Plugin applied in project ':' but no supported Kotlin plugin was found")
     }
 
     @Test
@@ -42,12 +56,12 @@ class KgqlPluginTest {
         File(fixtureRoot, "local.properties").writeText("sdk.dir=$androidHome\n")
 
         val runner = GradleRunner.create()
-                .withProjectDir(fixtureRoot)
-                .withPluginClasspath()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
 
         val result = runner
-                .withArguments("clean", "generateDebugKgqlInterface", "--stacktrace")
-                .build()
+            .withArguments("clean", "generateDebugKgqlInterface", "--stacktrace")
+            .build()
         assertThat(result.output).contains("BUILD SUCCESSFUL")
     }
 
@@ -55,12 +69,12 @@ class KgqlPluginTest {
     fun `Applying the plugin works fine for multiplatform projects`() {
         val fixtureRoot = File("src/test/kotlin-mpp")
         val runner = GradleRunner.create()
-                .withProjectDir(fixtureRoot)
-                .withPluginClasspath()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
 
         val result = runner
-                .withArguments("clean", "generateKgqlInterface", "--stacktrace", "--info")
-                .build()
+            .withArguments("clean", "generateKgqlInterface", "--stacktrace", "--info")
+            .build()
         assertThat(result.output).contains("BUILD SUCCESSFUL")
 
         // Assert the plugin added the common dependency
@@ -74,15 +88,15 @@ class KgqlPluginTest {
     fun `The generate task is a dependency of multiplatform js target`() {
         val fixtureRoot = File("src/test/kotlin-mpp")
         val runner = GradleRunner.create()
-                .withProjectDir(fixtureRoot)
-                .withPluginClasspath()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
 
         val buildDir = File(fixtureRoot, "build/kgql")
 
         buildDir.delete()
         val result = runner
-                .withArguments("clean", "compileKotlinJs", "--stacktrace")
-                .build()
+            .withArguments("clean", "compileKotlinJs", "--stacktrace")
+            .build()
         assertThat(result.output).contains("generateKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
@@ -91,15 +105,15 @@ class KgqlPluginTest {
     fun `The generate task is a dependency of multiplatform jvm target`() {
         val fixtureRoot = File("src/test/kotlin-mpp")
         val runner = GradleRunner.create()
-                .withProjectDir(fixtureRoot)
-                .withPluginClasspath()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
 
         val buildDir = File(fixtureRoot, "build/kgql")
 
         buildDir.delete()
         val result = runner
-                .withArguments("clean", "compileKotlinJvm", "--stacktrace")
-                .build()
+            .withArguments("clean", "compileKotlinJvm", "--stacktrace")
+            .build()
         assertThat(result.output).contains("generateKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }

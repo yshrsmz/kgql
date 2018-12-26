@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'com.codingfeline.kgql'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlinx-serialization'
 }
 
 apply from: '../../../../gradle/dependencies.gradle'
