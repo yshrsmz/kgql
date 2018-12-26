@@ -18,7 +18,7 @@ object KgqlCompiler {
     }
 
     fun writeDocumentWrapperFile(sourceFile: KgqlFile, typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>, output: FileAppender) {
-        val documentWrapperType = DocumentWrapperGenerator(sourceFile, typeMap).type()
+        val documentWrapperType = DocumentWrapperGenerator(sourceFile, typeMap).generateType()
         FileSpec.builder(sourceFile.packageName, sourceFile.source.nameWithoutExtension)
             .apply {
                 addType(documentWrapperType)

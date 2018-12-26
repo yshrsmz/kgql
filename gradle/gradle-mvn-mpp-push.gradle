@@ -8,7 +8,7 @@ def isReleaseBuild() {
 
 def getReleaseRepositoryUrl() {
     return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
-            "https://api.bintray.com/maven/yshrsmz/kgql"
+            "https://api.bintray.com/maven/yshrsmz/maven/kgql"
 }
 
 def getSnapshotRepositoryUrl() {

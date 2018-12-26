@@ -31,7 +31,8 @@ class DocumentWrapperGenerator(
 
     val className = "${sourceFile.source.nameWithoutExtension.capitalize()}DocumentWrapper"
 
-    fun type(): TypeSpec {
+    fun generateType(): TypeSpec {
+        println("Generating $className...")
         val objectType = TypeSpec.objectBuilder(className)
 
         // add raw document property
@@ -49,12 +50,18 @@ class DocumentWrapperGenerator(
             .associateBy({ it.name }, { generateVariableWrapper(it) })
         objectType.addTypes(variablesMap.values)
 
-        objectType.addFunctions(operations.map { generateOperationFunction(it, documentProp, variablesMap[it.name]) })
+        objectType.addFunctions(
+            operations
+                .map { generateOperationFunction(it, documentProp, variablesMap[it.name]) }
+        )
+
+        // generate serializer functions
+        objectType.addFunctions(RequestBodySerializersGenerator(objectType).generateFunctions())
 
         return objectType.build()
     }
 
-    fun generateOperationFunction(operation: OperationDefinition, documentProp: PropertySpec, variablesSpec: TypeSpec?): FunSpec {
+    private fun generateOperationFunction(operation: OperationDefinition, documentProp: PropertySpec, variablesSpec: TypeSpec?): FunSpec {
         val variablesType: TypeName = if (variablesSpec == null) {
             Unit::class.asTypeName()
         } else {
@@ -88,15 +95,15 @@ class DocumentWrapperGenerator(
         return spec.build()
     }
 
-    fun generateParameterSpecFromVariable(variables: TypeName): ParameterSpec {
+    private fun generateParameterSpecFromVariable(variables: TypeName): ParameterSpec {
         return ParameterSpec.builder(
             name = PARAM_VARIABLES_NAME,
             type = variables)
             .build()
     }
 
-    fun generateVariableWrapper(operation: OperationDefinition): TypeSpec {
-        return VariableWrapperGenerator(operation.name, operation.variableDefinitions, typeMapper).type()
+    private fun generateVariableWrapper(operation: OperationDefinition): TypeSpec {
+        return VariableWrapperGenerator(operation.name, operation.variableDefinitions, typeMapper).generateType()
     }
 }
 

@@ -15,7 +15,7 @@ class VariableWrapperGenerator(
     val typeMapper: KgqlCustomTypeMapper
 ) {
 
-    fun type(): TypeSpec {
+    fun generateType(): TypeSpec {
         val classSpec = TypeSpec.classBuilder("${operationName?.capitalize() ?: ""}Variables")
             .addModifiers(KModifier.DATA)
             .addAnnotation(Serializable::class.java)
@@ -25,7 +25,7 @@ class VariableWrapperGenerator(
         return classSpec.build()
     }
 
-    fun generateConstructor(variables: List<VariableDefinition>): FunSpec {
+    private fun generateConstructor(variables: List<VariableDefinition>): FunSpec {
         return FunSpec.constructorBuilder()
             .addParameters(variables.map {
                 ParameterSpec.builder(it.name, typeMapper.get(it.type)).build()
@@ -33,7 +33,7 @@ class VariableWrapperGenerator(
             .build()
     }
 
-    fun generateProperties(variables: List<VariableDefinition>): List<PropertySpec> {
+    private fun generateProperties(variables: List<VariableDefinition>): List<PropertySpec> {
         return variables.map {
             PropertySpec.builder(it.name, typeMapper.get(it.type))
                 .initializer(it.name)

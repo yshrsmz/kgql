@@ -14,9 +14,9 @@ class KgqlCustomTypeMapper(
 ) {
     fun get(type: Type<*>): TypeName {
         return when (type) {
-            is NonNullType -> get(type.type).copy(nullable = true)
+            is NonNullType -> get(type.type).copy(nullable = false)
             is ListType -> ClassName("kotlin.collections", "List")
-                .plusParameter(get(type.type))
+                .plusParameter(get(type.type)).copy(nullable = true)
             else -> {
                 when ((type as graphql.language.TypeName).name) {
                     "String" -> String::class.asTypeName()
@@ -24,7 +24,7 @@ class KgqlCustomTypeMapper(
                     "Float" -> Float::class.asTypeName()
                     "Boolean" -> Boolean::class.asTypeName()
                     else -> mapCustomType(type)
-                }
+                }.copy(nullable = true)
             }
         }
     }
@@ -34,5 +34,13 @@ class KgqlCustomTypeMapper(
             val parts = fqName.split('.')
             ClassName(parts.dropLast(1).joinToString("."), parts.last())
         } ?: ANY
+    }
+
+    fun isCustomType(type: TypeName): Boolean {
+        return typeMap.values.contains(type.copy(nullable = false, annotations = emptyList()).toString())
+    }
+
+    fun hasCustomType(gqlTypeName: String): Boolean {
+        return typeMap.containsKey(gqlTypeName)
     }
 }
