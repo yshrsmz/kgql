@@ -42,7 +42,7 @@ class KgqlEnvironment(
             val file = KgqlFile(
                 packageName = packageName!!,
                 outputDirectory = outputDirectory!!,
-                sourceFile = it)
+                source = it)
             KgqlCompiler.compile(file, typeMap, writer)
         }
 

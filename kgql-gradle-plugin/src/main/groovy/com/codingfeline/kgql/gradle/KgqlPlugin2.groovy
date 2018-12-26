@@ -24,23 +24,26 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
+import org.jetbrains.kotlinx.serialization.gradle.SerializationGradleSubplugin
 
 import java.util.function.BooleanSupplier
 
 class KgqlPlugin2 implements Plugin<Project> {
     @Override
     void apply(Project project) {
-        println("KgqlPlugin2")
         def extension = project.extensions.create('kgql', KgqlExtension2.class)
 
         boolean kotlin = false
+        boolean serialization = false
         boolean android = false
-
 
         project.plugins.all {
             switch (it) {
                 case KotlinBasePluginWrapper:
                     kotlin = true
+                    break
+                case SerializationGradleSubplugin:
+                    serialization = true
                     break
                 case BasePlugin:
                     android = true
@@ -48,11 +51,12 @@ class KgqlPlugin2 implements Plugin<Project> {
             }
         }
 
-        boolean hasAndroidAndKotlinPlugin =
+        boolean hasAndroidAndKotlinAndSerializationPlugin =
                 (project.plugins.hasPlugin('com.android.application') ||
                         project.plugins.hasPlugin('com.android.library')) &&
-                        project.plugins.hasPlugin('org.jetbrains.kotlin.android')
-        if (hasAndroidAndKotlinPlugin) {
+                        project.plugins.hasPlugin('org.jetbrains.kotlin.android') &&
+                        project.plugins.hasPlugin('org.jetbrains.kotlin.plugin.serialization')
+        if (hasAndroidAndKotlinAndSerializationPlugin) {
             // The kotlin plugin does it's own magic after evaluate, but it needs to know about our
             // generated code. So run Now instead of after evaluations
             configureAndroid(project, extension, false)
@@ -60,16 +64,16 @@ class KgqlPlugin2 implements Plugin<Project> {
         }
 
         project.afterEvaluate { Project p ->
-            println("apply: project.afterEvaluate")
             if (!kotlin) {
                 throw new IllegalStateException("Kgql Gradle Plugin applied in project '${project.path}' but no supported Kotlin plugin was found")
             }
+            if (!serialization) {
+                throw new IllegalStateException("Kgql Gradle Plugin applied in project '${project.path}' but no kotlinx-serialization plugin was found")
+            }
             boolean isMultiplatform = project.plugins.hasPlugin('org.jetbrains.kotlin.multiplatform')
             if (android && !isMultiplatform) {
-                println('configureAndroid')
                 configureAndroid(p, extension, true)
             } else {
-                println('configureKotlin')
                 configureKotlin(p, extension, isMultiplatform, true)
             }
         }
@@ -90,13 +94,9 @@ class KgqlPlugin2 implements Plugin<Project> {
             def sourceSets = project.property('sourceSets') as SourceSetContainer
             kotlinSrcs = getKotlinSourceDirectorySret(sourceSets.getByName('main'))
         }
-        println(outputDirectory.toString())
-        println(project.projectDir.toString())
-        println("outputDirectory: ${project.projectDir.toPath().relativize(outputDirectory.toPath()).toString()}")
         kotlinSrcs.srcDirs(project.projectDir.toPath().relativize(outputDirectory.toPath()).toString())
 
         def action = { Project p ->
-            println('configureKotlin: project.afterEvaluate')
             def packageName = Objects.requireNonNull(extension.packageName, "property packageName must be provided")
             def sourceSet = extension.sourceSet ?: p.files('src/main/kgql')
             def typeMap = extension.typeMapper ?: new HashMap<String, String>()
@@ -114,7 +114,6 @@ class KgqlPlugin2 implements Plugin<Project> {
                 properties.toFile(new File(propsDir, KgqlPropertiesFile.NAME))
             }
 
-            println("register generateKgqlInterface")
             KgqlTask2 task = p.tasks.create('generateKgqlInterface', KgqlTask2.class) {
                 it.packageName = packageName
                 it.sourceFolders = sourceSet.files
@@ -139,9 +138,9 @@ class KgqlPlugin2 implements Plugin<Project> {
                             p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
                                 (it as Task).dependsOn(task)
                             }
-                            p.tasks.findByName((compilationUnit as KotlinNativeCompilation).linkAllTaskName)?.configure {
-                                (it as Task).dependsOn(task)
-                            }
+//                            p.tasks.findByName((compilationUnit as KotlinNativeCompilation).linkAllTaskName)?.configure {
+//                                (it as Task).dependsOn(task)
+//                            }
                             p.tasks.findByName(getAlternateLinkAllTaskName(compilationUnit as KotlinNativeCompilation))?.configure {
                                 (it as Task).dependsOn(task)
                             }

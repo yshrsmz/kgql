@@ -25,3 +25,5 @@ include ':core'
 //include ':library'
 
 rootProject.name = 'kgql'
+
+enableFeaturePreview('GRADLE_METADATA')

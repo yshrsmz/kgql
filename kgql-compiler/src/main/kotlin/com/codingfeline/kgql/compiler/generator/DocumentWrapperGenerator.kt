@@ -1,32 +1,34 @@
 package com.codingfeline.kgql.compiler.generator
 
-import com.codingfeline.kgql.compiler.DOCUMENT_WRAPPER_SUFFIX
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.codingfeline.kgql.compiler.KgqlFile
 import com.codingfeline.kgql.core.KgqlRequestBody
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import graphql.language.OperationDefinition
-import graphql.language.VariableDefinition
 import graphql.parser.Parser
+
+private const val PARAM_VARIABLES_NAME = "variables"
 
 class DocumentWrapperGenerator(
     val sourceFile: KgqlFile,
     typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
 ) {
 
-    val rawDocument = sourceFile.sourceFile.readText()
+    val rawDocument = sourceFile.source.readText()
     val document = Parser().parseDocument(rawDocument)
     val typeMapper = KgqlCustomTypeMapper(typeMap)
 
+    val className = "${sourceFile.source.nameWithoutExtension.capitalize()}DocumentWrapper"
+
     fun type(): TypeSpec {
-        val capitalizedName = sourceFile.sourceFile.nameWithoutExtension.capitalize()
-        val objectType = TypeSpec.objectBuilder("$capitalizedName$DOCUMENT_WRAPPER_SUFFIX")
+        val objectType = TypeSpec.objectBuilder(className)
 
         // add raw document property
         val documentProp = PropertySpec.builder("document", String::class)
@@ -39,36 +41,45 @@ class DocumentWrapperGenerator(
         val operations = document.definitions.filter { it is OperationDefinition }
             .map { it as OperationDefinition }
 
-        objectType.addFunctions(operations.map { generateOperationFunction(it, documentProp) })
-        objectType.addTypes(
-            operations.filter { it.variableDefinitions.isNotEmpty() }
-                .map { generateVariableWrapper(it) }
-        )
+        val variablesMap = operations.filter { it.variableDefinitions.isNotEmpty() }
+            .associateBy({ it.name }, { generateVariableWrapper(it) })
+        objectType.addTypes(variablesMap.values)
+
+        objectType.addFunctions(operations.map { generateOperationFunction(it, documentProp, variablesMap[it.name]) })
 
         return objectType.build()
     }
 
-    fun generateOperationFunction(operation: OperationDefinition, documentProp: PropertySpec): FunSpec {
-        val spec = FunSpec.builder("${operation.name
-            ?: ""}${operation.operation.name.toLowerCase().capitalize()}".decapitalize())
+    fun generateOperationFunction(operation: OperationDefinition, documentProp: PropertySpec, variablesSpec: TypeSpec?): FunSpec {
+        val spec = FunSpec.builder(
+            "${operation.name ?: ""}${operation.operation.name.toLowerCase().capitalize()}".decapitalize())
             .returns(returnType = KgqlRequestBody::class)
 
-        spec.addParameters(operation.variableDefinitions.map { generateParameterSpecFromVariable(it) })
+        if (variablesSpec != null) {
+            spec.addParameter(generateParameterSpecFromVariable(variablesSpec))
+        }
 
         val operationName = if (operation.name != null) {
             "\"${operation.name}\""
         } else "null"
 
+        val variablesLiteral = if (variablesSpec != null) {
+            PARAM_VARIABLES_NAME
+        } else "null"
+
         spec.addStatement(
-            "return KgqlRequestBody(operationName=%L, query=%N, variables=null)",
+            "return KgqlRequestBody(operationName=%L, query=%N, variables=%L)",
             operationName,
-            documentProp)
+            documentProp,
+            variablesLiteral)
 
         return spec.build()
     }
 
-    fun generateParameterSpecFromVariable(variable: VariableDefinition): ParameterSpec {
-        return ParameterSpec.builder(name = variable.name, type = typeMapper.get(variable.type))
+    fun generateParameterSpecFromVariable(variables: TypeSpec): ParameterSpec {
+        return ParameterSpec.builder(
+            name = PARAM_VARIABLES_NAME,
+            type = ClassName.bestGuess("${sourceFile.packageName}.$className.${variables.name}"))
             .build()
     }
 

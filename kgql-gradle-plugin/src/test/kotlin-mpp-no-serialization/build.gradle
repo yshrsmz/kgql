@@ -1,6 +1,5 @@
 plugins {
     id 'org.jetbrains.kotlin.multiplatform'
-    id 'kotlinx-serialization'
     id 'com.codingfeline.kgql'
 }
 
@@ -25,27 +24,18 @@ kotlin {
         commonMain {
             dependencies {
                 implementation deps.kotlin.stdlib.common
-                implementation deps.kotlin.serialization.common
             }
         }
         jvmMain {
             dependencies {
                 implementation deps.kotlin.stdlib.jdk7
-                implementation deps.kotlin.serialization.jvm
             }
         }
         jsMain {
             dependencies {
                 implementation deps.kotlin.stdlib.js
-                implementation deps.kotlin.serialization.js
             }
         }
-        iosMain {
-            dependencies {
-                implementation deps.kotlin.serialization.native
-            }
-        }
-        iosTest {}
     }
     targets {
         fromPreset(presets.jvm, 'jvm')
