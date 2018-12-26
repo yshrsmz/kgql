@@ -1,6 +1,6 @@
 // TODO tie this into the normal gradle-mvn-push script
 apply plugin: 'maven-publish'
-apply plugin: 'signing'
+//apply plugin: 'signing'
 
 def isReleaseBuild() {
     return VERSION_NAME.contains("SNAPSHOT") == false
@@ -31,10 +31,10 @@ task emptyJavadocJar(type: Jar) {
     classifier = 'javadoc'
 }
 
-signing {
-    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-    sign(publishing.publications)
-}
+//signing {
+//    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+//    sign(publishing.publications)
+//}
 
 publishing {
     publications.all {
