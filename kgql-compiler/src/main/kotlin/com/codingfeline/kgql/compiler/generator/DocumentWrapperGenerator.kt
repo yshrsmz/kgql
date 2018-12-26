@@ -9,10 +9,14 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
 import graphql.language.OperationDefinition
 import graphql.parser.Parser
+import graphql.language.TypeName as GqlTypeName
 
 private const val PARAM_VARIABLES_NAME = "variables"
 
@@ -51,12 +55,19 @@ class DocumentWrapperGenerator(
     }
 
     fun generateOperationFunction(operation: OperationDefinition, documentProp: PropertySpec, variablesSpec: TypeSpec?): FunSpec {
+        val variablesType: TypeName = if (variablesSpec == null) {
+            Unit::class.asTypeName()
+        } else {
+            ClassName.bestGuess("${sourceFile.packageName}.$className.${variablesSpec.name}")
+        }
+
         val spec = FunSpec.builder(
             "${operation.name ?: ""}${operation.operation.name.toLowerCase().capitalize()}".decapitalize())
-            .returns(returnType = KgqlRequestBody::class)
+            .returns(returnType = KgqlRequestBody::class.asTypeName().plusParameter(variablesType))
+
 
         if (variablesSpec != null) {
-            spec.addParameter(generateParameterSpecFromVariable(variablesSpec))
+            spec.addParameter(generateParameterSpecFromVariable(variablesType))
         }
 
         val operationName = if (operation.name != null) {
@@ -68,7 +79,8 @@ class DocumentWrapperGenerator(
         } else "null"
 
         spec.addStatement(
-            "return KgqlRequestBody(operationName=%L, query=%N, variables=%L)",
+            "return KgqlRequestBody<%T>(operationName=%L, query=%N, variables=%L)",
+            variablesType,
             operationName,
             documentProp,
             variablesLiteral)
@@ -76,10 +88,10 @@ class DocumentWrapperGenerator(
         return spec.build()
     }
 
-    fun generateParameterSpecFromVariable(variables: TypeSpec): ParameterSpec {
+    fun generateParameterSpecFromVariable(variables: TypeName): ParameterSpec {
         return ParameterSpec.builder(
             name = PARAM_VARIABLES_NAME,
-            type = ClassName.bestGuess("${sourceFile.packageName}.$className.${variables.name}"))
+            type = variables)
             .build()
     }
 

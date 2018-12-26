@@ -7,6 +7,7 @@ import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.errors.SyncIssueHandlerImpl
 import com.android.build.gradle.options.SyncOptions
 import com.android.builder.core.DefaultManifestParser
+import com.codingfeline.kgql.VersionKt
 import com.codingfeline.kgql.compiler.KgqlFileType
 import com.codingfeline.kgql.compiler.KgqlPropertiesFile
 import org.gradle.api.DomainObjectSet
@@ -86,9 +87,9 @@ class KgqlPlugin2 implements Plugin<Project> {
         if (isMultiplatform) {
             def sourceSets = project.extensions.getByType(KotlinMultiplatformExtension.class).sourceSets
             def sourceSet = (sourceSets.getByName('commonMain') as DefaultKotlinSourceSet)
-//            project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
-//                    project.dependencies.create("com.codingfeline.kgql:core:${VersionKt.VERSION}")
-//            )
+            project.configurations.getByName(sourceSet.apiConfigurationName).dependencies.add(
+                    project.dependencies.create("com.codingfeline.kgql:core:${VersionKt.VERSION}")
+            )
             kotlinSrcs = sourceSet.kotlin
         } else {
             def sourceSets = project.property('sourceSets') as SourceSetContainer
