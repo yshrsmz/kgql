@@ -10,6 +10,7 @@ import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 
 class KgqlTask2 extends SourceTask {
+    // Required to invalidate the task on version updates.
     @Input
     String pluginVersion() {
         return VersionKt.getVERSION()
@@ -19,7 +20,11 @@ class KgqlTask2 extends SourceTask {
     File outputDirectory = null
 
     Iterable<File> sourceFolders
+
+    @Input
     String packageName
+
+    @Input
     Map<String, String> typeMap
 
     @TaskAction
