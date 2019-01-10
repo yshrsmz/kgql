@@ -16,7 +16,6 @@ gradlePlugin {
 
 configurations {
     fixtureClasspath
-    bundled
 }
 
 // Append any extra dependencies to the test fixtures via a custom configuration classpath. This
@@ -57,3 +56,5 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

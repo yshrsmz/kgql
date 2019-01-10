@@ -5,15 +5,9 @@ repositories {
 
 apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'maven-publish'
 
 kotlin {
-//    jvm()
-//    js()
-//    // This is for iPhone emulator
-//    // Switch here to iosArm64 (or iosArm32) to build library for iPhone device
-//    iosX64("ios") {
-//        compilations.main.outputKinds("framework")
-//    }
     sourceSets {
         commonMain {
             dependencies {
@@ -81,7 +75,7 @@ configurations {
     compileClasspath
 }
 
-apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
+apply from: rootProject.file("gradle/publish.gradle")
 
 afterEvaluate {
     // Alias the task names we use elsewhere to the new task names.

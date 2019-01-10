@@ -3,6 +3,8 @@ apply plugin: 'com.github.ben-manes.versions'
 buildscript {
     apply from: "$rootDir/gradle/dependencies.gradle"
 
+    def deployNative = property('native.deploy') == 'true'
+
     repositories {
         mavenCentral()
         google()
@@ -19,6 +21,12 @@ buildscript {
         classpath deps.plugins.dokka
         classpath deps.plugins.android
         classpath deps.plugins.versions
+
+        if (deployNative) {
+            classpath deps.plugins.bintrayNative
+        } else {
+            classpath deps.plugins.bintray
+        }
     }
 }
 

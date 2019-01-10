@@ -1,6 +1,35 @@
 // TODO tie this into the normal gradle-mvn-push script
 apply plugin: 'maven-publish'
-//apply plugin: 'signing'
+apply plugin: 'org.jetbrains.dokka'
+
+dokka {
+    impliedPlatforms = ["Common"]
+    kotlinTasks {
+        []
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.srcDirs[0]
+        platforms = ["Common"]
+    }
+    if (kotlin.sourceSets.getNames().contains("jvmMain")) {
+        sourceRoot {
+            path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
+            platforms = ["JVM"]
+        }
+    }
+    if (kotlin.sourceSets.getNames().contains("jsMain")) {
+        sourceRoot {
+            path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
+            platforms = ["js"]
+        }
+    }
+    if (kotlin.sourceSets.getNames().contains("nativeMain")) {
+        sourceRoot {
+            path = kotlin.sourceSets.nativeMain.kotlin.srcDirs[0]
+            platforms = ["native"]
+        }
+    }
+}
 
 def isReleaseBuild() {
     return VERSION_NAME.contains("SNAPSHOT") == false
@@ -8,7 +37,7 @@ def isReleaseBuild() {
 
 def getReleaseRepositoryUrl() {
     return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
-            "https://api.bintray.com/maven/yshrsmz/maven/kgql"
+            "https://api.bintray.com/maven/yshrsmz/kgql/kgql"
 }
 
 def getSnapshotRepositoryUrl() {
@@ -30,11 +59,6 @@ task emptySourcesJar(type: Jar) {
 task emptyJavadocJar(type: Jar) {
     classifier = 'javadoc'
 }
-
-//signing {
-//    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-//    sign(publishing.publications)
-//}
 
 publishing {
     publications.all {

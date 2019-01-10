@@ -1,0 +1,22 @@
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    publications = ['mavenProject']
+    publish = false
+    override = true
+
+    pkg {
+        repo = 'kgql'
+        name = POM_ARTIFACT_ID
+        userOrg = POM_DEVELOPER_ID
+        licenses = ['Apache-2.0']
+        vcsUrl = POM_SCM_URL
+        websiteUrl = POM_URL
+        issueTrackerUrl = "$POM_SCM_URL/issues"
+
+        githubRepo = POM_SCM_URL
+        version {
+            name = project.version
+        }
+    }
+}
