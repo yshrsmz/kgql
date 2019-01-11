@@ -5,6 +5,8 @@ buildscript {
 
     def deployNative = property('native.deploy') == 'true'
 
+    println("deployNative: $deployNative")
+
     repositories {
         mavenCentral()
         google()
@@ -42,4 +44,9 @@ allprojects {
 
     group = GROUP
     version = VERSION_NAME
+}
+
+wrapper {
+    gradleVersion = '4.7'
+    distributionType = Wrapper.DistributionType.ALL
 }

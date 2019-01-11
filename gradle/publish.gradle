@@ -32,6 +32,10 @@ publishing {
         maven {
             url = "https://${project.BINTRAY_ORG}.bintray.com/${project.BINTRAY_REPOSITORY}"
         }
+        maven {
+            name 'test'
+            url "file://${rootProject.buildDir}/localMaven"
+        }
     }
 
     // Process each publication we have in this project

@@ -6,7 +6,7 @@ sourceSets {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(':kgql-core')
     implementation deps.kotlin.stdlib.jdk8
     implementation deps.kotlin.serialization.jvm
 

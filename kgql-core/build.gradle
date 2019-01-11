@@ -75,7 +75,7 @@ configurations {
     compileClasspath
 }
 
-apply from: rootProject.file("gradle/publish.gradle")
+apply from: "$rootDir/gradle/publish.gradle"
 
 afterEvaluate {
     // Alias the task names we use elsewhere to the new task names.
