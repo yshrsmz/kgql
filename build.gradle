@@ -24,11 +24,11 @@ buildscript {
         classpath deps.plugins.android
         classpath deps.plugins.versions
 
-        if (deployNative) {
-            classpath deps.plugins.bintrayNative
-        } else {
-            classpath deps.plugins.bintray
-        }
+//        if (deployNative) {
+//            classpath deps.plugins.bintrayNative
+//        } else {
+//            classpath deps.plugins.bintray
+//        }
     }
 }
 

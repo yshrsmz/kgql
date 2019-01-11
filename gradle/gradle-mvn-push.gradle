@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 version = VERSION_NAME
 group = GROUP
@@ -25,21 +26,20 @@ def isReleaseBuild() {
 
 def getReleaseRepositoryUrl() {
     return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
-            "https://api.bintray.com/maven/yshrsmz/kgql/kgql"
+            "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 def getSnapshotRepositoryUrl() {
     return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
-            "https://oss.jfrog.org/artifactory/oss-snapshot-local"
+            "https://oss.sonatype.org/content/repositories/snapshots/"
 }
 
-
 def getRepositoryUsername() {
-    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : ""
+    return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
 }
 
 def getRepositoryPassword() {
-    return hasProperty('BINTRAY_API_KEY') ? BINTRAY_API_KEY : ""
+    return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
 def configurePom(pom) {
@@ -80,6 +80,8 @@ afterEvaluate { project ->
     uploadArchives {
         repositories {
             mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
                 repository(url: getReleaseRepositoryUrl()) {
                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
                 }
@@ -102,6 +104,11 @@ afterEvaluate { project ->
                 configurePom(pom)
             }
         }
+    }
+
+    signing {
+        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
     }
 
     if (project.getPlugins().hasPlugin('com.android.application') ||
