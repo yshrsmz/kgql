@@ -7,6 +7,8 @@ apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'maven-publish'
 
+apply from: "$rootDir/gradle/dokka.gradle"
+
 archivesBaseName = 'kgql-core'
 
 kotlin {
