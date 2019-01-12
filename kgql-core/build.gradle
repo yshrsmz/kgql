@@ -7,8 +7,6 @@ apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'maven-publish'
 
-apply from: "$rootDir/gradle/dokka.gradle"
-
 archivesBaseName = 'kgql-core'
 
 kotlin {
@@ -96,13 +94,4 @@ afterEvaluate {
     //tasks.create('uploadArchives').dependsOn('publishKotlinMultiplatformPublicationToMavenRepository')
 }
 
-apply from: "$rootDir/gradle/publish.gradle"
-
-//publishing {
-//    publications.all {
-////        println("artifactId: $artifactId")
-//        // Rewrite all artifacts from using the project name to just 'core'.
-//        // artifactId is something like 'core-kgql-core-jvm' with Gradle 4.7
-//        artifactId = artifactId.replace("-${project.name}", '')
-//    }
-//}
+apply from: "$rootDir/gradle/publish-mpp.gradle"
