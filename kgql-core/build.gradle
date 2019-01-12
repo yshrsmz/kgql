@@ -96,9 +96,11 @@ afterEvaluate {
 
 apply from: "$rootDir/gradle/publish.gradle"
 
-publishing {
-    publications.all {
-        // Rewrite all artifacts from using the project name to just 'core'.
-        artifactId = artifactId.replace(project.name, 'core')
-    }
-}
+//publishing {
+//    publications.all {
+////        println("artifactId: $artifactId")
+//        // Rewrite all artifacts from using the project name to just 'core'.
+//        // artifactId is something like 'core-kgql-core-jvm' with Gradle 4.7
+//        artifactId = artifactId.replace("-${project.name}", '')
+//    }
+//}

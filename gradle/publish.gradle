@@ -8,9 +8,9 @@ apply plugin: 'com.jfrog.bintray'
 apply from: project.rootProject.file('gradle/pom.gradle')
 
 // Load `local.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
-if (Files.exists(Paths.get("$project.rootDir/local.properties"))) {
+if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
     def localProperties = new Properties()
-    localProperties.load(new FileInputStream("$project.rootDir/local.properties"))
+    localProperties.load(new FileInputStream("$project.rootDir/secret.properties"))
     localProperties.each { prop -> project.ext.set(prop.key, prop.value) }
 }
 
@@ -30,7 +30,7 @@ publishing {
     // TODO: I have no idea about this
     repositories {
         maven {
-            url = "https://${project.BINTRAY_ORG}.bintray.com/${project.BINTRAY_REPOSITORY}"
+            url = "https://dl.bintray.com/${project.BINTRAY_ORG}/${project.BINTRAY_REPOSITORY}"
         }
         maven {
             name 'test'
@@ -40,15 +40,16 @@ publishing {
 
     // Process each publication we have in this project
     publications.all { publication ->
+        println("${project.name}, ${publication.name}, publication.artifactId: ${publication.artifactId}")
         // apply changes to pom.xml files, see pom.gradle
         pom.withXml(configureMavenCentralMetadata)
 
         if (publication.name == 'kotlinMultiplatform') {
             // for our root metadata publication, set artifactId with a package and project name
-            publication.artifactId = "$POM_ARTIFACT_ID-$project.name"
+            publication.artifactId = "$POM_ARTIFACT_ID"
         } else {
             // for targets, set artifactId with a package, project name and target name (e.g. iosX64)
-            publication.artifactId = "$POM_ARTIFACT_ID-$project.name-$publication.name"
+            publication.artifactId = "$POM_ARTIFACT_ID-${publication.name}"
         }
     }
 
@@ -73,8 +74,8 @@ publishing {
 }
 
 bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    user = project.hasProperty('BINTRAY_USER') ? project.property('BINTRAY_USER') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('BINTRAY_API_KEY') ? project.property('BINTRAY_API_KEY') : System.getenv('BINTRAY_API_KEY')
     publish = true
     override = true // for multi-platform Kotlin/Native publishing
 

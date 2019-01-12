@@ -57,4 +57,10 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+test {
+    def os = System.getenv("TRAVIS_OS_NAME")
+    dependsOn(":kgql-core:installLocally")
+
+}
+
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
