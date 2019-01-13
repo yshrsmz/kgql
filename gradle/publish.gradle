@@ -1,0 +1,72 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply from: "$rootDir/gradle/pom.gradle"
+
+// Load `secret.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
+if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream("$project.rootDir/secret.properties"))
+    localProperties.each { prop -> project.ext.set(prop.key, prop.value) }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+    repositories {
+        maven { url "https://dl.bintray.com/${project.BINTRAY_ORG}/${project.BINTRAY_REPOSITORY}" }
+    }
+
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId GROUP
+            artifactId POM_ARTIFACT_ID
+            version VERSION_NAME
+
+            pom.withXml(configureMavenCentralMetadata)
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('BINTRAY_USER') ? project.property('BINTRAY_USER') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('BINTRAY_API_KEY') ? project.property('BINTRAY_API_KEY') : System.getenv('BINTRAY_API_KEY')
+
+    publications = ['MyPublication']
+    publish = true
+
+    pkg {
+        userOrg = project.BINTRAY_ORG
+        repo = project.BINTRAY_REPOSITORY
+        name = project.POM_ARTIFACT_ID
+        licenses = ['Apache-2.0']
+        vcsUrl = project.POM_SCM_URL
+        version {
+            name = project.version
+            vcsTag = project.version
+            released = new Date()
+        }
+    }
+}
+
+// This is for easier debugging of bintray uploading problems
+bintrayUpload.doFirst {
+    publications = project.publishing.publications.findAll { !it.name.contains('-test') }.collect {
+        println("Uploading artifact '$it.groupId:$it.artifactId:$it.version' from publication '$it.name'")
+        it
+    }
+}

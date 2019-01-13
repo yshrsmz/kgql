@@ -1,9 +1,34 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'groovy'
-apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: "com.gradle.plugin-publish"
+//apply plugin: 'org.jetbrains.kotlin.jvm'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
+// Load `secret.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
+if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream("$project.rootDir/secret.properties"))
+    localProperties.each { prop -> project.ext.set(prop.key, prop.value) }
+}
+
+
+pluginBundle {
+    website = 'https://github.com/yshrsmz/kgql'
+    vcsUrl = 'https://github.com/yshrsmz/kgql.git'
+    description = POM_DESCRIPTION
+    tags = ['GraphQL', 'Kotlin', 'Kotlin Multiplatform']
+
+    plugins {
+        kgql {
+            displayName = POM_NAME
+        }
+    }
+}
 
 gradlePlugin {
     plugins {
@@ -50,17 +75,24 @@ dependencies {
     fixtureClasspath deps.plugins.android
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+//compileKotlin {
+//    kotlinOptions.jvmTarget = "1.8"
+//}
+//compileTestKotlin {
+//    kotlinOptions.jvmTarget = "1.8"
+//}
+
+compileGroovy {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+
+compileTestGroovy {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }
 
 test {
     def os = System.getenv("TRAVIS_OS_NAME")
     dependsOn(":kgql-core:installLocally")
-
 }
-
-apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

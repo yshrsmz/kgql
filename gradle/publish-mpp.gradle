@@ -5,7 +5,7 @@ import java.nio.file.Paths
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
-apply from: project.rootProject.file('gradle/pom.gradle')
+apply from: "$rootDir/gradle/pom.gradle"
 apply from: "$rootDir/gradle/dokka.gradle"
 
 // Load `local.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git

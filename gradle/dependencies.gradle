@@ -14,7 +14,8 @@ ext.deps = [
                 dokka        : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
                 versions     : "com.github.ben-manes:gradle-versions-plugin:0.20.0",
                 bintray      : "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3",
-                bintrayNative: "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.2-SNAPSHOT"
+                bintrayNative: "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.2-SNAPSHOT",
+                pluginPublish: "com.gradle.publish:plugin-publish-plugin:0.10.0"
         ],
         kotlin            : [
                 stdlib       : [

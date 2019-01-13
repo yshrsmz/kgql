@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
-./gradlew -Pnative.deploy=true core:publish
-./gradlew kgql-compiler:publish
-./gradlew kgql-gradle-plugin:publish
+./gradlew clean
+./gradlew build
+./gradlew -Pnative.deploy=true :kgql-core:bintrayUpload
+./gradlew kgql-compiler:bintrayUpload
+#./gradlew kgql-gradle-plugin:bintrayUpload
+./gradlew kgql-gradle-plugin:publishPlugins
