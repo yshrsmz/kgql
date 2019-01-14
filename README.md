@@ -1,7 +1,7 @@
 kgql
 ===
 
-GraphQL Document wrapper generator for Kotlin Multiplatform Project.　　
+GraphQL Document wrapper generator for Kotlin Multiplatform Project.  
 Currently available for JVM/Android/iOS
 
 ## core
