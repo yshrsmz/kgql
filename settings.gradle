@@ -27,3 +27,4 @@ include ':kgql-gradle-plugin'
 rootProject.name = 'kgql'
 
 enableFeaturePreview('GRADLE_METADATA')
+//enableFeaturePreview('STABLE_PUBLISHING')
