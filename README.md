@@ -6,6 +6,7 @@ Currently available for JVM/Android/iOS
 
 ## core
 
+kgql core classes
 
 
 ## kgql-gradle-plugin
@@ -48,7 +49,7 @@ kgql {
 }
 ```
 
-## ktor-kgql
+## [WIP]kgql-ktor
 
 ktor extensions for kgql
 
