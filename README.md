@@ -19,15 +19,24 @@ kgql Gradle Plugin generates wrapper classes for provided GraphQL document files
 buildScript {
     repositories {
         jcenter()
+        maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.1'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.3'
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.codingfeline.kgql'
+
+repositories {
+     maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+}
+
+dependencies {
+    implementation "com.codingfeline.kgql:core:0.0.3"
+}
 
 kgql {
     packageName = "com.sample"
