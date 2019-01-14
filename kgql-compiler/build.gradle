@@ -44,4 +44,10 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-apply from: "$rootDir/gradle/publish.gradle"
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+afterEvaluate {
+    // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
+    addDependency(tasks.getByName('uploadArchives') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
+    addDependency(tasks.getByName('installLocally') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
+}
