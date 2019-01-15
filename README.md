@@ -18,6 +18,8 @@ kgql Gradle Plugin generates wrapper classes for provided GraphQL document files
 
 ### Setup
 
+#### For Android Project
+
 ```gradle
 buildScript {
     repositories {
@@ -38,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.codingfeline.kgql:core:0.0.5"
+    implementation "com.codingfeline.kgql:core-jvm:0.0.5"
 }
 
 kgql {
@@ -50,6 +52,38 @@ kgql {
     ]
 }
 ```
+
+#### For Kotlin Multiplatform Project
+
+```gradle
+buildScript {
+    repositories {
+        jcenter()
+        maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+    }
+    dependencies {
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.5'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.codingfeline.kgql'
+
+repositories {
+     maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+}
+
+kgql {
+    packageName = "com.sample"
+    sourceSet = files("src/main/kgql")
+    typeMapper = [
+        // mapper for non-scalar type
+        "UserProfile": "com.sample.data.UserProfile"
+    ]
+}
+```
+
 
 ## [WIP]kgql-ktor
 
