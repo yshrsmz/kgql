@@ -92,6 +92,37 @@ afterEvaluate {
     }
     // NOTE: We do not alias uploadArchives because CI runs it on Linux and we only want to run it on Mac OS.
     //tasks.create('uploadArchives').dependsOn('publishKotlinMultiplatformPublicationToMavenRepository')
+
+//    tasks.create('publishToMavenRepository') {
+//        dependsOn 'publishKotlinMultiplatformPublicationToMavenRepository'
+//        dependsOn 'publishIosArm64PublicationToMavenRepository'
+//        dependsOn 'publishIosX64PublicationToMavenRepository'
+//        dependsOn 'publishJsPublicationToMavenRepository'
+//        dependsOn 'publishJvmPublicationToMavenRepository'
+//        dependsOn 'publishMetadataPublicationToMavenRepository'
+//    }
+//
+//    tasks.create('publishToTestRepository') {
+//        dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
+//        dependsOn 'publishIosArm64PublicationToTestRepository'
+//        dependsOn 'publishIosX64PublicationToTestRepository'
+//        dependsOn 'publishJsPublicationToTestRepository'
+//        dependsOn 'publishJvmPublicationToTestRepository'
+//        dependsOn 'publishMetadataPublicationToTestRepository'
+//    }
 }
 
-apply from: "$rootDir/gradle/publish-mpp.gradle"
+//apply from: "$rootDir/gradle/publish-mpp.gradle"
+apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
+
+publishing {
+    publications.all { publication ->
+        if (publication.name == 'kotlinMultiplatform') {
+            // for our root metadata publication, set artifactId with a package and project name
+            publication.artifactId = "$POM_ARTIFACT_ID"
+        } else {
+            // for targets, set artifactId with a package, project name and target name (e.g. iosX64)
+            publication.artifactId = "$POM_ARTIFACT_ID-${publication.name}"
+        }
+    }
+}

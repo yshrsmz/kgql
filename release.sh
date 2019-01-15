@@ -2,7 +2,7 @@
 
 ./gradlew clean
 ./gradlew build
-./gradlew -Pnative.deploy=true :kgql-core:bintrayUpload
+./gradlew -Pnative.deploy=true :kgql-core:publish
 #./gradlew :kgql-compiler:bintrayUpload
 ./gradlew :kgql-compiler:uploadArchives
 #./gradlew :kgql-gradle-plugin:bintrayUpload

@@ -1,30 +1,55 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
 // TODO tie this into the normal gradle-mvn-push script
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 apply plugin: 'org.jetbrains.dokka'
 
+// Load `secret.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
+if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream("$project.rootDir/secret.properties"))
+    localProperties.each { prop -> project.ext.set(prop.key, prop.value) }
+}
+
+def findProperty(String key) {
+    [project.properties[key], System.getenv(key)].find { it != null }
+}
+
 dokka {
-    impliedPlatforms = ["Common"]
+    impliedPlatforms = ["Common"] // This will force platform tags for all non-common sources e.g. "JVM"
     kotlinTasks {
+        // dokka fails to retrieve sources from MPP-tasks so they must be set empty to avoid exception
+        // use sourceRoot instead (see below)
         []
     }
+    packageOptions {
+        prefix = "com.codingfeline.kgql.internal"
+        suppress = true
+    }
     sourceRoot {
-        path = kotlin.sourceSets.commonMain.srcDirs[0]
+        // assuming there is only a single source dir...
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
         platforms = ["Common"]
     }
     if (kotlin.sourceSets.getNames().contains("jvmMain")) {
         sourceRoot {
+            // assuming there is only a single source dir...
             path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
             platforms = ["JVM"]
         }
     }
     if (kotlin.sourceSets.getNames().contains("jsMain")) {
         sourceRoot {
+            // assuming there is only a single source dir...
             path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
             platforms = ["js"]
         }
     }
     if (kotlin.sourceSets.getNames().contains("nativeMain")) {
         sourceRoot {
+            // assuming there is only a single source dir...
             path = kotlin.sourceSets.nativeMain.kotlin.srcDirs[0]
             platforms = ["native"]
         }
@@ -36,33 +61,38 @@ def isReleaseBuild() {
 }
 
 def getReleaseRepositoryUrl() {
-    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
-            "https://api.bintray.com/maven/yshrsmz/kgql/kgql"
+    return  findProperty('RELEASE_REPOSITORY_URL') ?: "https://api.bintray.com/maven/$BINTRAY_ORG/$BINTRAY_REPOSITORY/$POM_ARTIFACT_ID"
 }
 
 def getSnapshotRepositoryUrl() {
-    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
-            "https://oss.jfrog.org/artifactory/oss-snapshot-local"
+    return findProperty('SNAPSHOT_REPOSITORY_URL') ?: "https://oss.jfrog.org/artifactory/oss-snapshot-local"
 }
 
 def getRepositoryUsername() {
-    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : ""
+    return findProperty('BINTRAY_USER') ?: "no.bintray.user"
 }
 
 def getRepositoryPassword() {
-    return hasProperty('BINTRAY_API_KEY') ? BINTRAY_API_KEY : ""
+    return findProperty('BINTRAY_API_KEY') ?: "no.bintray.api.key"
 }
 
 task emptySourcesJar(type: Jar) {
     classifier = 'sources'
 }
-task emptyJavadocJar(type: Jar) {
+
+task javadocsJar(type: Jar, dependsOn: dokka) {
     classifier = 'javadoc'
+    from dokka.outputDirectory
 }
+
+//signing {
+//    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+//    sign(publishing.publications)
+//}
 
 publishing {
     publications.all {
-        artifact emptyJavadocJar
+        artifact javadocsJar
 
         pom.withXml {
             def root = asNode()
