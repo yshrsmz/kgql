@@ -1,6 +1,8 @@
 kgql
 ===
 
+[ ![Download](https://api.bintray.com/packages/yshrsmz/kgql/gradle-plugin/images/download.svg) ](https://bintray.com/yshrsmz/kgql/gradle-plugin/_latestVersion)
+
 GraphQL Document wrapper generator for Kotlin Multiplatform Project.  
 Currently available for JVM/Android/iOS
 
@@ -23,7 +25,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.4'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.5'
     }
 }
 
@@ -36,7 +38,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.codingfeline.kgql:core:0.0.4"
+    implementation "com.codingfeline.kgql:core:0.0.5"
 }
 
 kgql {
