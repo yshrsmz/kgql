@@ -1,6 +1,13 @@
 Change Log
 ===
 
+
+Version 0.0.6 *(WIP)*
+---
+
+* Create dedicated object for each operation in a document([#3](https://github.com/yshrsmz/kgql/issues/3))
+
+
 Version 0.0.5 *(2019-01-15)*
 ---
 
