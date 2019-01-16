@@ -119,13 +119,13 @@ object ViewerDocumentWrapper {
             |}
             |""".trimMargin()
 
-    fun query(): KgqlRequestBody<Unit> = KgqlRequestBody<Unit>(
-        operationName = null, query = document,
-        variables = null
-    )
+    object Query {
+        fun query(): KgqlRequestBody<Unit> = KgqlRequestBody<Unit>(operationName=null,
+                query=document, variables=null)
 
-    fun querySerializer(): KSerializer<KgqlRequestBody<Unit>> =
-        KgqlRequestBody.serializer(kotlinx.serialization.internal.UnitSerializer)
+        fun serializer(): KSerializer<KgqlRequestBody<Unit>> =
+                KgqlRequestBody.serializer(kotlinx.serialization.internal.UnitSerializer)
+    }
 }
 
 ```
@@ -167,8 +167,8 @@ class GitHubApi {
     }
 
     suspend fun fetchLogin(): Viewer? {
-        val query = TestDocumentWrapper.query()
-        val serializer = TestDocumentWrapper.querySerializer()
+        val query = ViewerDocumentWrapper.Query.query()
+        val serializer = ViewerDocumentWrapper.Query.serializer()
 
         val response = client.post<String>(url = Url("https://api.github.com/graphql")) {
             body = JSON.stringify(serializer, query)
