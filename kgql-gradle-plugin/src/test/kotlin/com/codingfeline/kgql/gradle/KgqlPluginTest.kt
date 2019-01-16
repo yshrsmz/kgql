@@ -78,10 +78,10 @@ class KgqlPluginTest {
         assertThat(result.output).contains("BUILD SUCCESSFUL")
 
         // Assert the plugin added the common dependency
-//        val dependenciesResult = runner
-//            .withArguments("dependencies", "--stacktrace")
-//            .build()
-//        assertThat(dependenciesResult.output).contains("com.squareup.sqldelight:runtime")
+        val dependenciesResult = runner
+            .withArguments("dependencies", "--stacktrace")
+            .build()
+        assertThat(dependenciesResult.output).contains("com.codingfeline.kgql:core")
     }
 
     @Test
