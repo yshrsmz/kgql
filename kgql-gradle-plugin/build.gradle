@@ -8,7 +8,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 
 pluginBundle {
-    website = 'https://github.com/yshrsmz/kgql'
+    website = POM_URL
     vcsUrl = 'https://github.com/yshrsmz/kgql.git'
     description = POM_DESCRIPTION
     tags = ['GraphQL', 'Kotlin', 'Kotlin Multiplatform']
