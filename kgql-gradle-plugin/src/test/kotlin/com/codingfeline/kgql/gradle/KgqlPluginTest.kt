@@ -2,7 +2,9 @@ package com.codingfeline.kgql.gradle
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Ignore
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import java.io.File
 
 class KgqlPluginTest {
@@ -23,7 +25,7 @@ class KgqlPluginTest {
 
     @Test
     fun `Applying the plugin without kotlinx-serialization applied throws`() {
-        val fixtureRoot = File("src/test/no-serialization")
+        val fixtureRoot = File("src/test/kotlin-mpp-no-serialization")
 
         val runner = GradleRunner.create()
             .withProjectDir(fixtureRoot)
@@ -114,6 +116,34 @@ class KgqlPluginTest {
         val result = runner
             .withArguments("clean", "compileKotlinJvm", "--stacktrace")
             .build()
+        assertThat(result.output).contains("generateKgqlInterface")
+        assertThat(buildDir.exists()).isTrue()
+    }
+
+    @Ignore("can not find link task from plugin. need to figure out the way.")
+    @Test
+    @Category(IosTest::class)
+    fun `The generate task is a dependency of multiplatform ios target`() {
+        val fixtureRoot = File("src/test/kotlin-mpp")
+        val runner = GradleRunner.create()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
+
+        val buildDir = File(fixtureRoot, "build/kgql")
+
+        buildDir.delete()
+        var result = runner
+            .withArguments("clean", "linkMainIosArm64", "--stacktrace")
+            .build()
+
+        assertThat(result.output).contains("generateKgqlInterface")
+        assertThat(buildDir.exists()).isTrue()
+
+        buildDir.delete()
+        result = runner
+            .withArguments("clean", "linkMainIosX64", "--stacktrace")
+            .build()
+
         assertThat(result.output).contains("generateKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
