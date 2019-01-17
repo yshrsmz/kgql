@@ -19,6 +19,7 @@ class KgqlTask2 extends SourceTask {
     @OutputDirectory
     File outputDirectory = null
 
+    @Input
     Iterable<File> sourceFolders
 
     @Input

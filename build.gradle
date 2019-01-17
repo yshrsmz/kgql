@@ -43,7 +43,7 @@ wrapper {
 }
 
 // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
-@SuppressWarnings("UnnecessaryQualifiedReference")
+@SuppressWarnings(["UnnecessaryQualifiedReference", "unused", "GrMethodMayBeStatic"])
 def addDependency(Upload task, String groupId, String artifactId, String version, String type) {
     task.repositories.withType(org.gradle.api.artifacts.maven.MavenDeployer) { mavenDeployer ->
         task.doFirst {

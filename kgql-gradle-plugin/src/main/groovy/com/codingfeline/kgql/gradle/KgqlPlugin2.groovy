@@ -107,9 +107,11 @@ class KgqlPlugin2 implements Plugin<Project> {
                 def propsDir = new File(ideaDir, "kgql/${p.rootDir.toPath().relativize(p.projectDir.toPath()).toString()}")
                 propsDir.mkdirs()
 
+                def sourceSets = new ArrayList()
+                sourceSets.add(sourceSet.collect { p.projectDir.toPath().relativize(it.toPath()).toString() })
                 def properties = new KgqlPropertiesFile(
                         packageName,
-                        new ArrayList(sourceSet.collect { p.projectDir.toPath().relativize(it.toPath()).toString() }),
+                        sourceSets,
                         p.projectDir.toPath().relativize(outputDirectory.toPath()).toString()
                 )
                 properties.toFile(new File(propsDir, KgqlPropertiesFile.NAME))
@@ -139,9 +141,9 @@ class KgqlPlugin2 implements Plugin<Project> {
                             p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
                                 (it as Task).dependsOn(task)
                             }
-//                            p.tasks.findByName((compilationUnit as KotlinNativeCompilation).linkAllTaskName)?.configure {
-//                                (it as Task).dependsOn(task)
-//                            }
+                            p.tasks.findByName((compilationUnit as KotlinNativeCompilation).linkAllTaskName)?.configure {
+                                (it as Task).dependsOn(task)
+                            }
                             p.tasks.findByName(getAlternateLinkAllTaskName(compilationUnit as KotlinNativeCompilation))?.configure {
                                 (it as Task).dependsOn(task)
                             }
