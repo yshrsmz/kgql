@@ -1,16 +1,14 @@
 package com.codingfeline.kgql.core
 
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 /**
- * Root class for GraphQL response
+ * Root interface for GraphQL response
  */
-@Serializable
-data class KgqlResponse<T>(
-    @Optional val data: T? = null,
-    @Optional val errors: List<KgqlError>? = null
-)
+interface KgqlResponse<T> {
+    val data: T?
+    val errors: List<KgqlError>?
+}
 
 /**
  * GraphQL error
