@@ -61,7 +61,7 @@ def isReleaseBuild() {
 }
 
 def getReleaseRepositoryUrl() {
-    return  findProperty('RELEASE_REPOSITORY_URL') ?: "https://api.bintray.com/maven/$BINTRAY_ORG/$BINTRAY_REPOSITORY/$POM_ARTIFACT_ID"
+    return findProperty('RELEASE_REPOSITORY_URL') ?: "https://api.bintray.com/maven/$BINTRAY_ORG/$BINTRAY_REPOSITORY/$POM_ARTIFACT_ID;publish=1"
 }
 
 def getSnapshotRepositoryUrl() {
@@ -143,6 +143,20 @@ publishing {
         maven {
             name 'test'
             url "file://${rootProject.buildDir}/localMaven"
+        }
+    }
+}
+
+afterEvaluate {
+    // Remove gradle metadata publishing from all targets which are not native
+    kotlin.targets.all { target ->
+        if (target.platformType.name != 'native') {
+            def publication = publishing.publications[targetName]
+            publication.gradleModuleMetadataFile = null
+            tasks.matching { it.name == "generateMetadataFileFor${name.capitalize()}Publication" }.all {
+                enabled = false
+                onlyIf { false }
+            }
         }
     }
 }
