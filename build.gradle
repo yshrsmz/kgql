@@ -3,10 +3,6 @@ apply plugin: 'com.github.ben-manes.versions'
 buildscript {
     apply from: "$rootDir/gradle/dependencies.gradle"
 
-    def deployNative = property('native.deploy') == 'true'
-
-    println("deployNative: $deployNative")
-
     repositories {
         mavenCentral()
         google()
