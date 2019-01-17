@@ -1,12 +1,11 @@
 package com.codingfeline.kgql.compiler.generator
 
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
-import com.codingfeline.kgql.core.KgqlRequestBody
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import graphql.language.OperationDefinition
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.internal.UnitSerializer
+import kotlinx.serialization.json.JSON
 
 private const val PARAM_VARIABLES_NAME = "variables"
 
@@ -24,24 +23,28 @@ class OperationWrapperGenerator(
         val objectSpec = TypeSpec.objectBuilder(name = name)
 
         if (hasVariables) {
-            variableSpec = generateVariable(operation)
+            variableSpec = VariableWrapperGenerator(operation.variableDefinitions, typeMapper).generateType()
             objectSpec.addType(variableSpec)
         }
 
+        val requestBodySpec =
+            RequestBodyGenerator(
+                operation = operation,
+                parentObjectFqName = "$parentFQName.$name",
+                variablesSpec = variableSpec,
+                documentProp = documentProp
+            ).generateType()
+        objectSpec.addType(requestBodySpec)
+
         val operationFunSpec = generateOperationFunction(
-            operation = operation,
             objectName = name,
-            documentProp = documentProp,
-            variablesSpec = variableSpec
+            variablesSpec = variableSpec,
+            requestBodySpec = requestBodySpec
         )
         objectSpec.addFunction(operationFunSpec)
-        objectSpec.addFunction(generateSerializerFunction(operationFunSpec))
+        objectSpec.addFunction(generateSerializerFunction(requestBodySpec, name))
 
         return objectSpec.build()
-    }
-
-    private fun generateVariable(operation: OperationDefinition): TypeSpec {
-        return VariableWrapperGenerator(operation.variableDefinitions, typeMapper).generateType()
     }
 
     private fun generateParameterSpecFromVariable(variables: TypeName): ParameterSpec {
@@ -53,10 +56,9 @@ class OperationWrapperGenerator(
     }
 
     private fun generateOperationFunction(
-        operation: OperationDefinition,
         objectName: String,
-        documentProp: PropertySpec,
-        variablesSpec: TypeSpec?
+        variablesSpec: TypeSpec?,
+        requestBodySpec: TypeSpec
     ): FunSpec {
         val variablesType: TypeName = if (variablesSpec == null) {
             Unit::class.asTypeName()
@@ -64,45 +66,50 @@ class OperationWrapperGenerator(
             ClassName.bestGuess("$parentFQName.$objectName.${variablesSpec.name}")
         }
 
-        // function name could be `query`, `mutation` or `subscription`
-        val spec = FunSpec.builder(operation.operation.name.toLowerCase())
-            .returns(KgqlRequestBody::class.asTypeName().plusParameter(variablesType))
+        val spec = FunSpec.builder("requestBody")
+            .returns(String::class)
 
         if (variablesSpec != null) {
             spec.addParameter(generateParameterSpecFromVariable(variablesType))
         }
 
-        val operationName = if (operation.name != null) {
-            "\"${operation.name}\""
-        } else "null"
+        if (variablesSpec != null) {
+            spec.addStatement(
+                "return %L.stringify(serializer(), %N(variables = variables))",
+                JSON::class.asClassName(),
+                requestBodySpec
+            )
+        } else {
+            spec.addStatement(
+                "return %L.stringify(serializer(), %N())",
+                JSON::class.asClassName(),
+                requestBodySpec
+            )
+        }
 
-        val variablesLiteral = if (variablesSpec != null) {
-            PARAM_VARIABLES_NAME
-        } else "null"
-
-        spec.addStatement(
-            "return KgqlRequestBody<%T>(operationName=%L, query=%N, variables=%L)",
-            variablesType,
-            operationName,
-            documentProp,
-            variablesLiteral
+        spec.addKdoc(
+            """
+            |Generate Json string of [%N]
+        """.trimMargin(), requestBodySpec
         )
 
         return spec.build()
     }
 
-    private fun generateSerializerFunction(operationFunSpec: FunSpec): FunSpec {
+    private fun generateSerializerFunction(requestBodySpec: TypeSpec, parentObjectName: String): FunSpec {
         val spec = FunSpec.builder("serializer")
-            .returns(KSerializer::class.asTypeName().plusParameter(operationFunSpec.returnType!!))
+            .returns(KSerializer::class.asTypeName().plusParameter(requestBodySpec.typeNameOrUnit(parentObjectName)))
 
-        val serializerLiteral = operationFunSpec.parameters.firstOrNull()?.let { "${it.type}.serializer()" }
-            ?: kotlin.run { UnitSerializer::class.asTypeName().toString() }
-
-        spec.addStatement(
-            "return KgqlRequestBody.serializer(%L)",
-            serializerLiteral
-        )
+        spec.addStatement("return Request.serializer()")
 
         return spec.build()
+    }
+
+    private fun TypeSpec?.typeNameOrUnit(parentObjectName: String): TypeName {
+        return if (this == null) {
+            Unit::class.asTypeName()
+        } else {
+            ClassName.bestGuess("$parentFQName.$parentObjectName.${name}")
+        }
     }
 }

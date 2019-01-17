@@ -1,8 +1,10 @@
 package com.codingfeline.kgql.compiler.generator
 
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
+import com.codingfeline.kgql.core.KgqlRequestBody
 import com.squareup.kotlinpoet.*
 import graphql.language.VariableDefinition
+import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 class VariableWrapperGenerator(
@@ -23,16 +25,36 @@ class VariableWrapperGenerator(
     private fun generateConstructor(variables: List<VariableDefinition>): FunSpec {
         return FunSpec.constructorBuilder()
             .addParameters(variables.map {
-                ParameterSpec.builder(it.name, typeMapper.get(it.type)).build()
+                val type = typeMapper.get(it.type)
+                val spec = ParameterSpec.builder(it.name, type)
+
+                if (type.isNullable) {
+                    spec.defaultValue("null")
+                }
+
+                spec.build()
             })
             .build()
     }
 
     private fun generateProperties(variables: List<VariableDefinition>): List<PropertySpec> {
         return variables.map {
-            PropertySpec.builder(it.name, typeMapper.get(it.type))
+            val type = typeMapper.get(it.type)
+            val spec = PropertySpec.builder(it.name, type)
                 .initializer(it.name)
-                .build()
+
+            if (type.isNullable) {
+                spec.addAnnotation(Optional::class)
+            }
+
+            spec.build()
         }
     }
+}
+
+data class Request(
+    override val variables: String?
+) : KgqlRequestBody<String> {
+    override val operationName: String? = null
+    override val query: String = ""
 }
