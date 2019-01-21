@@ -11,13 +11,21 @@ private typealias FileAppender = (fileName: String) -> Appendable
 
 object KgqlCompiler {
 
-    fun compile(file: KgqlFile, typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>, output: FileAppender) {
+    fun compile(
+        file: KgqlFile,
+        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>,
+        output: FileAppender
+    ) {
         writeDocumentWrapperFile(file, typeMap, output)
         val document = Parser().parseDocument(file.source.readText())
         println(document)
     }
 
-    fun writeDocumentWrapperFile(sourceFile: KgqlFile, typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>, output: FileAppender) {
+    fun writeDocumentWrapperFile(
+        sourceFile: KgqlFile,
+        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>,
+        output: FileAppender
+    ) {
         val documentWrapperType = DocumentWrapperGenerator(sourceFile, typeMap).generateType()
         FileSpec.builder(sourceFile.packageName, sourceFile.source.nameWithoutExtension)
             .apply {

@@ -20,7 +20,7 @@ class DocumentWrapperGenerator(
     val document = Parser().parseDocument(rawDocument)
     val typeMapper = KgqlCustomTypeMapper(typeMap)
 
-    val className = "${sourceFile.source.nameWithoutExtension.capitalize()}DocumentWrapper"
+    val className = "${sourceFile.source.nameWithoutExtension.capitalize()}Document"
 
     fun generateType(): TypeSpec {
         println("Generating $className...")
