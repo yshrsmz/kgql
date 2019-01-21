@@ -84,6 +84,7 @@ afterEvaluate {
         dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
         dependsOn 'publishJvmPublicationToTestRepository'
         dependsOn 'publishJsPublicationToTestRepository'
+        dependsOn 'publishMetadataPublicationToTestRepository'
     }
     tasks.create('installIosLocally') {
         dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
