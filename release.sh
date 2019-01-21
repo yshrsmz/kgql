@@ -4,4 +4,4 @@
 ./gradlew build
 ./gradlew :kgql-core:publish
 ./gradlew :kgql-compiler:uploadArchives
-./gradlew :kgql-gradle-plugin:uploadArchives
+./gradlew :kgql-gradle-plugin:uploadArchives :kgql-gradle-plugin:publishPlugins
