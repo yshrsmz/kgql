@@ -15,6 +15,7 @@ Version 0.0.6 *(2019-01-21)*
 * Create dedicated object for each operation in a document([#3](https://github.com/yshrsmz/kgql/issues/3))
 * Change KgqlRequestBody & KgqlResponse to interface([#8](https://github.com/yshrsmz/kgql/issues/8))
 * Change suffix of generate classes to Document, from DocumentWrapper
+* Downgrade to Kotlin 1.3.11 [#8](https://github.com/yshrsmz/kgql/issues/8)
 
 
 Version 0.0.5 *(2019-01-15)*
