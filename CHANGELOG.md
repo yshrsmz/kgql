@@ -1,6 +1,12 @@
 Change Log
 ===
 
+Version 0.0.7 *(WIP)*
+---
+
+* Android compilation task now depends on `generateKgqlInterface` task properly in Kotlin multiplatform project
+* Gradle Plugin now depends on antlr4 to avoid dependency conflict with Android DataBinding
+
 
 Version 0.0.6 *(2019-01-21)*
 ---
