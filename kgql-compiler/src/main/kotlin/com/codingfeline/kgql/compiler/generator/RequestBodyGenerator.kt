@@ -31,6 +31,7 @@ class RequestBodyGenerator(
                 variablesType.copy(nullable = true),
                 KModifier.OVERRIDE
             )
+            .addAnnotation(generateSerialName("variables"))
 
         if (variablesSpec == null) {
             variablesParameterSpec.defaultValue("null")
@@ -47,6 +48,7 @@ class RequestBodyGenerator(
                         KModifier.OVERRIDE
                     )
                     .addAnnotation(Optional::class)
+                    .addAnnotation(generateSerialName("operationName"))
                     .defaultValue(operation.name?.let { "\"${operation.name}\"" } ?: "null")
                     .build()
             )
@@ -58,6 +60,7 @@ class RequestBodyGenerator(
                         KModifier.OVERRIDE
                     )
                     .defaultValue(documentProp.name)
+                    .addAnnotation(generateSerialName("query"))
                     .build()
             )
 

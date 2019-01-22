@@ -27,6 +27,7 @@ class VariableWrapperGenerator(
             .addParameters(variables.map {
                 val type = typeMapper.get(it.type)
                 val spec = ParameterSpec.builder(it.name, type)
+                    .addAnnotation(generateSerialName(it.name))
 
                 if (type.isNullable) {
                     spec.defaultValue("null")

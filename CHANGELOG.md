@@ -4,7 +4,8 @@ Change Log
 Version 0.0.7 *(WIP)*
 ---
 
-* Android compilation task now depends on `generateKgqlInterface` task properly in Kotlin multiplatform project
+* Use `kotlinx.serialization.SerialName` annotation [#11](https://github.com/yshrsmz/kgql/issues/11)
+* Android compilation task now depends on `generateKgqlInterface` task properly in Kotlin multiplatform project [#12](https://github.com/yshrsmz/kgql/issues/12)
 * Gradle Plugin now depends on antlr4 to avoid dependency conflict with Android DataBinding
 
 

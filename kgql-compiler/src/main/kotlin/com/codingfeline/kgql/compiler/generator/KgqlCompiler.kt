@@ -3,8 +3,10 @@ package com.codingfeline.kgql.compiler.generator
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
 import com.codingfeline.kgql.compiler.KgqlFile
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import graphql.parser.Parser
+import kotlinx.serialization.SerialName
 import java.io.Closeable
 
 private typealias FileAppender = (fileName: String) -> Appendable
@@ -39,4 +41,10 @@ object KgqlCompiler {
         writeTo(appendable)
         if (appendable is Closeable) appendable.close()
     }
+}
+
+fun generateSerialName(name: String): AnnotationSpec {
+    return AnnotationSpec.builder(SerialName::class)
+        .addMember("value = %S", name)
+        .build()
 }
