@@ -130,32 +130,56 @@ class KgqlPlugin2 implements Plugin<Project> {
 
             if (isMultiplatform) {
                 p.extensions.getByType(KotlinMultiplatformExtension.class).targets.forEach { target ->
-                    target.compilations.forEach { compilationUnit ->
+                    target.compilations.all { compilationUnit ->
                         if (compilationUnit instanceof KotlinNativeCompilation) {
                             // Honestly the way native compiles kotlin seems completely arbitrary and some order
                             // of the following tasks, so just set the dependency for all of them and let gradle
                             // figure it out.
-                            p.tasks.getByName(compilationUnit.compileAllTaskName).configure {
-                                (it as Task).dependsOn(task)
-                            }
-                            p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
-                                (it as Task).dependsOn(task)
-                            }
-                            p.tasks.findByName((compilationUnit as KotlinNativeCompilation).linkAllTaskName)?.configure {
-                                (it as Task).dependsOn(task)
-                            }
-                            p.tasks.findByName(getAlternateLinkAllTaskName(compilationUnit as KotlinNativeCompilation))?.configure {
-                                (it as Task).dependsOn(task)
-                            }
-                            NativeOutputKind.values().each { kind ->
-                                NativeBuildType.values().each { buildType ->
-                                    (compilationUnit as KotlinNativeCompilation).findLinkTask(kind, buildType)?.dependsOn(task)
+                            // FIXME: use `p.tasks.getByName` once Gradle is updated to 4.8 or later
+                            p.tasks.all { t ->
+                                switch (t.name) {
+                                    case compilationUnit.compileAllTaskName:
+                                    case compilationUnit.compileKotlinTaskName:
+                                    case (compilationUnit as KotlinNativeCompilation).linkAllTaskName:
+                                    case getAlternateLinkAllTaskName(compilationUnit as KotlinNativeCompilation):
+                                        (t as Task).dependsOn(task)
+                                }
+
+                                NativeOutputKind.values().each { kind ->
+                                    NativeBuildType.values().each { buildType ->
+                                        if (t.name == (compilationUnit as KotlinNativeCompilation).linkTaskName(kind, buildType)) {
+                                            (t as Task).dependsOn(task)
+                                        }
+                                    }
                                 }
                             }
+
+//                            p.tasks.getByName(compilationUnit.compileAllTaskName).configure {
+//                                (it as Task).dependsOn(task)
+//                            }
+//                            p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
+//                                (it as Task).dependsOn(task)
+//                            }
+//                            p.tasks.findByName((compilationUnit as KotlinNativeCompilation).linkAllTaskName)?.configure {
+//                                (it as Task).dependsOn(task)
+//                            }
+//                            p.tasks.findByName(getAlternateLinkAllTaskName(compilationUnit as KotlinNativeCompilation))?.configure {
+//                                (it as Task).dependsOn(task)
+//                            }
+//                            NativeOutputKind.values().each { kind ->
+//                                NativeBuildType.values().each { buildType ->
+//                                    (compilationUnit as KotlinNativeCompilation).findLinkTask(kind, buildType)?.dependsOn(task)
+//                                }
+//                            }
                         } else {
-                            p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
-                                (it as Task).dependsOn(task)
+                            p.tasks.all { t ->
+                                if (t.name == compilationUnit.compileKotlinTaskName) {
+                                    (t as Task).dependsOn(task)
+                                }
                             }
+//                            p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
+//                                (it as Task).dependsOn(task)
+//                            }
                         }
                     }
                 }
