@@ -1,7 +1,7 @@
 Change Log
 ===
 
-Version 0.0.7 *(WIP)*
+Version 0.0.7 *(2019-01-22)*
 ---
 
 * Use `kotlinx.serialization.SerialName` annotation [#11](https://github.com/yshrsmz/kgql/issues/11)
