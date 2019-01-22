@@ -27,7 +27,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.5'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.7'
     }
 }
 
@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.codingfeline.kgql:core-jvm:0.0.5"
+    implementation "com.codingfeline.kgql:core-jvm:0.0.7"
 }
 
 kgql {
@@ -62,7 +62,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.5'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.7'
     }
 }
 
@@ -108,9 +108,14 @@ Below code will be generated from above GraphQL document file(viewer.gql).
 package com.sample
 
 import com.codingfeline.kgql.core.KgqlRequestBody
+import kotlin.String
+import kotlin.Unit
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Optional
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-object ViewerDocumentWrapper {
+object ViewerDocument {
     private val document: String = """
             |query {
             |  viewer {
@@ -120,14 +125,23 @@ object ViewerDocumentWrapper {
             |""".trimMargin()
 
     object Query {
-        fun query(): KgqlRequestBody<Unit> = KgqlRequestBody<Unit>(operationName=null,
-                query=document, variables=null)
+        /**
+         * Generate Json string of [Request]
+         */
+        fun requestBody(): String = kotlinx.serialization.json.JSON.stringify(serializer(),
+                Request())
 
-        fun serializer(): KSerializer<KgqlRequestBody<Unit>> =
-                KgqlRequestBody.serializer(kotlinx.serialization.internal.UnitSerializer)
+        fun serializer(): KSerializer<Request> = Request.serializer()
+
+        @Serializable
+        data class Request(
+            @SerialName(value = "variables") @Optional override val variables: Unit? = null,
+            @Optional @SerialName(value = "operationName") override val operationName: String? =
+                    null,
+            @SerialName(value = "query") override val query: String = document
+        ) : KgqlRequestBody<Unit>
     }
 }
-
 ```
 
 You can use this code with Ktor or any other HttpClient.
@@ -138,6 +152,7 @@ Example usage with Ktor is below
 package com.sample
 
 import com.codingfeline.kgql.core.KgqlResponse
+import com.codingfeline.kgql.core.KgqlError
 import com.sample.TestDocumentWrapper
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
@@ -159,6 +174,12 @@ data class Viewer(
     val login: String
 )
 
+@Serializable
+data class ViewerResponse(
+    override val data: ViewerWrapper?,
+    override val errors: List<KgqlError>?
+): KgqlResponse<ViewerWrapper>
+
 
 class GitHubApi {
 
@@ -167,18 +188,16 @@ class GitHubApi {
     }
 
     suspend fun fetchLogin(): Viewer? {
-        val query = ViewerDocumentWrapper.Query.query()
-        val serializer = ViewerDocumentWrapper.Query.serializer()
 
         val response = client.post<String>(url = Url("https://api.github.com/graphql")) {
-            body = JSON.stringify(serializer, query)
+            body = ViewerDocument.Query.requestBody()
 
             headers {
                 append("Authorization", "bearer $TOKEN")
             }
         }
 
-        val res = JSON.parse(KgqlResponse.serializer(ViewerWrapper.serializer()), response)
+        val res = JSON.parse(ViewerResponse.serializer(), response)
 
         return res.data?.viewer
     }
