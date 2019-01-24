@@ -2,7 +2,6 @@ package com.codingfeline.kgql.gradle
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import java.io.File
@@ -120,13 +119,6 @@ class KgqlPluginTest {
         assertThat(buildDir.exists()).isTrue()
     }
 
-    @Ignore(
-        """
-        can not find link task from plugin. need to figure out the way.
-        This could be caused by the fact that Gradle 4.7 can not nest `project.afterEvaluate`.
-        If this is the case, we need to wait for Gradle 4.8 compatible release of Kotlin
-    """"
-    )
     @Test
     @Category(IosTest::class)
     fun `The generate task is a dependency of multiplatform ios target`() {
@@ -139,7 +131,7 @@ class KgqlPluginTest {
 
         buildDir.delete()
         var result = runner
-            .withArguments("clean", "linkIosArm64", "--stacktrace")
+            .withArguments("clean", "linkMainIosArm64", "--stacktrace")
             .build()
 
         assertThat(result.output).contains("generateKgqlInterface")
@@ -147,7 +139,7 @@ class KgqlPluginTest {
 
         buildDir.delete()
         result = runner
-            .withArguments("clean", "linkIosX64", "--stacktrace")
+            .withArguments("clean", "linkMainIosX64", "--stacktrace")
             .build()
 
         assertThat(result.output).contains("generateKgqlInterface")

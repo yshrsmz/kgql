@@ -140,8 +140,6 @@ class KgqlPlugin2 implements Plugin<Project> {
                                 switch (t.name) {
                                     case compilationUnit.compileAllTaskName:
                                     case compilationUnit.compileKotlinTaskName:
-                                    case (compilationUnit as KotlinNativeCompilation).linkAllTaskName:
-                                    case getAlternateLinkAllTaskName(compilationUnit as KotlinNativeCompilation):
                                         (t as Task).dependsOn(task)
                                 }
 
@@ -281,13 +279,5 @@ class KgqlPlugin2 implements Plugin<Project> {
 
     private Object getConvention(Object target, String name) {
         return (target as HasConvention).convention.plugins[name]
-    }
-
-    private String getAlternateLinkAllTaskName(KotlinNativeCompilation compilation) {
-        def compilationName = ''
-        if (compilation.compilationName != 'main') {
-            compilationName = compilation.compilationName
-        }
-        return "${compilation.target.disambiguationClassifier.uncapitalize()}${compilationName.capitalize()}Link"
     }
 }
