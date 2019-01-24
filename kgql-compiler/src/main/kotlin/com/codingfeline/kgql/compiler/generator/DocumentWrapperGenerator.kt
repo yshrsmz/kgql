@@ -27,6 +27,8 @@ class DocumentWrapperGenerator(
         logger("Generating $className...")
 
         val objectType = TypeSpec.objectBuilder(className)
+            .addModifiers(KModifier.INTERNAL)
+
         val fqName = "${sourceFile.packageName}.$className"
 
         // add raw document property
