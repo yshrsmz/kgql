@@ -1,6 +1,12 @@
 Change Log
 ===
 
+Version 0.0.8 *(WIP)*
+---
+
+* Generated Document Objects are now `internal` by default [#13](https://github.com/yshrsmz/kgql/issues/13)
+
+
 Version 0.0.7 *(2019-01-22)*
 ---
 
