@@ -26,7 +26,7 @@ class KgqlEnvironment(
         class Failure(val errors: List<String>) : CompilationStatus()
     }
 
-    fun generateKgqlFiles(logger: (String) -> Unit): CompilationStatus {
+    fun generateKgqlFiles(logger: Logger): CompilationStatus {
         val errors = ArrayList<String>()
 
         val writer = writer@{ fileName: String ->
@@ -42,8 +42,9 @@ class KgqlEnvironment(
             val file = KgqlFile(
                 packageName = packageName!!,
                 outputDirectory = outputDirectory!!,
-                source = it)
-            KgqlCompiler.compile(file, typeMap, writer)
+                source = it
+            )
+            KgqlCompiler.compile(file, typeMap, writer, logger)
         }
 
         return CompilationStatus.Success()

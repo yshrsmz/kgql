@@ -4,6 +4,7 @@ import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.codingfeline.kgql.compiler.KgqlFile
+import com.codingfeline.kgql.compiler.Logger
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
@@ -22,8 +23,9 @@ class DocumentWrapperGenerator(
 
     val className = "${sourceFile.source.nameWithoutExtension.capitalize()}Document"
 
-    fun generateType(): TypeSpec {
-        println("Generating $className...")
+    fun generateType(logger: Logger): TypeSpec {
+        logger("Generating $className...")
+
         val objectType = TypeSpec.objectBuilder(className)
         val fqName = "${sourceFile.packageName}.$className"
 
