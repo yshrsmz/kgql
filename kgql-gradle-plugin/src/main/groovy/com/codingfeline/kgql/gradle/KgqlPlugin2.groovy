@@ -13,7 +13,6 @@ import com.codingfeline.kgql.compiler.KgqlPropertiesFile
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.SourceSet
@@ -60,7 +59,7 @@ class KgqlPlugin2 implements Plugin<Project> {
         if (hasAndroidAndKotlinAndSerializationPlugin) {
             // The kotlin plugin does it's own magic after evaluate, but it needs to know about our
             // generated code. So run Now instead of after evaluations
-            configureAndroid(project, extension, false)
+            configureAndroid(project, extension)
             return
         }
 
@@ -73,14 +72,14 @@ class KgqlPlugin2 implements Plugin<Project> {
             }
             boolean isMultiplatform = project.plugins.hasPlugin('org.jetbrains.kotlin.multiplatform')
             if (android && !isMultiplatform) {
-                configureAndroid(p, extension, true)
+                configureAndroid(p, extension)
             } else {
-                configureKotlin(p, extension, isMultiplatform, true)
+                configureKotlin(p, extension, isMultiplatform)
             }
         }
     }
 
-    private void configureKotlin(Project project, KgqlExtension2 extension, boolean isMultiplatform, boolean evaluated) {
+    private void configureKotlin(Project project, KgqlExtension2 extension, boolean isMultiplatform) {
         File outputDirectory = new File(project.buildDir, 'kgql')
 
         def kotlinSrcs
@@ -97,7 +96,7 @@ class KgqlPlugin2 implements Plugin<Project> {
         }
         kotlinSrcs.srcDirs(project.projectDir.toPath().relativize(outputDirectory.toPath()).toString())
 
-        def action = { Project p ->
+        project.afterEvaluate { Project p ->
             def packageName = Objects.requireNonNull(extension.packageName, "property packageName must be provided")
             def sourceSet = extension.sourceSet ?: p.files('src/main/kgql')
             def typeMap = extension.typeMapper ?: new HashMap<String, String>()
@@ -117,7 +116,7 @@ class KgqlPlugin2 implements Plugin<Project> {
                 properties.toFile(new File(propsDir, KgqlPropertiesFile.NAME))
             }
 
-            KgqlTask2 task = p.tasks.create('generateKgqlInterface', KgqlTask2.class) {
+            def task = p.tasks.register('generateKgqlInterface', KgqlTask2.class) {
                 it.packageName = packageName
                 it.sourceFolders = sourceSet.files
                 it.outputDirectory = outputDirectory
@@ -126,74 +125,63 @@ class KgqlPlugin2 implements Plugin<Project> {
                 it.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
                 it.group = 'kgql'
                 it.description = 'Generate Kotlin interface for .gql files'
-            } as KgqlTask2
+            }
 
             if (isMultiplatform) {
                 p.extensions.getByType(KotlinMultiplatformExtension.class).targets.forEach { target ->
-                    target.compilations.all { compilationUnit ->
+                    println("target: $target")
+                    target.compilations.forEach { compilationUnit ->
+                        println("compilation: $compilationUnit")
                         if (compilationUnit instanceof KotlinNativeCompilation) {
                             // Honestly the way native compiles kotlin seems completely arbitrary and some order
                             // of the following tasks, so just set the dependency for all of them and let gradle
                             // figure it out.
-                            // FIXME: use `p.tasks.getByName` once Gradle is updated to 4.8 or later
-                            p.tasks.all { t ->
-                                switch (t.name) {
-                                    case compilationUnit.compileAllTaskName:
-                                    case compilationUnit.compileKotlinTaskName:
-                                        (t as Task).dependsOn(task)
-                                }
 
-                                NativeOutputKind.values().each { kind ->
-                                    NativeBuildType.values().each { buildType ->
-                                        if (t.name == (compilationUnit as KotlinNativeCompilation).linkTaskName(kind, buildType)) {
-                                            (t as Task).dependsOn(task)
-                                        }
+                            p.tasks.named(compilationUnit.compileAllTaskName).configure {
+                                println("task to depend found1: $it.name")
+                                it.dependsOn(task)
+                            }
+                            p.tasks.named(compilationUnit.compileKotlinTaskName).configure {
+                                println("task to depend found2: $it.name")
+                                it.dependsOn(task)
+                            }
+
+                            // for 1.3.0-style target config
+                            NativeOutputKind.values().each { kind ->
+                                NativeBuildType.values().each { buildType ->
+                                    def t = (compilationUnit as KotlinNativeCompilation).findLinkTask(kind, buildType)
+                                    if (t != null) {
+                                        println("task to depend found3: $t.name")
+                                        t.dependsOn(task)
                                     }
                                 }
                             }
 
-//                            p.tasks.getByName(compilationUnit.compileAllTaskName).configure {
-//                                (it as Task).dependsOn(task)
-//                            }
-//                            p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
-//                                (it as Task).dependsOn(task)
-//                            }
-//                            p.tasks.findByName((compilationUnit as KotlinNativeCompilation).linkAllTaskName)?.configure {
-//                                (it as Task).dependsOn(task)
-//                            }
-//                            p.tasks.findByName(getAlternateLinkAllTaskName(compilationUnit as KotlinNativeCompilation))?.configure {
-//                                (it as Task).dependsOn(task)
-//                            }
-//                            NativeOutputKind.values().each { kind ->
-//                                NativeBuildType.values().each { buildType ->
-//                                    (compilationUnit as KotlinNativeCompilation).findLinkTask(kind, buildType)?.dependsOn(task)
-//                                }
-//                            }
-                        } else {
-                            p.tasks.all { t ->
-                                if (t.name == compilationUnit.compileKotlinTaskName) {
-                                    (t as Task).dependsOn(task)
+                            // for 1.3.20-style target config
+                            compilationUnit.target.binaries.forEach { binary ->
+                                p.tasks.named(binary.linkTask.name).configure {
+                                    println("task to depend found4: $it.name")
+                                    it.dependsOn(task)
                                 }
                             }
-//                            p.tasks.getByName(compilationUnit.compileKotlinTaskName).configure {
-//                                (it as Task).dependsOn(task)
-//                            }
+                        } else {
+                            p.tasks.named(compilationUnit.compileKotlinTaskName).configure {
+                                println("task to depend found5: $it.name")
+                                it.dependsOn(task)
+                            }
                         }
                     }
                 }
             } else {
-                p.tasks.getByName('compileKotlin').configure { (it as Task).dependsOn(task) }
+                p.tasks.named('compileKotlin').configure {
+                    println("task to depend found6: $it.name")
+                    it.dependsOn(task)
+                }
             }
-        }
-
-        if (evaluated) {
-            action.call(project)
-        } else {
-            project.afterEvaluate(action)
         }
     }
 
-    private void configureAndroid(Project project, KgqlExtension2 extension, boolean evaluated) {
+    private void configureAndroid(Project project, KgqlExtension2 extension) {
         DomainObjectSet<BaseVariant> variants
         if (project.plugins.hasPlugin('com.android.application')) {
             variants = project.extensions.getByType(AppExtension).applicationVariants
@@ -202,10 +190,10 @@ class KgqlPlugin2 implements Plugin<Project> {
         } else {
             throw IllegalStateException("Unknown Android plugin in project ${project.path}")
         }
-        configureAndroid(project, extension, variants as DomainObjectSet<BaseVariant>, evaluated)
+        configureAndroid(project, extension, variants as DomainObjectSet<BaseVariant>)
     }
 
-    private void configureAndroid(Project project, KgqlExtension2 extension, DomainObjectSet<BaseVariant> variants, boolean evaluated) {
+    private void configureAndroid(Project project, KgqlExtension2 extension, DomainObjectSet<BaseVariant> variants) {
         String packageName = null
         List<List<String>> sourceSets = new ArrayList()
         File buildDirectory = new File(new File(new File('generated'), 'source'), 'kgql')
@@ -230,7 +218,7 @@ class KgqlPlugin2 implements Plugin<Project> {
             variant.registerJavaGeneratingTask(task, task.outputDirectory)
         }
 
-        def action = { Project p ->
+        project.afterEvaluate { Project p ->
             File ideaDir = new File(project.rootDir, '.idea')
             if (ideaDir.exists()) {
                 File propsDir = new File(ideaDir, "kgql/${p.rootDir.toPath().relativize(p.projectDir.toPath()).toString()}")
@@ -243,12 +231,6 @@ class KgqlPlugin2 implements Plugin<Project> {
                 )
                 properties.toFile(new File(propsDir, KgqlPropertiesFile.NAME))
             }
-        }
-
-        if (evaluated) {
-            action.call(project)
-        } else {
-            project.afterEvaluate(action)
         }
     }
 
