@@ -79,7 +79,10 @@ compileTestGroovy {
 
 test {
     def os = System.getenv("TRAVIS_OS_NAME")
-    dependsOn(":kgql-core:installLocally")
+    dependsOn(
+            ":kgql-core:installLocally",
+            ":kgql-core:installIosLocally"
+    )
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

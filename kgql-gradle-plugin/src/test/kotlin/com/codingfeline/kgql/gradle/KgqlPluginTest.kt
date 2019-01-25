@@ -110,13 +110,30 @@ class KgqlPluginTest {
             .withPluginClasspath()
 
         val buildDir = File(fixtureRoot, "build/kgql")
-
         buildDir.delete()
+
         val result = runner
             .withArguments("clean", "compileKotlinJvm", "--stacktrace")
             .build()
         assertThat(result.output).contains("generateKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
+    }
+
+    @Test
+    fun `The generate task is a dependency of multiplatform android target`() {
+        val fixtureRoot = File("src/test/kotlin-mpp-android-ios")
+        val runner = GradleRunner.create()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
+
+        val buildDir = File(fixtureRoot, "build/kgql")
+        buildDir.delete()
+
+        val result = runner
+            .withArguments("clean", "compileDebugKotlinAndroid", "--stacktrace", "--info")
+            .build()
+        assertThat(result.output).contains("BUILD SUCCESSFUL")
+        assertThat(result.output).contains("generateKgqlInterface")
     }
 
     @Test
@@ -131,7 +148,7 @@ class KgqlPluginTest {
 
         buildDir.delete()
         var result = runner
-            .withArguments("clean", "linkMainIosArm64", "--stacktrace")
+            .withArguments("clean", "linkDebugFrameworkIosArm64", "--stacktrace")
             .build()
 
         assertThat(result.output).contains("generateKgqlInterface")
@@ -139,7 +156,7 @@ class KgqlPluginTest {
 
         buildDir.delete()
         result = runner
-            .withArguments("clean", "linkMainIosX64", "--stacktrace")
+            .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
             .build()
 
         assertThat(result.output).contains("generateKgqlInterface")

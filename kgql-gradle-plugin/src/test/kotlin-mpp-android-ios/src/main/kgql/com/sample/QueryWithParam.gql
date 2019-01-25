@@ -1,0 +1,27 @@
+query User(
+        $login: String!,
+        $name: Int,
+        $id: String = "",
+        $company: String = null,
+        $foo: Float,
+        $logins: [String]) {
+  user(login: $login) {
+    id
+    login
+    bio
+    avatarUrl
+    company
+    createdAt
+  }
+}
+
+mutation withArbitraryType($user: UserProfile) {
+    user(login: $login) {
+        id
+        login
+        bio
+        avatarUrl
+        company
+        createdAt
+  }
+}
