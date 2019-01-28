@@ -165,6 +165,79 @@ class DocumentWrapperTest {
             |
         """.trimMargin()
         )
+    }
 
+    @Test
+    fun `documentWrapper creates Variables class if an operation has parameters`() {
+        val result = FixtureCompiler.compileGql(
+            """
+                |query WithVariables(${"$"}login: String!) {
+                |  user(login: ${'$'}login) {
+                |    id
+                |    login
+                |    bio
+                |    avatarUrl
+                |    company
+                |    createdAt
+                |  }
+                |}
+            """.trimMargin(),
+            tempFolder
+        )
+
+        assertThat(result.errors).isEmpty()
+
+        val documentWrapperFile = result.compilerOutput[File(result.outputDirectory, "com/example/TestDocument.kt")]
+        assertThat(documentWrapperFile).isNotNull()
+        assertThat(documentWrapperFile.toString()).isEqualTo(
+            """
+                |package com.example
+                |
+                |import com.codingfeline.kgql.core.KgqlRequestBody
+                |import kotlin.String
+                |import kotlinx.serialization.KSerializer
+                |import kotlinx.serialization.Optional
+                |import kotlinx.serialization.SerialName
+                |import kotlinx.serialization.Serializable
+                |
+                |internal object TestDocument {
+                |    private val document: String = ""${'"'}
+                |            |query WithVariables(${"$" + "{'$'}"}login: String!) {
+                |            |  user(login: ${"$" + "{'$'}"}login) {
+                |            |    id
+                |            |    login
+                |            |    bio
+                |            |    avatarUrl
+                |            |    company
+                |            |    createdAt
+                |            |  }
+                |            |}
+                |            ""${'"'}.trimMargin()
+                |
+                |    object WithVariablesQuery {
+                |        /**
+                |         * Generate Json string of [Request]
+                |         */
+                |        fun requestBody(variables: Variables): String =
+                |                kotlinx.serialization.json.Json.stringify(serializer(), Request(variables =
+                |                variables))
+                |
+                |        fun serializer(): KSerializer<Request> = Request.serializer()
+                |
+                |        @Serializable
+                |        data class Variables(@SerialName(value = "login") val login: String)
+                |
+                |        @Serializable
+                |        data class Request(
+                |            @SerialName(value = "variables") override val variables: Variables?,
+                |            @Optional @SerialName(value = "operationName") override val operationName: String? =
+                |                    "WithVariables",
+                |            @SerialName(value = "query") override val query: String = document
+                |        ) : KgqlRequestBody<Variables>
+                |    }
+                |}
+                |
+            """.trimMargin()
+        )
     }
 }
