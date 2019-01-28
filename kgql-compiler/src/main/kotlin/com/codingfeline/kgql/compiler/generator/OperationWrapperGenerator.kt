@@ -5,7 +5,7 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import graphql.language.OperationDefinition
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.json.JSON
+import kotlinx.serialization.json.Json
 
 private const val PARAM_VARIABLES_NAME = "variables"
 
@@ -76,13 +76,13 @@ class OperationWrapperGenerator(
         if (variablesSpec != null) {
             spec.addStatement(
                 "return %L.stringify(serializer(), %N(variables = variables))",
-                JSON::class.asClassName(),
+                Json::class.asClassName(),
                 requestBodySpec
             )
         } else {
             spec.addStatement(
                 "return %L.stringify(serializer(), %N())",
-                JSON::class.asClassName(),
+                Json::class.asClassName(),
                 requestBodySpec
             )
         }
