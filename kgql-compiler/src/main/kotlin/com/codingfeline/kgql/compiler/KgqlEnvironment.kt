@@ -5,10 +5,8 @@ import java.io.File
 
 class KgqlEnvironment(
     /**
-     * The GraphQL source directories for this environment
+     * The GraphQL source files for this environment
      */
-    private val sourceFolders: List<File>,
-
     private val sourceFiles: List<File>,
     /**
      * The package name to be used for generated KgqlDocuments class.
@@ -38,15 +36,21 @@ class KgqlEnvironment(
             return@writer file.writer()
         }
 
-        sourceFiles.forEach {
-            val file = KgqlFile(
-                packageName = packageName!!,
-                outputDirectory = outputDirectory!!,
-                source = it
-            )
+        forEachSourceFile { file ->
             KgqlCompiler.compile(file, typeMap, writer, logger)
         }
 
         return CompilationStatus.Success()
+    }
+
+    fun forEachSourceFile(action: (file: KgqlFile) -> Unit) {
+        sourceFiles.forEach { file ->
+            val kgqlFile = KgqlFile(
+                packageName = packageName!!,
+                outputDirectory = outputDirectory!!,
+                source = file
+            )
+            action(kgqlFile)
+        }
     }
 }

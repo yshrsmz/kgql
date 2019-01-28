@@ -28,13 +28,15 @@ object KgqlCompiler {
         output: FileAppender,
         logger: Logger
     ) {
+        val packageName = sourceFile.packageName
+        val outputDirectory = "${sourceFile.outputDirectory.absolutePath}/${packageName.replace(".", "/")}"
         val documentWrapperType = DocumentWrapperGenerator(sourceFile, typeMap).generateType(logger)
         FileSpec.builder(sourceFile.packageName, sourceFile.source.nameWithoutExtension)
             .apply {
                 addType(documentWrapperType)
             }
             .build()
-            .writeToAndClose(output("${sourceFile.outputDirectory.absolutePath}/${documentWrapperType.name}.kt"))
+            .writeToAndClose(output("$outputDirectory/${documentWrapperType.name}.kt"))
     }
 
     private fun FileSpec.writeToAndClose(appendable: Appendable) {

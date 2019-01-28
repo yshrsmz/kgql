@@ -5,6 +5,7 @@ Version 0.0.8 *(WIP)*
 ---
 
 * Generated Document Objects are now `internal` by default [#13](https://github.com/yshrsmz/kgql/issues/13)
+* Fix generated file's output directory not correct.
 * Kotlin is updated to 1.3.20 [#14](https://github.com/yshrsmz/kgql/issues/14)
 * Gradle is updated to 5.1.1 [#14](https://github.com/yshrsmz/kgql/issues/14) and __5.1.x or later__ is required.
 * Android Gradle Plugin is update to 3.3.0

@@ -17,6 +17,10 @@ dependencies {
 
     implementation deps.moshi
     kapt deps.moshiKotlinCodegen
+
+    testImplementation deps.junit
+    testImplementation deps.truth
+    testImplementation project(':test-util')
 }
 
 task pluginVersion {

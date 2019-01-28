@@ -35,7 +35,6 @@ class KgqlTask2 extends SourceTask {
         outputDirectory.mkdirs()
 
         def environment = new KgqlEnvironment(
-                sourceFolders.findAll { it.exists() }.toList(),
                 getSource().toList(),
                 packageName,
                 outputDirectory,
