@@ -29,7 +29,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.7'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.1.0'
     }
 }
 
@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.codingfeline.kgql:core-jvm:0.0.7"
+    implementation "com.codingfeline.kgql:core-jvm:0.1.0"
 }
 
 kgql {
@@ -64,7 +64,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.0.7'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.1.0'
     }
 }
 
@@ -130,7 +130,7 @@ object ViewerDocument {
         /**
          * Generate Json string of [Request]
          */
-        fun requestBody(): String = kotlinx.serialization.json.JSON.stringify(serializer(),
+        fun requestBody(): String = kotlinx.serialization.json.Json.stringify(serializer(),
                 Request())
 
         fun serializer(): KSerializer<Request> = Request.serializer()
