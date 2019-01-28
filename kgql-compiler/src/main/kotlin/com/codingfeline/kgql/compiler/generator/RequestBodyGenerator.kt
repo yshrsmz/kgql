@@ -1,8 +1,15 @@
 package com.codingfeline.kgql.compiler.generator
 
 import com.codingfeline.kgql.core.KgqlRequestBody
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
 import graphql.language.OperationDefinition
 import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
