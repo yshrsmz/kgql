@@ -1,10 +1,6 @@
 plugins {
     id 'kotlin-multiplatform'
 }
-repositories {
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-    mavenCentral()
-}
 
 apply plugin: 'maven-publish'
 

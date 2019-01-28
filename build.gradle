@@ -4,33 +4,64 @@ buildscript {
     apply from: "$rootDir/gradle/dependencies.gradle"
 
     repositories {
-        mavenCentral()
-        google()
-        jcenter()
+        // prevent gradle from re-downloading kotlin/native's POM upon sync
+        // https://youtrack.jetbrains.com/issue/KT-28128
+        mavenCentral().content() { excludeGroup "Kotlin/Native" }
+        google().content() { excludeGroup "Kotlin/Native" }
+        jcenter {
+            content {
+                excludeGroup "Kotlin/Native"
+            }
+        }
         gradlePluginPortal()
-        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlinx'
+            content {
+                excludeGroup "Kotlin/Native"
+            }
+        }
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlin-eap'
+            content {
+                excludeGroup "Kotlin/Native"
+            }
+        }
         maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
-    }
 
-    dependencies {
-        classpath deps.plugins.kotlin
-        classpath deps.plugins.serialization
-        classpath deps.plugins.dokka
-        classpath deps.plugins.android
-        classpath deps.plugins.versions
-        classpath deps.plugins.pluginPublish
+
+        dependencies {
+            classpath deps.plugins.kotlin
+            classpath deps.plugins.serialization
+            classpath deps.plugins.dokka
+            classpath deps.plugins.android
+            classpath deps.plugins.versions
+            classpath deps.plugins.pluginPublish
+        }
     }
 }
 
 
 allprojects {
     repositories {
-        google()
-        mavenCentral()
-        jcenter()
-        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        google().content() { excludeGroup "Kotlin/Native" }
+        mavenCentral().content() { excludeGroup "Kotlin/Native" }
+        jcenter {
+            content {
+                excludeGroup "Kotlin/Native"
+            }
+        }
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlinx'
+            content {
+                excludeGroup "Kotlin/Native"
+            }
+        }
+        maven {
+            url 'https://dl.bintray.com/kotlin/kotlin-eap'
+            content {
+                excludeGroup "Kotlin/Native"
+            }
+        }
     }
 
     group = GROUP
