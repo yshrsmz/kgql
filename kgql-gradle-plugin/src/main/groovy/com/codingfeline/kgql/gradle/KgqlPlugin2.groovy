@@ -15,6 +15,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.HasConvention
+import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -81,6 +82,7 @@ class KgqlPlugin2 implements Plugin<Project> {
 
     private void configureKotlin(Project project, KgqlExtension2 extension, boolean isMultiplatform) {
         File outputDirectory = new File(project.buildDir, 'kgql')
+        Logger logger = project.getLogger()
 
         def kotlinSrcs
         if (isMultiplatform) {
@@ -129,20 +131,20 @@ class KgqlPlugin2 implements Plugin<Project> {
 
             if (isMultiplatform) {
                 p.extensions.getByType(KotlinMultiplatformExtension.class).targets.forEach { target ->
-                    println("target: $target")
+                    logger.debug("target: $target")
                     target.compilations.forEach { compilationUnit ->
-                        println("compilation: $compilationUnit")
+                        logger.debug("compilation: $compilationUnit")
                         if (compilationUnit instanceof KotlinNativeCompilation) {
                             // Honestly the way native compiles kotlin seems completely arbitrary and some order
                             // of the following tasks, so just set the dependency for all of them and let gradle
                             // figure it out.
 
                             p.tasks.named(compilationUnit.compileAllTaskName).configure {
-                                println("task to depend found1: $it.name")
+                                logger.debug("task to depend found1: $it.name")
                                 it.dependsOn(task)
                             }
                             p.tasks.named(compilationUnit.compileKotlinTaskName).configure {
-                                println("task to depend found2: $it.name")
+                                logger.debug("task to depend found2: $it.name")
                                 it.dependsOn(task)
                             }
 
@@ -151,7 +153,7 @@ class KgqlPlugin2 implements Plugin<Project> {
                                 NativeBuildType.values().each { buildType ->
                                     def t = (compilationUnit as KotlinNativeCompilation).findLinkTask(kind, buildType)
                                     if (t != null) {
-                                        println("task to depend found3: $t.name")
+                                        logger.debug("task to depend found3: $t.name")
                                         t.dependsOn(task)
                                     }
                                 }
@@ -160,13 +162,13 @@ class KgqlPlugin2 implements Plugin<Project> {
                             // for 1.3.20-style target config
                             compilationUnit.target.binaries.forEach { binary ->
                                 p.tasks.named(binary.linkTask.name).configure {
-                                    println("task to depend found4: $it.name")
+                                    logger.debug("task to depend found4: $it.name")
                                     it.dependsOn(task)
                                 }
                             }
                         } else {
                             p.tasks.named(compilationUnit.compileKotlinTaskName).configure {
-                                println("task to depend found5: $it.name")
+                                logger.debug("task to depend found5: $it.name")
                                 it.dependsOn(task)
                             }
                         }
@@ -174,7 +176,7 @@ class KgqlPlugin2 implements Plugin<Project> {
                 }
             } else {
                 p.tasks.named('compileKotlin').configure {
-                    println("task to depend found6: $it.name")
+                    logger.debug("task to depend found6: $it.name")
                     it.dependsOn(task)
                 }
             }

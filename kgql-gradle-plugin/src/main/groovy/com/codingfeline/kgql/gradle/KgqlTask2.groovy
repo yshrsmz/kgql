@@ -30,7 +30,6 @@ class KgqlTask2 extends SourceTask {
 
     @TaskAction
     void generateKgqlFiles() {
-        println("generateKgqlFiles")
         outputDirectory?.deleteDir()
         outputDirectory.mkdirs()
 
