@@ -206,3 +206,7 @@ class GitHubApi {
 }
 
 ```
+
+## Credits
+
+This library is highly inspired by [squareup/sqldelight](https://github.com/squareup/sqldelight) and the gradle plugin and basic idea is heavily based on it. Thanks for this.
