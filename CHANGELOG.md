@@ -1,6 +1,12 @@
 Change Log
 ===
 
+Version 0.1.1 *(2019-02-05)*
+---
+
+* Replace `println` with `Logger`
+
+
 Version 0.1.0 *(2019-01-28)*
 ---
 
