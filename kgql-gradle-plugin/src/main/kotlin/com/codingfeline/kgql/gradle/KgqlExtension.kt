@@ -5,5 +5,5 @@ import org.gradle.api.file.FileCollection
 open class KgqlExtension {
     var packageName: String? = null
     var sourceSet: FileCollection? = null
-    var typeMapper: Map<String, String>? = null
+    var typeMapper: MutableMap<String, String>? = null
 }
