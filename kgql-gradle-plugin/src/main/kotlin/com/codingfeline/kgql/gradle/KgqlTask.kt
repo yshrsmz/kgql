@@ -1,8 +1,9 @@
 package com.codingfeline.kgql.gradle
 
 import com.codingfeline.kgql.VERSION
-import com.codingfeline.kgql.core.KgqlEnvironment
-import com.codingfeline.kgql.core.KgqlException
+import com.codingfeline.kgql.compiler.KgqlEnvironment
+import com.codingfeline.kgql.compiler.KgqlEnvironment.CompilationStatus.Failure
+import com.codingfeline.kgql.compiler.KgqlException
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
@@ -17,34 +18,31 @@ open class KgqlTask : SourceTask() {
     @get:OutputDirectory
     var outputDirectory: File? = null
 
+    @Input
     lateinit var sourceFolders: Iterable<File>
+
+    @Input
     lateinit var packageName: String
-    lateinit var typeMap: Map<String, String>
+
+    @Input
+    lateinit var typeMap: MutableMap<String, String>
 
     @TaskAction
     fun generateKgqlFiles() {
-        println("generateKgqlFiles")
         outputDirectory?.deleteRecursively()
+        outputDirectory?.mkdirs()
 
         val environment = KgqlEnvironment(
-            sourceFolders = sourceFolders.filter { it.exists() },
-            sourceFiles = getSource().toList(),
+            sourceFiles = source.toList(),
             packageName = packageName,
-            outputDirectory = outputDirectory!!,
+            outputDirectory = outputDirectory,
             typeMap = typeMap
         )
-
-        println("includes: ${includes}")
-        println("source: ${getSource().map { it.toString() }}")
-
-        logger.log(LogLevel.INFO, "KgqlTask-sourceFolders: $sourceFolders")
-        logger.log(LogLevel.INFO, "kgqlTask-packageName: $packageName")
-        logger.log(LogLevel.INFO, "kgqlTask-outputDirectory: $outputDirectory")
 
         val generationStatus = environment.generateKgqlFiles { info -> logger.log(LogLevel.INFO, info) }
 
         when (generationStatus) {
-            is KgqlEnvironment.CompilationStatus.Failure -> {
+            is Failure -> {
                 logger.log(LogLevel.ERROR, "")
                 generationStatus.errors.forEach { logger.log(LogLevel.ERROR, it) }
                 throw KgqlException("Generation failed; see the generator error output for details.")
