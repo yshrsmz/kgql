@@ -41,10 +41,6 @@ repositories {
      maven { url "https://dl.bintray.com/yshrsmz/kgql" }
 }
 
-dependencies {
-    implementation "com.codingfeline.kgql:core-jvm:0.1.0"
-}
-
 kgql {
     packageName = "com.sample"
     sourceSet = files("src/main/kgql")

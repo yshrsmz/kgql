@@ -1,10 +1,11 @@
 Change Log
 ===
 
-Version 0.2.0 *(WIP)*
+Version 0.2.0 *(2019-02-06)*
 ---
 
 * Rewrite Plugin in Kotlin ([#15](https://github.com/yshrsmz/kgql/issues/15))
+* Applying plugin in Android project now automatically add `core-jvm` dependency.
 
 
 Version 0.1.1 *(2019-02-05)*

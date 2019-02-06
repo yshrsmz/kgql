@@ -64,6 +64,12 @@ class KgqlPluginTest {
             .withArguments("clean", "generateDebugKgqlInterface", "--stacktrace")
             .build()
         assertThat(result.output).contains("BUILD SUCCESSFUL")
+
+        // Assert the plugin added the common dependency
+        val dependenciesResult = runner
+            .withArguments("dependencies", "--stacktrace")
+            .build()
+        assertThat(dependenciesResult.output).contains("com.codingfeline.kgql:core-jvm")
     }
 
     @Test
