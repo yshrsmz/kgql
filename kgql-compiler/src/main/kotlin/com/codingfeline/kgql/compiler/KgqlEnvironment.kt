@@ -37,10 +37,18 @@ class KgqlEnvironment(
         }
 
         forEachSourceFile { file ->
-            KgqlCompiler.compile(file, typeMap, writer, logger)
+            try {
+                KgqlCompiler.compile(file, typeMap, writer, logger)
+            } catch (e: Throwable) {
+                e.message?.let { errors.add(it) }
+            }
         }
 
-        return CompilationStatus.Success()
+        return if (errors.isEmpty()) {
+            CompilationStatus.Success()
+        } else {
+            CompilationStatus.Failure(errors)
+        }
     }
 
     fun forEachSourceFile(action: (file: KgqlFile) -> Unit) {
