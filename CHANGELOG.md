@@ -1,6 +1,8 @@
 Change Log
 ===
 
+Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
+
 Version 0.3.0 *(WIP)*
 ---
 
@@ -10,61 +12,61 @@ Version 0.3.0 *(WIP)*
 Version 0.2.1 *(2019-02-12)*
 ---
 
-* Enhancement: Support iOS Arm32
-* Fix: Update to Kotlin 1.3.21
-* Fix: Update to Android Gradle Plugin 3.3.1
+* `[ADDED]`: Support iOS Arm32
+* `[UPDATED]`: Kotlin 1.3.21
+* `[UPDATED]`: Android Gradle Plugin 3.3.1
 
 
 Version 0.2.0 *(2019-02-06)*
 ---
 
-* Rewrite Plugin in Kotlin ([#15](https://github.com/yshrsmz/kgql/issues/15))
-* Applying plugin in Android project now automatically add `core-jvm` dependency.
+* `[UPDATED]`: Rewrite Plugin in Kotlin ([#15](https://github.com/yshrsmz/kgql/issues/15))
+* `[UPDATED]`: Applying plugin in Android project now automatically add `core-jvm` dependency.
 
 
 Version 0.1.1 *(2019-02-05)*
 ---
 
-* Replace `println` with `Logger`
+* `[UPDATED]`: Replace `println` with `Logger`
 
 
 Version 0.1.0 *(2019-01-28)*
 ---
 
-* Generated Document Objects are now `internal` by default ([#13](https://github.com/yshrsmz/kgql/issues/13))
-* Fix generated file's output directory not correct.
-* Kotlin is updated to 1.3.20 ([#14](https://github.com/yshrsmz/kgql/issues/14))
-* Gradle is updated to 5.1.1 ([#14](https://github.com/yshrsmz/kgql/issues/14)) and __5.1.x or later__ is required.
-* Android Gradle Plugin is update to 3.3.0
+* `[BREAKING]`: Generated Document Objects are now `internal` by default ([#13](https://github.com/yshrsmz/kgql/issues/13))
+* `[FIXED]`: Fix generated file's output directory not correct.
+* `[UPDATED]`: Kotlin 1.3.20 ([#14](https://github.com/yshrsmz/kgql/issues/14))
+* `[UPDATED]`: Gradle 5.1.1 ([#14](https://github.com/yshrsmz/kgql/issues/14)) and __5.1.x or later__ is required.
+* `[UPDATED]`: Android Gradle Plugin 3.3.0
 
 
 Version 0.0.7 *(2019-01-22)*
 ---
 
-* Use `kotlinx.serialization.SerialName` annotation ([#11](https://github.com/yshrsmz/kgql/issues/11))
-* Android compilation task now depends on `generateKgqlInterface` task properly in Kotlin multiplatform project ([#12](https://github.com/yshrsmz/kgql/issues/12))
-* Gradle Plugin now depends on antlr4 to avoid dependency conflict with Android DataBinding
+* `[ADDED]`: Use `kotlinx.serialization.SerialName` annotation ([#11](https://github.com/yshrsmz/kgql/issues/11))
+* `[FIXED]`: Android compilation task now depends on `generateKgqlInterface` task properly in Kotlin multiplatform project ([#12](https://github.com/yshrsmz/kgql/issues/12))
+* `[FIXED]`: Gradle Plugin now depends on antlr4 to avoid dependency conflict with Android DataBinding
 
 
 Version 0.0.6 *(2019-01-21)*
 ---
 
-* Create dedicated object for each operation in a document ([#3](https://github.com/yshrsmz/kgql/issues/3))
-* Change KgqlRequestBody & KgqlResponse to interface ([#8](https://github.com/yshrsmz/kgql/issues/8))
-* Change suffix of generate classes to Document, from DocumentWrapper
-* Downgrade to Kotlin 1.3.11 ([#8](https://github.com/yshrsmz/kgql/issues/8))
+* `[BREAKING]`: Create dedicated object for each operation in a document ([#3](https://github.com/yshrsmz/kgql/issues/3))
+* `[BREAKING]`: Change KgqlRequestBody & KgqlResponse to interface ([#8](https://github.com/yshrsmz/kgql/issues/8))
+* `[ADDED]`: Change suffix of generate classes to Document, from DocumentWrapper
+* `[FIXED]`: Downgrade to Kotlin 1.3.11 ([#8](https://github.com/yshrsmz/kgql/issues/8))
 
 
 Version 0.0.5 *(2019-01-15)*
 ---
 
-* Release via `gradle-mvn-mpp-push.gradle`
+* `[ADDED]`: Release via `gradle-mvn-mpp-push.gradle`
 
 
 Version 0.0.4 *(2019-01-14)*
 ---
 
-* Fix dependency resolution
+* `[FIXED]`: Fix dependency resolution
 
 
 
