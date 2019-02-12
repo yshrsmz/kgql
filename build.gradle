@@ -4,22 +4,11 @@ buildscript {
     apply from: "$rootDir/gradle/dependencies.gradle"
 
     repositories {
-        // prevent gradle from re-downloading kotlin/native's POM upon sync
-        // https://youtrack.jetbrains.com/issue/KT-28128
-        mavenCentral().content() { excludeGroup "Kotlin/Native" }
-        google().content() { excludeGroup "Kotlin/Native" }
-        jcenter {
-            content {
-                excludeGroup "Kotlin/Native"
-            }
-        }
+        mavenCentral()
+        google()
+        jcenter()
         gradlePluginPortal()
-        maven {
-            url 'https://dl.bintray.com/kotlin/kotlinx'
-            content {
-                excludeGroup "Kotlin/Native"
-            }
-        }
+        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
         maven {
             url 'https://dl.bintray.com/kotlin/kotlin-eap'
             content {
@@ -43,25 +32,11 @@ buildscript {
 
 allprojects {
     repositories {
-        google().content() { excludeGroup "Kotlin/Native" }
-        mavenCentral().content() { excludeGroup "Kotlin/Native" }
-        jcenter {
-            content {
-                excludeGroup "Kotlin/Native"
-            }
-        }
-        maven {
-            url 'https://dl.bintray.com/kotlin/kotlinx'
-            content {
-                excludeGroup "Kotlin/Native"
-            }
-        }
-        maven {
-            url 'https://dl.bintray.com/kotlin/kotlin-eap'
-            content {
-                excludeGroup "Kotlin/Native"
-            }
-        }
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
 
     group = GROUP

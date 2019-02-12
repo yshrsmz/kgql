@@ -207,7 +207,7 @@ open class KgqlPlugin : Plugin<Project> {
     }
 
     /**
-     * Theres no external api to get the package name. There is to get the application id, but thats
+     * There's no external api to get the package name. There is to get the application id, but thats
      * the post build package for the play store, and not the package name that should be used during
      * compilation. Think R.java, we want to be using the same namespace as it.
      *

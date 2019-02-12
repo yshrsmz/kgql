@@ -7,6 +7,11 @@ archivesBaseName = 'kgql-core'
 kotlin {
     jvm()
     js()
+    iosArm32() {
+        binaries {
+            framework()
+        }
+    }
     iosArm64() {
         binaries {
             framework()
@@ -62,7 +67,7 @@ kotlin {
         nativeTest {
         }
 
-        [iosX64(), iosArm64()].forEach { t ->
+        [iosX64(), iosArm32(), iosArm64()].forEach { t ->
             t.compilations.main.source(sourceSets.nativeMain)
             t.compilations.test.source(sourceSets.nativeTest)
         }
@@ -85,6 +90,7 @@ afterEvaluate {
     }
     tasks.create('installIosLocally') {
         dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
+        dependsOn 'publishIosArm32PublicationToTestRepository'
         dependsOn 'publishIosArm64PublicationToTestRepository'
         dependsOn 'publishIosX64PublicationToTestRepository'
     }
@@ -93,6 +99,7 @@ afterEvaluate {
 
 //    tasks.create('publishToMavenRepository') {
 //        dependsOn 'publishKotlinMultiplatformPublicationToMavenRepository'
+//        dependsOn 'publishIosArm32PublicationToMavenRepository'
 //        dependsOn 'publishIosArm64PublicationToMavenRepository'
 //        dependsOn 'publishIosX64PublicationToMavenRepository'
 //        dependsOn 'publishJsPublicationToMavenRepository'
@@ -102,6 +109,7 @@ afterEvaluate {
 //
 //    tasks.create('publishToTestRepository') {
 //        dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
+//        dependsOn 'publishIosArm32PublicationToMavenRepository'
 //        dependsOn 'publishIosArm64PublicationToTestRepository'
 //        dependsOn 'publishIosX64PublicationToTestRepository'
 //        dependsOn 'publishJsPublicationToTestRepository'

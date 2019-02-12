@@ -1,6 +1,14 @@
 Change Log
 ===
 
+Version 0.2.1 *(2019-02-12)*
+---
+
+* Enhancement: Support iOS Arm32
+* Fix: Update to Kotlin 1.3.21
+* Fix: Update to Android Gradle Plugin 3.3.1
+
+
 Version 0.2.0 *(2019-02-06)*
 ---
 
