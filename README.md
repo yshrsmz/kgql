@@ -29,7 +29,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.1.0'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.2.1'
     }
 }
 
@@ -60,7 +60,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.1.0'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.2.1'
     }
 }
 
