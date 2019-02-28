@@ -150,7 +150,7 @@ package com.sample
 
 import com.codingfeline.kgql.core.KgqlResponse
 import com.codingfeline.kgql.core.KgqlError
-import com.sample.TestDocumentWrapper
+import com.sample.ViewerDocument
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.headers
