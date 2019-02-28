@@ -64,8 +64,7 @@ buildScript {
     }
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-multiplatform'
 apply plugin: 'com.codingfeline.kgql'
 
 repositories {
