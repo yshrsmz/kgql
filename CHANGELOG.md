@@ -8,6 +8,14 @@ Version 0.3.0 *(WIP)*
 
 * TBD
 
+Version 0.2.1 *(WIP)*
+---
+
+* `[UPDATED]`: Kotlin 1.3.30
+* `[UPDATED]`: kotlinx.serialization 0.11.0-1.3.30-eap-125
+* `[UPDATED]`: Android Gradle Plugin 3.4.0
+* `[UPDATED]`: graphql-java 12.0
+
 
 Version 0.2.1 *(2019-02-12)*
 ---

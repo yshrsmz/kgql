@@ -10,7 +10,7 @@ dependencies {
     implementation deps.kotlin.serialization.jvm
 
     compile deps.graphql
-    compile 'org.antlr:antlr4:4.7.1'
+    compile deps.antlr4
 
     implementation deps.kotlinPoet
 
@@ -47,8 +47,8 @@ compileTestKotlin {
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
 
-afterEvaluate {
-    // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
-    addDependency(tasks.getByName('uploadArchives') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
-    addDependency(tasks.getByName('installLocally') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
-}
+//afterEvaluate {
+//    // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
+//    addDependency(tasks.getByName('uploadArchives') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
+//    addDependency(tasks.getByName('installLocally') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
+//}
