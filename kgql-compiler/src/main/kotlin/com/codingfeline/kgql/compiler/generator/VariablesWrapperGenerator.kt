@@ -8,7 +8,6 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import graphql.language.VariableDefinition
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 class VariableWrapperGenerator(
@@ -47,10 +46,6 @@ class VariableWrapperGenerator(
             val type = typeMapper.get(it.type)
             val spec = PropertySpec.builder(it.name, type)
                 .initializer(it.name)
-
-            if (type.isNullable) {
-                spec.addAnnotation(Optional::class)
-            }
 
             spec.build()
         }

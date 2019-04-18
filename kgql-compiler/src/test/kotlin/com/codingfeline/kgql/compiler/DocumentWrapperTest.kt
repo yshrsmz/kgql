@@ -36,7 +36,6 @@ class DocumentWrapperTest {
             |import kotlin.String
             |import kotlin.Unit
             |import kotlinx.serialization.KSerializer
-            |import kotlinx.serialization.Optional
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
             |
@@ -60,9 +59,8 @@ class DocumentWrapperTest {
             |
             |        @Serializable
             |        data class Request(
-            |            @SerialName(value = "variables") @Optional override val variables: Unit? = null,
-            |            @Optional @SerialName(value = "operationName") override val operationName: String? =
-            |                    null,
+            |            @SerialName(value = "variables") override val variables: Unit? = null,
+            |            @SerialName(value = "operationName") override val operationName: String? = null,
             |            @SerialName(value = "query") override val query: String = document
             |        ) : KgqlRequestBody<Unit>
             |    }
@@ -105,7 +103,6 @@ class DocumentWrapperTest {
             |import kotlin.String
             |import kotlin.Unit
             |import kotlinx.serialization.KSerializer
-            |import kotlinx.serialization.Optional
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
             |
@@ -137,8 +134,8 @@ class DocumentWrapperTest {
             |
             |        @Serializable
             |        data class Request(
-            |            @SerialName(value = "variables") @Optional override val variables: Unit? = null,
-            |            @Optional @SerialName(value = "operationName") override val operationName: String? =
+            |            @SerialName(value = "variables") override val variables: Unit? = null,
+            |            @SerialName(value = "operationName") override val operationName: String? =
             |                    "CodeOfConduct",
             |            @SerialName(value = "query") override val query: String = document
             |        ) : KgqlRequestBody<Unit>
@@ -155,9 +152,8 @@ class DocumentWrapperTest {
             |
             |        @Serializable
             |        data class Request(
-            |            @SerialName(value = "variables") @Optional override val variables: Unit? = null,
-            |            @Optional @SerialName(value = "operationName") override val operationName: String? =
-            |                    "Test",
+            |            @SerialName(value = "variables") override val variables: Unit? = null,
+            |            @SerialName(value = "operationName") override val operationName: String? = "Test",
             |            @SerialName(value = "query") override val query: String = document
             |        ) : KgqlRequestBody<Unit>
             |    }
@@ -196,7 +192,6 @@ class DocumentWrapperTest {
                 |import com.codingfeline.kgql.core.KgqlRequestBody
                 |import kotlin.String
                 |import kotlinx.serialization.KSerializer
-                |import kotlinx.serialization.Optional
                 |import kotlinx.serialization.SerialName
                 |import kotlinx.serialization.Serializable
                 |
@@ -230,7 +225,7 @@ class DocumentWrapperTest {
                 |        @Serializable
                 |        data class Request(
                 |            @SerialName(value = "variables") override val variables: Variables?,
-                |            @Optional @SerialName(value = "operationName") override val operationName: String? =
+                |            @SerialName(value = "operationName") override val operationName: String? =
                 |                    "WithVariables",
                 |            @SerialName(value = "query") override val query: String = document
                 |        ) : KgqlRequestBody<Variables>

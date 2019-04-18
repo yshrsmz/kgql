@@ -77,11 +77,11 @@ def getRepositoryPassword() {
 }
 
 task emptySourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set("sources")
 }
 
 task javadocsJar(type: Jar, dependsOn: dokka) {
-    classifier = 'javadoc'
+    archiveClassifier.set("javadoc")
     from dokka.outputDirectory
 }
 

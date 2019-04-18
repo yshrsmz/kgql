@@ -11,7 +11,6 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import graphql.language.OperationDefinition
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 class RequestBodyGenerator(
@@ -42,7 +41,6 @@ class RequestBodyGenerator(
 
         if (variablesSpec == null) {
             variablesParameterSpec.defaultValue("null")
-                .addAnnotation(Optional::class)
         }
 
         constructorSpec
@@ -54,7 +52,6 @@ class RequestBodyGenerator(
                         String::class.asTypeName().copy(nullable = true),
                         KModifier.OVERRIDE
                     )
-                    .addAnnotation(Optional::class)
                     .addAnnotation(generateSerialName("operationName"))
                     .defaultValue(operation.name?.let { "\"${operation.name}\"" } ?: "null")
                     .build()
