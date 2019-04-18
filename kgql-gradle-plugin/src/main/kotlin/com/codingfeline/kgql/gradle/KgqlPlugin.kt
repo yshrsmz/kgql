@@ -4,10 +4,9 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BasePlugin
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.internal.errors.SyncIssueHandlerImpl
-import com.android.build.gradle.options.SyncOptions.EvaluationMode.STANDARD
 import com.codingfeline.kgql.VERSION
 import com.codingfeline.kgql.compiler.KgqlFileType
+import com.codingfeline.kgql.gradle.android.packageName
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -126,7 +125,7 @@ open class KgqlPlugin : Plugin<Project> {
                             // for 1.3.0-style target config
                             NativeOutputKind.values().forEach { kind ->
                                 NativeBuildType.values().forEach { buildType ->
-                                    val t = compilationUnit.findLinkTask(kind, buildType)
+                                    @Suppress("DEPRECATION") val t = compilationUnit.findLinkTask(kind, buildType)
                                     if (t != null) {
                                         logger.debug("task to depend found3: $t.name")
                                         t.dependsOn(task)
@@ -196,7 +195,7 @@ open class KgqlPlugin : Plugin<Project> {
                 task.description = "Generate Android interface for working with GraphQL documents"
                 task.source(variant.sourceSets.map { "src/${it.name}/${KgqlFileType.FOLDER_NAME}" })
                 task.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
-                task.packageName = variant.packageName(project)
+                task.packageName = project.packageName()
                 task.sourceFolders =
                     variant.sourceSets.map { File("${project.projectDir}/src/${task.name}/${KgqlFileType.FOLDER_NAME}") }
                 sourceSets.add(task.sourceFolders.map { it.toRelativeString(project.projectDir) })
@@ -204,32 +203,6 @@ open class KgqlPlugin : Plugin<Project> {
             // TODO Use task configuration avoidance once released. https://issuetracker.google.com/issues/117343589
             variant.registerJavaGeneratingTask(taskProvider.get(), taskProvider.get().outputDirectory)
         }
-    }
-
-    /**
-     * There's no external api to get the package name. There is to get the application id, but thats
-     * the post build package for the play store, and not the package name that should be used during
-     * compilation. Think R.java, we want to be using the same namespace as it.
-     *
-     * There IS an internal api for doing this.
-     * [BaseVariantImpl.getVariantData().getVariantConfiguration().getPackageFromManifest()],
-     * and so this code just emulates that behavior.
-     *
-     * Package name is enforced identical by agp across multiple source sets, so taking the first
-     * package name we find is fine.
-     */
-    private fun BaseVariant.packageName(project: Project): String {
-        return sourceSets.map { it.manifestFile }
-            .filter { it.exists() }
-            .mapNotNull {
-                // I'm not sure why my IDEA does not resolve this reference
-                com.android.builder.core.DefaultManifestParser(
-                    it,
-                    { true },
-                    SyncIssueHandlerImpl(STANDARD, project.logger)
-                ).`package`
-            }
-            .first()
     }
 
     // Copied from kotlin plugin
