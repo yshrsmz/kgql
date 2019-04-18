@@ -8,7 +8,7 @@ Version 0.3.0 *(WIP)*
 
 * TBD
 
-Version 0.2.1 *(WIP)*
+Version 0.2.2 *(2019-04-18)*
 ---
 
 * `[UPDATED]`: Kotlin 1.3.30
