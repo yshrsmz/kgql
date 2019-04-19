@@ -3,6 +3,10 @@ package com.codingfeline.kgql.gradle
 import com.codingfeline.kgql.VERSION
 import graphql.introspection.IntrospectionResultToSchema
 import graphql.language.AstPrinter
+import graphql.schema.idl.RuntimeWiring
+import graphql.schema.idl.SchemaGenerator
+import graphql.schema.idl.SchemaParser
+import graphql.schema.idl.SchemaPrinter
 import groovy.json.JsonSlurper
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -18,6 +22,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import java.io.StringReader
 
 
 @UnstableDefault
@@ -54,6 +59,14 @@ open class FetchSchemaTask : DefaultTask() {
             val parsed = slurp(result)
             @Suppress("UNCHECKED_CAST") val schema =
                 IntrospectionResultToSchema().createSchemaDefinition(parsed["data"] as Map<String, Any>)
+
+            val printedSchema = SchemaPrinter().print(schema)
+            val schemaProvider = StringReader(printedSchema)
+            val parser = SchemaParser()
+            val schemaGenerator = SchemaGenerator()
+            val typeRegistry = parser.parse(schemaProvider)
+            val graphqlSchema =
+                schemaGenerator.makeExecutableSchema(typeRegistry, RuntimeWiring.newRuntimeWiring().build())
 
             print(AstPrinter.printAst(schema))
         }
