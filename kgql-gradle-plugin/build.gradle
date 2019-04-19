@@ -62,7 +62,6 @@ dependencies {
 
     implementation deps.ktor.javaClient
     implementation deps.ktor.cioEngine
-    implementation deps.ktor.serialization
     implementation deps.kotlin.serialization.jvm
 
     testImplementation deps.junit

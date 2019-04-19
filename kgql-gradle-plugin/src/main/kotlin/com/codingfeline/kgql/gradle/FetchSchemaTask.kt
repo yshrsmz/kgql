@@ -52,12 +52,14 @@ open class FetchSchemaTask : DefaultTask() {
             }
 
             val parsed = slurp(result)
-            val schema = IntrospectionResultToSchema().createSchemaDefinition(parsed["data"] as Map<String, Any>)
+            @Suppress("UNCHECKED_CAST") val schema =
+                IntrospectionResultToSchema().createSchemaDefinition(parsed["data"] as Map<String, Any>)
 
             print(AstPrinter.printAst(schema))
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun slurp(input: String): Map<String, Any> {
         val slurper = JsonSlurper()
         return slurper.parseText(input) as Map<String, Any>
