@@ -154,6 +154,8 @@ open class KgqlPlugin : Plugin<Project> {
                     it.dependsOn(task)
                 }
             }
+
+            configureFetchSchemaTask(project, extension)
         }
     }
 
@@ -202,6 +204,19 @@ open class KgqlPlugin : Plugin<Project> {
             }
             // TODO Use task configuration avoidance once released. https://issuetracker.google.com/issues/117343589
             variant.registerJavaGeneratingTask(taskProvider.get(), taskProvider.get().outputDirectory)
+        }
+    }
+
+    private fun configureFetchSchemaTask(project: Project, extension: KgqlExtension) {
+        val endpoint = requireNotNull(extension.schemaEndpoint) { "property schemaEndpoint must be provided" }
+        val outputDirectory = extension.schemaOutputDirectory ?: project.file("src/main/kgql")
+        val requestHeaders = extension.schemaHeaders ?: emptyMap<String, String>()
+        project.tasks.register("fetchGraphQLSchema", FetchSchemaTask::class.java) {
+            it.endpoint = endpoint
+            it.outputDirectory = outputDirectory
+            it.requestHeaders = requestHeaders
+            it.group = "kgql"
+            it.description = "Fetch schema from target GraphQL endpoint"
         }
     }
 

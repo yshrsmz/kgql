@@ -79,9 +79,12 @@ class KgqlPluginTest {
             .withProjectDir(fixtureRoot)
             .withPluginClasspath()
 
+        val schemaResult = runner.withArguments("clean", "fetchGraphQLSchema", "--stacktrace", "--info")
+            .build()
+
         val result = runner
             .withArguments("clean", "generateKgqlInterface", "--stacktrace", "--info")
-            .build()
+            .buildAndFail()
         assertThat(result.output).contains("BUILD SUCCESSFUL")
 
         // Assert the plugin added the common dependency

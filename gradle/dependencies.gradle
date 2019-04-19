@@ -36,6 +36,13 @@ ext.deps = [
                         js               : "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
                 ]
         ],
+
+        ktor              : [
+                javaClient   : "io.ktor:ktor-client-core:1.1.4",
+                cioEngine    : "io.ktor:ktor-client-cio:1.1.4",
+                serialization: "io.ktor:ktor-client-json-jvm:1.1.4"
+        ],
+
         graphql           : "com.graphql-java:graphql-java:12.0",
         antlr4            : "org.antlr:antlr4:4.7.2",
         kotlinPoet        : 'com.squareup:kotlinpoet:1.2.0',

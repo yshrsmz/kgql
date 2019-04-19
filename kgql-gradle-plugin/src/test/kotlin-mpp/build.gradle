@@ -20,6 +20,11 @@ kgql {
     typeMapper = [
             "UserProfile": "com.sample.data.UserProfile"
     ]
+
+    schemaEndpoint = "https://api.github.com/graphql"
+    schemaHeaders = [
+            "Authorization": "bearer develop"
+    ]
 }
 
 kotlin {
