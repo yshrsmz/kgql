@@ -44,6 +44,8 @@ open class FetchSchemaTask : DefaultTask() {
 
     @TaskAction
     fun fetchGraphQLSchema() {
+        outputDirectory?.mkdirs()
+
         runBlocking {
             val result = client.get<String>(endpoint) {
                 if (requestHeaders.isNotEmpty()) {
@@ -55,6 +57,15 @@ open class FetchSchemaTask : DefaultTask() {
                 }
                 this.body = Json.stringify(SchemaRequest.serializer(), SchemaRequest())
             }
+
+
+            val outputFile = File(outputDirectory, "schema.json")
+            if (!outputFile.exists()) {
+                @Suppress("BlockingMethodInNonBlockingContext")
+                outputFile.createNewFile()
+            }
+            outputFile.writeText(result)
+
 
             val parsed = slurp(result)
             @Suppress("UNCHECKED_CAST") val schema =

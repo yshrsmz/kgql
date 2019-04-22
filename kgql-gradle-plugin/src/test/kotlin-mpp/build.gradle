@@ -23,7 +23,7 @@ kgql {
 
     schemaEndpoint = "https://api.github.com/graphql"
     schemaHeaders = [
-            "Authorization": "bearer develop"
+            "Authorization": "bearer aa8f3022dd0f940628e04adc60554fffa19dbe76"
     ]
 }
 

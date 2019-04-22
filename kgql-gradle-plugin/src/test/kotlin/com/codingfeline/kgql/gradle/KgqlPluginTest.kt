@@ -1,10 +1,17 @@
 package com.codingfeline.kgql.gradle
 
 import com.google.common.truth.Truth.assertThat
+import graphql.introspection.IntrospectionResultToSchema
+import graphql.schema.idl.RuntimeWiring
+import graphql.schema.idl.SchemaGenerator
+import graphql.schema.idl.SchemaParser
+import graphql.schema.idl.SchemaPrinter
+import groovy.json.JsonSlurper
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import java.io.File
+import java.io.StringReader
 
 class KgqlPluginTest {
 
@@ -83,7 +90,13 @@ class KgqlPluginTest {
             .build()
 
         val result = runner
-            .withArguments("clean", "generateKgqlInterface", "--stacktrace", "--info")
+            .withArguments(
+                "clean",
+                "generateKgqlInterface",
+                "--stacktrace",
+                "--info",
+                "--no-daemon"
+            )
             .buildAndFail()
         assertThat(result.output).contains("BUILD SUCCESSFUL")
 
@@ -170,5 +183,22 @@ class KgqlPluginTest {
 
         assertThat(result.output).contains("generateKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
+    }
+
+    @Test
+    fun testSchema() {
+        val schemaFile = File("src/test/kotlin-mpp/src/main/kgql/schema.json")
+
+        val json = JsonSlurper().parseText(schemaFile.readText()) as Map<String, Any>
+        val schema = IntrospectionResultToSchema().createSchemaDefinition(json["data"] as Map<String, Any>)
+
+        val printedSchema = SchemaPrinter().print(schema)
+        val schemaProvider = StringReader(printedSchema)
+        val parser = SchemaParser()
+        val schemaGenerator = SchemaGenerator()
+        val typeRegistry = parser.parse(schemaProvider)
+        val graphqlSchema =
+            schemaGenerator.makeExecutableSchema(typeRegistry, RuntimeWiring.newRuntimeWiring().build())
+
     }
 }
