@@ -6,6 +6,7 @@ Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAK
 Version 0.3.0 *(WIP)*
 ---
 
+* `[ADDED]`: Support `.graphql` file extension.
 * TBD
 
 Version 0.2.2 *(2019-04-18)*

@@ -98,7 +98,7 @@ open class KgqlPlugin : Plugin<Project> {
                 it.outputDirectory = outputDirectory
                 it.typeMap = typeMap
                 it.source(sourceSet)
-                it.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
+                it.include(KgqlFileType.EXTENSIONS.map { ext -> "**${File.separatorChar}*.$ext" })
                 it.group = "kgql"
                 it.description = "Generate Kotlin interface for .gql files"
             }
@@ -194,7 +194,7 @@ open class KgqlPlugin : Plugin<Project> {
                 task.typeMap = typeMap
                 task.description = "Generate Android interface for working with GraphQL documents"
                 task.source(variant.sourceSets.map { "src/${it.name}/${KgqlFileType.FOLDER_NAME}" })
-                task.include("**${File.separatorChar}*.${KgqlFileType.EXTENSION}")
+                task.include(KgqlFileType.EXTENSIONS.map { ext -> "**${File.separatorChar}*.$ext" })
                 task.packageName = project.packageName()
                 task.sourceFolders =
                     variant.sourceSets.map { File("${project.projectDir}/src/${task.name}/${KgqlFileType.FOLDER_NAME}") }

@@ -20,6 +20,8 @@ kgql Gradle Plugin generates wrapper classes for provided GraphQL document files
 
 kgql requires Gradle __5.1 or later__
 
+Supported GraphQL file extension: `.gql` or `.graphql`
+
 #### For Android Project
 
 ```gradle

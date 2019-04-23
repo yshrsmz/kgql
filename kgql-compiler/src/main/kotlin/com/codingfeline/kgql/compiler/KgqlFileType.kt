@@ -1,6 +1,6 @@
 package com.codingfeline.kgql.compiler
 
 object KgqlFileType {
-    const val EXTENSION = "gql"
+    val EXTENSIONS = arrayOf("gql", "graphql")
     const val FOLDER_NAME = "kgql"
 }
