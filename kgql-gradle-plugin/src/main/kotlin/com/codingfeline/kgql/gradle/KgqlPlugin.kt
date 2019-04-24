@@ -6,7 +6,9 @@ import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import com.codingfeline.kgql.VERSION
 import com.codingfeline.kgql.compiler.KgqlFileType
+import com.codingfeline.kgql.compiler.scalar.GraphQLDateTimeScalar
 import com.codingfeline.kgql.gradle.android.packageName
+import graphql.schema.idl.RuntimeWiring
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -26,6 +28,10 @@ import java.io.File
 
 @Suppress("unused")
 open class KgqlPlugin : Plugin<Project> {
+
+    init {
+        RuntimeWiring.newRuntimeWiring().scalar(GraphQLDateTimeScalar())
+    }
 
     override fun apply(target: Project) {
         val extension = target.extensions.create("kgql", KgqlExtension::class.java)

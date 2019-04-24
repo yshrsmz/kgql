@@ -1,5 +1,7 @@
 package com.codingfeline.kgql.gradle
 
+import com.codingfeline.kgql.compiler.scalar.GraphQLDateTimeScalar
+import com.codingfeline.kgql.compiler.scalar.GraphQLURIScalar
 import com.google.common.truth.Truth.assertThat
 import graphql.introspection.IntrospectionResultToSchema
 import graphql.schema.idl.RuntimeWiring
@@ -187,6 +189,11 @@ class KgqlPluginTest {
 
     @Test
     fun testSchema() {
+        val wiring = RuntimeWiring.newRuntimeWiring()
+            .scalar(GraphQLDateTimeScalar())
+            .scalar(GraphQLURIScalar())
+            .build()
+
         val schemaFile = File("src/test/kotlin-mpp/src/main/kgql/schema.json")
 
         val json = JsonSlurper().parseText(schemaFile.readText()) as Map<String, Any>
@@ -197,8 +204,7 @@ class KgqlPluginTest {
         val parser = SchemaParser()
         val schemaGenerator = SchemaGenerator()
         val typeRegistry = parser.parse(schemaProvider)
-        val graphqlSchema =
-            schemaGenerator.makeExecutableSchema(typeRegistry, RuntimeWiring.newRuntimeWiring().build())
+        val graphqlSchema = schemaGenerator.makeExecutableSchema(typeRegistry, wiring)
 
     }
 }
