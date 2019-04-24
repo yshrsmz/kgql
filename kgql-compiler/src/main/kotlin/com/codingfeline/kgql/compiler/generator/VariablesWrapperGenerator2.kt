@@ -7,6 +7,7 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
@@ -15,15 +16,19 @@ import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.buildCodeBlock
 import graphql.language.VariableDefinition
 import kotlinx.serialization.internal.EnumSerializer
+import kotlinx.serialization.internal.NullableSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 
 private const val VARIABLES_CLASS_NAME = "Variables"
 
+typealias GQLTypeName = graphql.language.TypeName
+
 class VariablesWrapperGenerator2(
     private val variables: List<VariableDefinition>,
     private val parentObjectName: ClassName,
-    private val typeMapper: KgqlCustomTypeMapper
+    private val typeMapper: KgqlCustomTypeMapper,
+    private val enumNameSet: Set<String>
 ) {
     private val classifiedVariables = variables.map { VariableType.classify(it, typeMapper) }
 
@@ -67,46 +72,129 @@ class VariablesWrapperGenerator2(
             .addCode(
                 buildCodeBlock {
                     val jsonFun = MemberName("kotlinx.serialization.json", "json")
-                    val isEnumSubclass = MemberName("com.codingfeline.kgql.core.internal", "isEnumSubClass")
                     beginControlFlow("%M", jsonFun)
                     variables.forEach { variable ->
                         val name = variable.definition.name
                         val property = properties[name]
                         if (variable is VariableType.Required) {
-                            when (variable.type.copy(nullable = false)) {
-                                String::class.asTypeName(),
-                                Int::class.asTypeName(),
-                                Float::class.asTypeName() -> {
-                                    addStatement(
-                                        "%S to %N",
-                                        name,
-                                        property
-                                    )
+                            if (typeMapper.isCustomType(variable.type)) {
+                                val serializerCode = if (typeMapper.isEnum((variable.type))) {
+                                    enumSerializerCodeBlock(variable)
+                                } else {
+                                    buildCodeBlock { addStatement("%T.serializer()", variable.type) }
                                 }
-                                else -> {
-                                    beginControlFlow("val serializer = if (%M(%N))", isEnumSubclass, property)
-                                    addStatement("%T", EnumSerializer::class.asTypeName())
-                                    nextControlFlow("else")
+                                addStatement(
+                                    "%S to %T.plain.toJson(%L, %N)",
+                                    name,
+                                    Json::class,
+                                    serializerCode,
+                                    property
+                                )
 
-                                    endControlFlow()
-
-                                    addStatement(
-                                        "%S to %T.plain.toJson(%T.serializer(), %N)",
-                                        name,
-                                        Json::class,
-                                        variable.type,
-                                        property
-                                    )
-                                }
+                            } else {
+                                addStatement("%S to %N", name, property)
                             }
                         } else {
-                            variable.definition.type
+                            val serializerCode = buildCodeBlock { }
+                            addStatement(
+                                "(%N as? %T.Some)?.let { %S to %L}",
+                                property,
+                                KgqlValue::class,
+                                name,
+                                serializerCode
+                            )
                         }
                     }
                     endControlFlow()
                 }
             )
             .build()
+    }
+
+    private fun enumSerializerCodeBlock(variable: VariableType): CodeBlock {
+        return buildCodeBlock {
+            addStatement("%T(%T::class)", EnumSerializer::class.asTypeName(), variable.type)
+        }
+    }
+
+    private fun wrapWithNullableSerializer(codeBlock: CodeBlock): CodeBlock {
+        return buildCodeBlock {
+            addStatement("%T(%L)", NullableSerializer::class.asTypeName(), codeBlock)
+        }
+    }
+
+    private fun generateOptionalSerializer(variable: VariableType, property: PropertySpec): CodeBlock {
+        val name = variable.definition.name
+
+        return buildCodeBlock {
+            if (typeMapper.isCustomType(variable.type)) {
+                val serializer = if (typeMapper.isEnum(variable.type)) {
+                    if (variable.type.isNullable) {
+                        wrapWithNullableSerializer(enumSerializerCodeBlock(variable))
+                    } else {
+                        enumSerializerCodeBlock(variable)
+                    }
+                } else {
+                    variable.type
+                }
+            }
+        }
+    }
+
+    sealed class SerializerPart {
+        abstract val isNullable: Boolean
+        abstract fun generateCodeBlockInternal(block: CodeBlock): CodeBlock
+
+        private fun wrapWithNullableSerializerIfNeeded(block: CodeBlock): CodeBlock {
+            return if (isNullable) {
+                buildCodeBlock {
+                    add("%T(%L)", NullableSerializer::class.asTypeName(), block)
+                }
+            } else {
+                block
+            }
+        }
+
+        fun generateCodeBlock(block: CodeBlock): CodeBlock {
+            return wrapWithNullableSerializerIfNeeded(generateCodeBlockInternal(block))
+        }
+
+        data class List(override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%L.%M", block, listSerializer)
+                }
+            }
+        }
+
+        data class Primitive(val typeName: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%T.%M()", typeName, primitiveSerializer)
+                }
+            }
+        }
+
+        data class Custom(val typeName: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%T.serializer()", typeName)
+                }
+            }
+        }
+
+        data class Enum(val type: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%T(%T)", EnumSerializer::class.asTypeName(), type)
+                }
+            }
+        }
+
+        companion object {
+            val primitiveSerializer = MemberName("kotlinx.serialization", "serializer")
+            val listSerializer = MemberName("kotlinx.serialization", "list")
+        }
     }
 
     sealed class VariableType {
@@ -179,6 +267,50 @@ class VariablesWrapperGenerator2(
                     // optional
                     Optional(variable, type)
                 }
+            }
+        }
+    }
+}
+
+fun listup(type: TypeName, typeMapper: KgqlCustomTypeMapper): List<VariablesWrapperGenerator2.SerializerPart> {
+    return when (type) {
+        is ParameterizedTypeName -> {
+            // should be List type
+            listOf(VariablesWrapperGenerator2.SerializerPart.List(type.isNullable)) + listup(
+                type.typeArguments.first(),
+                typeMapper
+            )
+        }
+        else -> {
+            if (typeMapper.isCustomType(type)) {
+                if (typeMapper.isEnum(type)) {
+                    listOf(
+                        VariablesWrapperGenerator2.SerializerPart.Enum(
+                            type.copy(
+                                nullable = false,
+                                annotations = emptyList()
+                            ), type.isNullable
+                        )
+                    )
+                } else {
+                    listOf(
+                        VariablesWrapperGenerator2.SerializerPart.Custom(
+                            type.copy(
+                                nullable = false,
+                                annotations = emptyList()
+                            ), type.isNullable
+                        )
+                    )
+                }
+            } else {
+                listOf(
+                    VariablesWrapperGenerator2.SerializerPart.Primitive(
+                        type.copy(
+                            nullable = false,
+                            annotations = emptyList()
+                        ), type.isNullable
+                    )
+                )
             }
         }
     }

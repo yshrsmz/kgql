@@ -4,6 +4,7 @@ import com.codingfeline.kgql.VERSION
 import com.codingfeline.kgql.compiler.KgqlEnvironment
 import com.codingfeline.kgql.compiler.KgqlEnvironment.CompilationStatus.Failure
 import com.codingfeline.kgql.compiler.KgqlException
+import groovy.json.JsonSlurper
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
@@ -27,16 +28,26 @@ open class KgqlTask : SourceTask() {
     @Input
     lateinit var typeMap: MutableMap<String, String>
 
+    @Input
+    lateinit var schemaJson: File
+
     @TaskAction
     fun generateKgqlFiles() {
         outputDirectory?.deleteRecursively()
         outputDirectory?.mkdirs()
 
+        @Suppress("UNCHECKED_CAST") val schema = JsonSlurper().parse(schemaJson) as Map<String, Any>
+        @Suppress("UNCHECKED_CAST") val enums = ((schema["data"] as Map<String, Any>)["types"] as List<Any>)
+            .filter { type -> filterEnum(type as Map<String, Any>) }
+
+        @Suppress("UNCHECKED_CAST") val enumNameSet = enums.map { (it as Map<String, Any>)["name"] as String }.toSet()
+
         val environment = KgqlEnvironment(
             sourceFiles = source.toList(),
             packageName = packageName,
             outputDirectory = outputDirectory,
-            typeMap = typeMap
+            typeMap = typeMap,
+            enumNameSet = enumNameSet
         )
 
         val generationStatus = environment.generateKgqlFiles { info -> logger.log(LogLevel.INFO, info) }
@@ -48,5 +59,9 @@ open class KgqlTask : SourceTask() {
                 throw KgqlException("Generation failed; see the generator error output for details.")
             }
         }
+    }
+
+    private fun filterEnum(type: Map<String, Any>): Boolean {
+        return (type["kind"] as String).toLowerCase() == "ENUM"
     }
 }
