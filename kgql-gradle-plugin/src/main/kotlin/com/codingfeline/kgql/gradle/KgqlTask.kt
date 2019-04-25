@@ -36,11 +36,13 @@ open class KgqlTask : SourceTask() {
         outputDirectory?.deleteRecursively()
         outputDirectory?.mkdirs()
 
-        @Suppress("UNCHECKED_CAST") val schema = JsonSlurper().parse(schemaJson) as Map<String, Any>
-        @Suppress("UNCHECKED_CAST") val enums = ((schema["data"] as Map<String, Any>)["types"] as List<Any>)
-            .filter { type -> filterEnum(type as Map<String, Any>) }
+        println("schema path: $schemaJson")
+        logger.log(LogLevel.INFO, "schema path: $schemaJson")
 
-        @Suppress("UNCHECKED_CAST") val enumNameSet = enums.map { (it as Map<String, Any>)["name"] as String }.toSet()
+        val schema = JsonSlurper().parse(schemaJson) as Map<String, Any>
+        val enums = getTypes(schema).filter { type -> filterEnum(type as Map<String, Any>) }
+
+        val enumNameSet = enums.map { (it as Map<String, Any>)["name"] as String }.toSet()
 
         val environment = KgqlEnvironment(
             sourceFiles = source.toList(),
@@ -59,6 +61,12 @@ open class KgqlTask : SourceTask() {
                 throw KgqlException("Generation failed; see the generator error output for details.")
             }
         }
+    }
+
+    private fun getTypes(schema: Map<String, Any>): List<Any> {
+        val data = schema["data"] as Map<String, Any>
+        val schema = data["__schema"] as Map<String, Any>
+        return schema["types"] as List<Any>
     }
 
     private fun filterEnum(type: Map<String, Any>): Boolean {

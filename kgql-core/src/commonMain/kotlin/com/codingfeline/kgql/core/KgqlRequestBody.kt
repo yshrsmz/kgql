@@ -1,10 +1,12 @@
 package com.codingfeline.kgql.core
 
+import kotlinx.serialization.json.JsonObject
+
 /**
  * Root interface for GraphQL request body
  */
-interface KgqlRequestBody<T> {
+interface KgqlRequestBody {
     val operationName: String?
     val query: String
-    val variables: T?
+    val variables: JsonObject?
 }

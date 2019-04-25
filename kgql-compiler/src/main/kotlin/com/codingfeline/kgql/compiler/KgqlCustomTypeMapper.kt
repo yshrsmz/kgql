@@ -53,4 +53,13 @@ class KgqlCustomTypeMapper(
     fun isEnum(type: TypeName): Boolean {
         return enumMap.containsValue(type.copy(nullable = false, annotations = emptyList()).toString())
     }
+
+    fun isPrimitive(type: TypeName): Boolean {
+        return listOf(
+            String::class.asTypeName(),
+            Int::class.asTypeName(),
+            Float::class.asTypeName(),
+            Boolean::class.asTypeName()
+        ).contains(type.copy(nullable = false, annotations = emptyList()))
+    }
 }

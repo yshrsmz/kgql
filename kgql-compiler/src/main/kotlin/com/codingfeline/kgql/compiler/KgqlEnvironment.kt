@@ -43,6 +43,7 @@ class KgqlEnvironment(
             try {
                 KgqlCompiler.compile(file, typeMapper, writer, logger)
             } catch (e: Throwable) {
+                println("error: $e")
                 e.message?.let { errors.add(it) }
             }
         }

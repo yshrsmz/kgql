@@ -1,60 +1,305 @@
 package com.codingfeline.kgql.compiler.generator
 
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
-import com.codingfeline.kgql.core.KgqlRequestBody
+import com.codingfeline.kgql.core.internal.KgqlValue
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.buildCodeBlock
 import graphql.language.VariableDefinition
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.internal.EnumSerializer
+import kotlinx.serialization.internal.NullableSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 
-class VariableWrapperGenerator(
-    val variables: List<VariableDefinition>,
-    val typeMapper: KgqlCustomTypeMapper
+private const val VARIABLES_CLASS_NAME = "Variables"
+
+class VariablesWrapperGenerator2(
+    private val variables: List<VariableDefinition>,
+    private val parentObjectName: ClassName,
+    private val typeMapper: KgqlCustomTypeMapper
 ) {
+    private val classifiedVariables = variables.map { VariableType.classify(it, typeMapper) }
 
     fun generateType(): TypeSpec {
-        val classSpec = TypeSpec.classBuilder("Variables")
-            .addModifiers(KModifier.DATA)
-            .addAnnotation(Serializable::class.java)
-            .primaryConstructor(generateConstructor(variables))
-            .addProperties(generateProperties(variables))
+        val classSpec = TypeSpec.classBuilder(VARIABLES_CLASS_NAME)
+            .primaryConstructor(generateConstructor(classifiedVariables))
+            .addProperties(generateProperties(classifiedVariables))
+            .addFunctions(generateSetterFunctions(classifiedVariables))
+
+        classSpec.addFunction(
+            generateAsJsonObjectFunction(
+                classifiedVariables,
+                classSpec.propertySpecs.associateBy { it.name })
+        )
 
         return classSpec.build()
     }
 
-    private fun generateConstructor(variables: List<VariableDefinition>): FunSpec {
+    private fun generateConstructor(variables: List<VariableType>): FunSpec {
         return FunSpec.constructorBuilder()
-            .addParameters(variables.map {
-                val type = typeMapper.get(it.type)
-                val spec = ParameterSpec.builder(it.name, type)
-                    .addAnnotation(generateSerialName(it.name))
-
-                if (type.isNullable) {
-                    spec.defaultValue("null")
-                }
-
-                spec.build()
-            })
+            .addParameters(
+                // constructor parameters must be required type without default value.
+                variables.filter { it is VariableType.Required }
+                    .map {
+                        ParameterSpec.builder(it.definition.name, it.type).build()
+                    }
+            )
             .build()
     }
 
-    private fun generateProperties(variables: List<VariableDefinition>): List<PropertySpec> {
-        return variables.map {
-            val type = typeMapper.get(it.type)
-            val spec = PropertySpec.builder(it.name, type)
-                .initializer(it.name)
+    private fun generateProperties(variables: List<VariableType>): List<PropertySpec> {
+        return variables.map { def -> def.generateProperty() }
+    }
 
-            spec.build()
+    private fun generateSetterFunctions(variables: List<VariableType>): List<FunSpec> {
+        return variables.filter { it !is VariableType.Required }.map { it.generateSetterFunction(parentObjectName) }
+    }
+
+    private fun generateAsJsonObjectFunction(
+        variables: List<VariableType>,
+        properties: Map<String, PropertySpec>
+    ): FunSpec {
+        return FunSpec.builder("asJsonObject")
+            .returns(JsonObject::class)
+            .addCode(
+                buildCodeBlock {
+                    val jsonFun = MemberName("kotlinx.serialization.json", "json")
+                    beginControlFlow("return %M", jsonFun)
+                    variables.forEach { variable ->
+                        val name = variable.definition.name
+                        val property = properties.getValue(name)
+                        if (variable is VariableType.Required) {
+                            val serializedValue = serializedValueCodeBlock(property, variable, typeMapper, false)
+                            addStatement(
+                                "%S to %L",
+                                name,
+                                serializedValue
+                            )
+                        } else {
+                            val itProp = PropertySpec.builder("it", variable.type).build()
+                            val serializedValue = serializedValueCodeBlock(itProp, variable, typeMapper, true)
+                            addStatement(
+                                "(%N as? %T.Some)?.let { %S to %L }",
+                                property,
+                                KgqlValue::class.asTypeName(),
+                                name,
+                                serializedValue
+                            )
+                        }
+                    }
+                    endControlFlow()
+                }
+            )
+            .build()
+    }
+
+    fun serializedValueCodeBlock(
+        property: PropertySpec,
+        variable: VariableType,
+        typeMapper: KgqlCustomTypeMapper,
+        isOptional: Boolean
+    ): CodeBlock {
+        return if (typeMapper.isPrimitive(variable.type)) {
+            CodeBlock.of("%N${if (isOptional) ".value" else ""}", property)
+        } else {
+            val serializer = listup(variable.type, typeMapper)
+                .foldRight(CodeBlock.of(""), { value, acc -> value.generateCodeBlock(acc) })
+            CodeBlock.of(
+                "%T.plain.toJson<%T>(%L, %N${if (isOptional) ".value" else ""})",
+                Json::class,
+                variable.type,
+                serializer,
+                property
+            )
+        }
+    }
+
+    sealed class SerializerPart {
+        abstract val isNullable: Boolean
+        abstract fun generateCodeBlockInternal(block: CodeBlock): CodeBlock
+
+        private fun wrapWithNullableSerializerIfNeeded(block: CodeBlock): CodeBlock {
+            return if (isNullable) {
+                buildCodeBlock {
+                    add("%T(%L)", NullableSerializer::class.asTypeName(), block)
+                }
+            } else {
+                block
+            }
+        }
+
+        fun generateCodeBlock(block: CodeBlock): CodeBlock {
+            return wrapWithNullableSerializerIfNeeded(generateCodeBlockInternal(block))
+        }
+
+        data class List(override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%L.%M", block, listSerializer)
+                }
+            }
+        }
+
+        data class Primitive(val typeName: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%T.%M()", typeName, primitiveSerializer)
+                }
+            }
+        }
+
+        data class Custom(val typeName: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%T.serializer()", typeName)
+                }
+            }
+        }
+
+        data class Enum(val type: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
+            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
+                return buildCodeBlock {
+                    add("%T(%T)", EnumSerializer::class.asTypeName(), type)
+                }
+            }
+        }
+
+        companion object {
+            val primitiveSerializer = MemberName("kotlinx.serialization", "serializer")
+            val listSerializer = MemberName("kotlinx.serialization", "list")
+        }
+    }
+
+    sealed class VariableType {
+        abstract val definition: VariableDefinition
+        abstract val type: TypeName
+
+        open fun generateProperty(): PropertySpec {
+            return PropertySpec.builder(
+                definition.name,
+                KgqlValue::class.asTypeName().plusParameter(type),
+                KModifier.PRIVATE
+            )
+                .mutable(true)
+                .initializer("%T", KgqlValue.None::class)
+                .build()
+        }
+
+        open fun generateSetterFunction(parentObjectName: ClassName): FunSpec {
+            val param = ParameterSpec.builder(definition.name, type).build()
+            return FunSpec.builder(definition.name)
+                .addParameter(param)
+                .returns(parentObjectName.nestedClass(VARIABLES_CLASS_NAME))
+                .addCode(
+                    CodeBlock.builder()
+                        .addStatement("this.${definition.name} = %T(%N)", KgqlValue.Some::class, param)
+                        .addStatement("return this")
+                        .build()
+                )
+                .build()
+        }
+
+        open fun appendStatementForAsJsonObject(builder: CodeBlock.Builder) {
+
+        }
+
+        data class Required(
+            override val definition: VariableDefinition,
+            override val type: TypeName
+        ) : VariableType() {
+            override fun generateProperty(): PropertySpec {
+                return PropertySpec.builder(definition.name, type, KModifier.PRIVATE)
+                    .initializer(definition.name)
+                    .build()
+            }
+
+            override fun generateSetterFunction(parentObjectName: ClassName): FunSpec {
+                throw UnsupportedOperationException("Required Variable(${definition.name}) does not need setter")
+            }
+        }
+
+        data class NonNullOptional(
+            override val definition: VariableDefinition,
+            override val type: TypeName
+        ) : VariableType() {
+
+        }
+
+        data class Optional(
+            override val definition: VariableDefinition,
+            override val type: TypeName
+        ) : VariableType() {
+
+        }
+
+        companion object {
+            fun classify(variable: VariableDefinition, typeMapper: KgqlCustomTypeMapper): VariableType {
+                val type = typeMapper.get(variable.type)
+                return if (!type.isNullable && variable.defaultValue == null) {
+                    // required and non-null
+                    Required(variable, type)
+                } else if (!type.isNullable) {
+                    // non-null, but optional
+                    NonNullOptional(variable, type)
+                } else {
+                    // optional
+                    Optional(variable, type)
+                }
+            }
         }
     }
 }
 
-data class Request(
-    override val variables: String?
-) : KgqlRequestBody<String> {
-    override val operationName: String? = null
-    override val query: String = ""
+fun listup(type: TypeName, typeMapper: KgqlCustomTypeMapper): List<VariablesWrapperGenerator2.SerializerPart> {
+    return when (type) {
+        is ParameterizedTypeName -> {
+            // should be List type
+            listOf(VariablesWrapperGenerator2.SerializerPart.List(type.isNullable)) + listup(
+                type.typeArguments.first(),
+                typeMapper
+            )
+        }
+        else -> {
+            if (typeMapper.isCustomType(type)) {
+                if (typeMapper.isEnum(type)) {
+                    listOf(
+                        VariablesWrapperGenerator2.SerializerPart.Enum(
+                            type.copy(
+                                nullable = false,
+                                annotations = emptyList()
+                            ), type.isNullable
+                        )
+                    )
+                } else {
+                    listOf(
+                        VariablesWrapperGenerator2.SerializerPart.Custom(
+                            type.copy(
+                                nullable = false,
+                                annotations = emptyList()
+                            ), type.isNullable
+                        )
+                    )
+                }
+            } else {
+                listOf(
+                    VariablesWrapperGenerator2.SerializerPart.Primitive(
+                        type.copy(
+                            nullable = false,
+                            annotations = emptyList()
+                        ), type.isNullable
+                    )
+                )
+            }
+        }
+    }
 }
