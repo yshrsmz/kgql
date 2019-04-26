@@ -3,6 +3,14 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.4.0 *(WIP)*
+---
+=======
+* `[ADDED]`: Support implicit-nullness of top level fields of variables. To provide optional variables to `Variables` class, you now need to set it via its member methods.
+* `[BREAKING]`: kgql now requires schema.json.
+* TBD
+
+
 Version 0.3.1 *(2019-07-12)*
 ---
 
