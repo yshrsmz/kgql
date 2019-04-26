@@ -2,6 +2,7 @@ package com.codingfeline.kgql.test.util
 
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
 import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
+import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.codingfeline.kgql.compiler.KgqlFile
 import com.codingfeline.kgql.compiler.Logger
 import com.codingfeline.kgql.compiler.generator.KgqlCompiler
@@ -9,7 +10,7 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 import java.io.FilenameFilter
 
-private typealias CompilationMethod = (KgqlFile, Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>, (String) -> Appendable, (String) -> Unit) -> Unit
+private typealias CompilationMethod = (KgqlFile, KgqlCustomTypeMapper, (String) -> Appendable, (String) -> Unit) -> Unit
 
 object FixtureCompiler {
 
@@ -17,11 +18,11 @@ object FixtureCompiler {
         gql: String,
         temporaryFolder: TemporaryFolder,
         compilationMethod: CompilationMethod = KgqlCompiler::compile,
-        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName> = emptyMap(),
+        typeMapper: KgqlCustomTypeMapper = KgqlCustomTypeMapper(emptyMap(), emptySet()),
         fileName: String = "Test.gql"
     ): CompilationResult {
         writeGql(gql, temporaryFolder, fileName)
-        return compileFixture(temporaryFolder.fixtureRoot().path, compilationMethod, typeMap)
+        return compileFixture(temporaryFolder.fixtureRoot().path, compilationMethod, typeMapper)
     }
 
     fun writeGql(
@@ -40,7 +41,7 @@ object FixtureCompiler {
     fun compileFixture(
         fixtureRoot: String,
         compilationMethod: CompilationMethod,
-        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName> = emptyMap(),
+        typeMapper: KgqlCustomTypeMapper,
         writer: ((String) -> Appendable)? = null,
         outputDirectory: File = File(fixtureRoot, "output")
     ): CompilationResult {
@@ -66,7 +67,7 @@ object FixtureCompiler {
         var file: KgqlFile? = null
 
         environment.forEachSourceFile {
-            compilationMethod(it, typeMap, fileWriter, logger)
+            compilationMethod(it, typeMapper, fileWriter, logger)
             file = it
         }
 

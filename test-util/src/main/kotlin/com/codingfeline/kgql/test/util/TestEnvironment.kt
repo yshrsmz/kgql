@@ -14,7 +14,8 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
 
     fun build(
         root: String,
-        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName> = emptyMap()
+        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName> = emptyMap(),
+        enumNameSet: Set<String> = emptySet()
     ): KgqlEnvironment {
         val files =
             Files.find(
@@ -23,6 +24,6 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
                 BiPredicate { t: Path, u: BasicFileAttributes -> t.toString().endsWith(".gql") })
                 .map { it.toFile() }
                 .collect(Collectors.toList())
-        return KgqlEnvironment(files, "com.example", outputDirectory, typeMap)
+        return KgqlEnvironment(files, "com.example", outputDirectory, typeMap, enumNameSet)
     }
 }

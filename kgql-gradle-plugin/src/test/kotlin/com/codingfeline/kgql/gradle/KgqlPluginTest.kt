@@ -1,11 +1,6 @@
 package com.codingfeline.kgql.gradle
 
-import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
-import com.codingfeline.kgql.compiler.generator.listup
 import com.google.common.truth.Truth.assertThat
-import com.squareup.kotlinpoet.CodeBlock
-import graphql.language.OperationDefinition
-import graphql.parser.Parser
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Test
 import org.junit.experimental.categories.Category
@@ -172,33 +167,5 @@ class KgqlPluginTest {
 
         assertThat(result.output).contains("generateKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
-    }
-
-    @Test
-    fun test() {
-        val query = """
-            query test(${'$'}string: String,
-                       ${'$'}list: [String],
-                       ${'$'}list2: [String!]!,
-                       ${'$'}test: EnumType) {
-                viewer
-            }
-        """.trimIndent()
-
-        val document = Parser().parseDocument(query)
-
-        val q = document.definitions.filter { it is OperationDefinition }.first() as OperationDefinition
-
-        val mapper = KgqlCustomTypeMapper(mapOf("EnumType" to "com.example.EnumType"), setOf("EnumType"))
-
-        q.variableDefinitions.map { mapper.get(it.type) }
-            .map { listup(it, mapper) }
-            .forEach { types ->
-                val block = types.foldRight(CodeBlock.builder().build(), { value, acc ->
-                    println(value)
-                    value.generateCodeBlock(acc)
-                })
-                println(block)
-            }
     }
 }

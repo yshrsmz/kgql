@@ -8,7 +8,6 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
@@ -16,19 +15,19 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.buildCodeBlock
 import graphql.language.VariableDefinition
-import kotlinx.serialization.internal.EnumSerializer
-import kotlinx.serialization.internal.NullableSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 
 private const val VARIABLES_CLASS_NAME = "Variables"
 
-class VariablesWrapperGenerator2(
+class VariablesWrapperGenerator(
     private val variables: List<VariableDefinition>,
     private val parentObjectName: ClassName,
     private val typeMapper: KgqlCustomTypeMapper
 ) {
     private val classifiedVariables = variables.map { VariableType.classify(it, typeMapper) }
+
+    private val serializerGenerator by lazy { SerializerGenerator(typeMapper) }
 
     fun generateType(): TypeSpec {
         val classSpec = TypeSpec.classBuilder(VARIABLES_CLASS_NAME)
@@ -103,7 +102,7 @@ class VariablesWrapperGenerator2(
             .build()
     }
 
-    fun serializedValueCodeBlock(
+    private fun serializedValueCodeBlock(
         property: PropertySpec,
         variable: VariableType,
         typeMapper: KgqlCustomTypeMapper,
@@ -112,8 +111,7 @@ class VariablesWrapperGenerator2(
         return if (typeMapper.isPrimitive(variable.type)) {
             CodeBlock.of("%N${if (isOptional) ".value" else ""}", property)
         } else {
-            val serializer = listup(variable.type, typeMapper)
-                .foldRight(CodeBlock.of(""), { value, acc -> value.generateCodeBlock(acc) })
+            val serializer = serializerGenerator.generateCodeBlock(variable.type)
             CodeBlock.of(
                 "%T.plain.toJson<%T>(%L, %N${if (isOptional) ".value" else ""})",
                 Json::class,
@@ -121,62 +119,6 @@ class VariablesWrapperGenerator2(
                 serializer,
                 property
             )
-        }
-    }
-
-    sealed class SerializerPart {
-        abstract val isNullable: Boolean
-        abstract fun generateCodeBlockInternal(block: CodeBlock): CodeBlock
-
-        private fun wrapWithNullableSerializerIfNeeded(block: CodeBlock): CodeBlock {
-            return if (isNullable) {
-                buildCodeBlock {
-                    add("%T(%L)", NullableSerializer::class.asTypeName(), block)
-                }
-            } else {
-                block
-            }
-        }
-
-        fun generateCodeBlock(block: CodeBlock): CodeBlock {
-            return wrapWithNullableSerializerIfNeeded(generateCodeBlockInternal(block))
-        }
-
-        data class List(override val isNullable: Boolean = true) : SerializerPart() {
-            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
-                return buildCodeBlock {
-                    add("%L.%M", block, listSerializer)
-                }
-            }
-        }
-
-        data class Primitive(val typeName: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
-            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
-                return buildCodeBlock {
-                    add("%T.%M()", typeName, primitiveSerializer)
-                }
-            }
-        }
-
-        data class Custom(val typeName: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
-            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
-                return buildCodeBlock {
-                    add("%T.serializer()", typeName)
-                }
-            }
-        }
-
-        data class Enum(val type: TypeName, override val isNullable: Boolean = true) : SerializerPart() {
-            override fun generateCodeBlockInternal(block: CodeBlock): CodeBlock {
-                return buildCodeBlock {
-                    add("%T(%T)", EnumSerializer::class.asTypeName(), type)
-                }
-            }
-        }
-
-        companion object {
-            val primitiveSerializer = MemberName("kotlinx.serialization", "serializer")
-            val listSerializer = MemberName("kotlinx.serialization", "list")
         }
     }
 
@@ -255,50 +197,6 @@ class VariablesWrapperGenerator2(
                     // optional
                     Optional(variable, type)
                 }
-            }
-        }
-    }
-}
-
-fun listup(type: TypeName, typeMapper: KgqlCustomTypeMapper): List<VariablesWrapperGenerator2.SerializerPart> {
-    return when (type) {
-        is ParameterizedTypeName -> {
-            // should be List type
-            listOf(VariablesWrapperGenerator2.SerializerPart.List(type.isNullable)) + listup(
-                type.typeArguments.first(),
-                typeMapper
-            )
-        }
-        else -> {
-            if (typeMapper.isCustomType(type)) {
-                if (typeMapper.isEnum(type)) {
-                    listOf(
-                        VariablesWrapperGenerator2.SerializerPart.Enum(
-                            type.copy(
-                                nullable = false,
-                                annotations = emptyList()
-                            ), type.isNullable
-                        )
-                    )
-                } else {
-                    listOf(
-                        VariablesWrapperGenerator2.SerializerPart.Custom(
-                            type.copy(
-                                nullable = false,
-                                annotations = emptyList()
-                            ), type.isNullable
-                        )
-                    )
-                }
-            } else {
-                listOf(
-                    VariablesWrapperGenerator2.SerializerPart.Primitive(
-                        type.copy(
-                            nullable = false,
-                            annotations = emptyList()
-                        ), type.isNullable
-                    )
-                )
             }
         }
     }

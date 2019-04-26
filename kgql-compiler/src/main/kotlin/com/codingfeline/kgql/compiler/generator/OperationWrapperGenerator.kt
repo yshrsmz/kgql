@@ -32,7 +32,7 @@ class OperationWrapperGenerator(
             .addAnnotation(ClassName("kotlinx.serialization", "UnstableDefault"))
 
         if (hasVariables) {
-            variableSpec = VariablesWrapperGenerator2(
+            variableSpec = VariablesWrapperGenerator(
                 operation.variableDefinitions,
                 ClassName.bestGuess(parentFQName).nestedClass(name),
                 typeMapper
