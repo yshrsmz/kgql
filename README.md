@@ -50,6 +50,7 @@ kgql {
         // mapper for non-scalar type
         "UserProfile": "com.sample.data.UserProfile"
     ]
+    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql"
 }
 ```
 
@@ -75,11 +76,12 @@ repositories {
 
 kgql {
     packageName = "com.sample"
-    sourceSet = files("src/main/kgql")
+    sourceSet = files("src/main/kgql") // defaults to "src/main/kgql"
     typeMapper = [
         // mapper for non-scalar type
         "UserProfile": "com.sample.data.UserProfile"
     ]
+    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql"
 }
 ```
 

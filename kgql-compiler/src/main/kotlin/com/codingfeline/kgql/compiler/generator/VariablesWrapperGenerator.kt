@@ -151,10 +151,6 @@ class VariablesWrapperGenerator(
                 .build()
         }
 
-        open fun appendStatementForAsJsonObject(builder: CodeBlock.Builder) {
-
-        }
-
         data class Required(
             override val definition: VariableDefinition,
             override val type: TypeName
@@ -173,16 +169,12 @@ class VariablesWrapperGenerator(
         data class NonNullOptional(
             override val definition: VariableDefinition,
             override val type: TypeName
-        ) : VariableType() {
-
-        }
+        ) : VariableType()
 
         data class Optional(
             override val definition: VariableDefinition,
             override val type: TypeName
-        ) : VariableType() {
-
-        }
+        ) : VariableType()
 
         companion object {
             fun classify(variable: VariableDefinition, typeMapper: KgqlCustomTypeMapper): VariableType {
