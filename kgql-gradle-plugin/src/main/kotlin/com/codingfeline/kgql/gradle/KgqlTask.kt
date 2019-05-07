@@ -36,13 +36,9 @@ open class KgqlTask : SourceTask() {
         outputDirectory?.deleteRecursively()
         outputDirectory?.mkdirs()
 
-        println("schema path: $schemaJson")
         logger.log(LogLevel.INFO, "schema path: $schemaJson")
 
-        val schema = JsonSlurper().parse(schemaJson) as Map<String, Any>
-        val enums = getTypes(schema).filter { type -> filterEnum(type as Map<String, Any>) }
-
-        val enumNameSet = enums.map { (it as Map<String, Any>)["name"] as String }.toSet()
+        val enumNameSet = extractEnumNameSet(schemaJson)
 
         val environment = KgqlEnvironment(
             sourceFiles = source.toList(),
@@ -63,13 +59,21 @@ open class KgqlTask : SourceTask() {
         }
     }
 
-    private fun getTypes(schema: Map<String, Any>): List<Any> {
-        val data = schema["data"] as Map<String, Any>
+    @Suppress("UNCHECKED_CAST")
+    private fun getTypes(schemaJson: Map<String, Any>): List<Map<String, Any>> {
+        val data = schemaJson["data"] as Map<String, Any>
         val schema = data["__schema"] as Map<String, Any>
-        return schema["types"] as List<Any>
+        return schema["types"] as List<Map<String, Any>>
     }
 
     private fun filterEnum(type: Map<String, Any>): Boolean {
         return (type["kind"] as String).toLowerCase() == "ENUM"
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun extractEnumNameSet(schemaFile: File): Set<String> {
+        val schemaJson = JsonSlurper().parse(schemaFile) as Map<String, Any>
+        val enums = getTypes(schemaJson).filter(::filterEnum)
+        return enums.map { it["name"] as String }.toSet()
     }
 }
