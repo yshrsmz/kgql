@@ -34,12 +34,12 @@ class DocumentWrapperTest {
             |
             |import com.codingfeline.kgql.core.KgqlRequestBody
             |import kotlin.String
-            |import kotlin.Unit
             |import kotlinx.serialization.KSerializer
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
             |import kotlinx.serialization.UnstableDefault
             |import kotlinx.serialization.json.Json
+            |import kotlinx.serialization.json.JsonObject
             |
             |internal object TestDocument {
             |  private val document: String = ""${'"'}
@@ -62,12 +62,12 @@ class DocumentWrapperTest {
             |    @Serializable
             |    data class Request(
             |      @SerialName(value = "variables")
-            |      override val variables: Unit? = null,
+            |      override val variables: JsonObject? = null,
             |      @SerialName(value = "operationName")
             |      override val operationName: String? = null,
             |      @SerialName(value = "query")
             |      override val query: String = document
-            |    ) : KgqlRequestBody<Unit>
+            |    ) : KgqlRequestBody
             |  }
             |}
             |
@@ -106,12 +106,12 @@ class DocumentWrapperTest {
             |
             |import com.codingfeline.kgql.core.KgqlRequestBody
             |import kotlin.String
-            |import kotlin.Unit
             |import kotlinx.serialization.KSerializer
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
             |import kotlinx.serialization.UnstableDefault
             |import kotlinx.serialization.json.Json
+            |import kotlinx.serialization.json.JsonObject
             |
             |internal object TestDocument {
             |  private val document: String = ""${'"'}
@@ -142,12 +142,12 @@ class DocumentWrapperTest {
             |    @Serializable
             |    data class Request(
             |      @SerialName(value = "variables")
-            |      override val variables: Unit? = null,
+            |      override val variables: JsonObject? = null,
             |      @SerialName(value = "operationName")
             |      override val operationName: String? = "CodeOfConduct",
             |      @SerialName(value = "query")
             |      override val query: String = document
-            |    ) : KgqlRequestBody<Unit>
+            |    ) : KgqlRequestBody
             |  }
             |
             |  @UnstableDefault
@@ -162,12 +162,12 @@ class DocumentWrapperTest {
             |    @Serializable
             |    data class Request(
             |      @SerialName(value = "variables")
-            |      override val variables: Unit? = null,
+            |      override val variables: JsonObject? = null,
             |      @SerialName(value = "operationName")
             |      override val operationName: String? = "Test",
             |      @SerialName(value = "query")
             |      override val query: String = document
-            |    ) : KgqlRequestBody<Unit>
+            |    ) : KgqlRequestBody
             |  }
             |}
             |
@@ -208,6 +208,8 @@ class DocumentWrapperTest {
                 |import kotlinx.serialization.Serializable
                 |import kotlinx.serialization.UnstableDefault
                 |import kotlinx.serialization.json.Json
+                |import kotlinx.serialization.json.JsonObject
+                |import kotlinx.serialization.json.json
                 |
                 |internal object TestDocument {
                 |  private val document: String = ""${'"'}
@@ -229,25 +231,27 @@ class DocumentWrapperTest {
                 |     * Generate Json string of [Request]
                 |     */
                 |    fun requestBody(variables: Variables, json: Json = Json.plain): String =
-                |        json.stringify(serializer(), Request(variables = variables))
+                |        json.stringify(serializer(), Request(variables = variables.asJsonObject()))
                 |
                 |    fun serializer(): KSerializer<Request> = Request.serializer()
                 |
-                |    @Serializable
-                |    data class Variables(
-                |      @SerialName(value = "login")
-                |      val login: String
-                |    )
+                |    class Variables(
+                |      private val login: String
+                |    ) {
+                |      fun asJsonObject(): JsonObject = json {
+                |        "login" to login
+                |      }
+                |    }
                 |
                 |    @Serializable
                 |    data class Request(
                 |      @SerialName(value = "variables")
-                |      override val variables: Variables?,
+                |      override val variables: JsonObject?,
                 |      @SerialName(value = "operationName")
                 |      override val operationName: String? = "WithVariables",
                 |      @SerialName(value = "query")
                 |      override val query: String = document
-                |    ) : KgqlRequestBody<Variables>
+                |    ) : KgqlRequestBody
                 |  }
                 |}
                 |
