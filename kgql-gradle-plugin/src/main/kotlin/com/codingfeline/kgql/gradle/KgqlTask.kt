@@ -67,7 +67,7 @@ open class KgqlTask : SourceTask() {
     }
 
     private fun filterEnum(type: Map<String, Any>): Boolean {
-        return (type["kind"] as String).toLowerCase() == "ENUM"
+        return (type["kind"] as String).toUpperCase() == "ENUM"
     }
 
     @Suppress("UNCHECKED_CAST")
