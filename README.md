@@ -22,6 +22,9 @@ kgql requires Gradle __5.3.1 or later__
 
 Supported GraphQL file extension: `.gql` or `.graphql`
 
+You need `schema.json` file which you can get via [introspection query](https://graphql.org/learn/introspection/).  
+You can use tools like [graphql-cli/graphql-cli](https://github.com/graphql-cli/graphql-cli).
+
 #### For Android Project
 
 ```gradle
@@ -50,7 +53,7 @@ kgql {
         // mapper for non-scalar type
         "UserProfile": "com.sample.data.UserProfile"
     ]
-    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql"
+    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql/schema.json"
 }
 ```
 
@@ -81,7 +84,7 @@ kgql {
         // mapper for non-scalar type
         "UserProfile": "com.sample.data.UserProfile"
     ]
-    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql"
+    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql/schema.json"
 }
 ```
 
@@ -206,103 +209,6 @@ class GitHubApi {
     }
 }
 
-```
-
-
-## Introspection Query
-
-```graphql
-query IntrospectionQuery {
-  __schema {
-    queryType { name }
-    mutationType { name }
-    subscriptionType { name }
-    types {
-      ...FullType
-    }
-    directives {
-      name
-      description
-      locations
-      args {
-        ...InputValue
-      }
-    }
-  }
-}
-
-fragment FullType on __Type {
-  kind
-  name
-  description
-  fields(includeDeprecated: true) {
-    name
-    description
-    args {
-      ...InputValue
-    }
-    type {
-      ...TypeRef
-    }
-    isDeprecated
-    deprecationReason
-  }
-  inputFields {
-    ...InputValue
-  }
-  interfaces {
-    ...TypeRef
-  }
-  enumValues(includeDeprecated: true) {
-    name
-    description
-    isDeprecated
-    deprecationReason
-  }
-  possibleTypes {
-    ...TypeRef
-  }
-}
-
-fragment InputValue on __InputValue {
-  name
-  description
-  type { ...TypeRef }
-  defaultValue
-}
-
-fragment TypeRef on __Type {
-  kind
-  name
-  ofType {
-    kind
-    name
-    ofType {
-      kind
-      name
-      ofType {
-        kind
-        name
-        ofType {
-          kind
-          name
-          ofType {
-            kind
-            name
-            ofType {
-              kind
-              name
-              ofType {
-                kind
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
 ```
 
 ## Credits
