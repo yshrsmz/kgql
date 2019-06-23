@@ -6,6 +6,10 @@ Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAK
 Version 0.3.0 *(WIP)*
 ---
 
+* `[UPDATED]`: Kotlin 1.3.40
+* `[UPDATED]`: kotlinx.serialization 0.11.1
+* `[UPDATED]`: graphql-java 13.0
+* `[UPDATED]`: Android Gradle Plugin 3.4.1
 * `[ADDED]`: Support `.graphql` file extension.
 * TBD
 
