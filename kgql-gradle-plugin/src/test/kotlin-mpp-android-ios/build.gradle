@@ -68,10 +68,14 @@ kotlin {
         fromPreset(presets.android, 'android')
         fromPreset(presets.js, 'js')
         fromPreset(presets.iosArm64, 'iosArm64') {
-            compilations.main.outputKinds('FRAMEWORK')
+            binaries {
+                framework()
+            }
         }
         fromPreset(presets.iosX64, 'iosX64') {
-            compilations.main.outputKinds('FRAMEWORK')
+            binaries {
+                framework()
+            }
         }
     }
 

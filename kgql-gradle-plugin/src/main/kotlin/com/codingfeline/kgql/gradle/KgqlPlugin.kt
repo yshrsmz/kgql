@@ -18,8 +18,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeCompilation
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeOutputKind
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSet
 import org.jetbrains.kotlinx.serialization.gradle.SerializationGradleSubplugin
 import java.io.File
@@ -120,17 +118,6 @@ open class KgqlPlugin : Plugin<Project> {
                             p.tasks.named(compilationUnit.compileKotlinTaskName).configure {
                                 logger.debug("task to depend found2: $it.name")
                                 it.dependsOn(task)
-                            }
-
-                            // for 1.3.0-style target config
-                            NativeOutputKind.values().forEach { kind ->
-                                NativeBuildType.values().forEach { buildType ->
-                                    @Suppress("DEPRECATION") val t = compilationUnit.findLinkTask(kind, buildType)
-                                    if (t != null) {
-                                        logger.debug("task to depend found3: $t.name")
-                                        t.dependsOn(task)
-                                    }
-                                }
                             }
 
                             // for 1.3.20-style target config
