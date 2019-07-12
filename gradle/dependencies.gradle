@@ -1,6 +1,6 @@
 ext.versions = [
         compileSdk   : 28,
-        kotlin       : '1.3.40',
+        kotlin       : '1.3.41',
         serialization: '0.11.1',
         dokka        : '0.9.18',
         moshi        : '1.8.0'
@@ -8,7 +8,7 @@ ext.versions = [
 
 ext.deps = [
         plugins           : [
-                android      : "com.android.tools.build:gradle:3.4.1",
+                android      : "com.android.tools.build:gradle:3.4.2",
                 kotlin       : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
                 serialization: "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
                 dokka        : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
@@ -43,5 +43,5 @@ ext.deps = [
         moshiKotlinCodegen: "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi",
 
         junit             : "junit:junit:4.12",
-        truth             : "com.google.truth:truth:0.45"
+        truth             : "com.google.truth:truth:1.0"
 ]
