@@ -18,7 +18,7 @@ kgql Gradle Plugin generates wrapper classes for provided GraphQL document files
 
 ### Setup
 
-kgql requires Gradle __5.1 or later__
+kgql requires Gradle __5.3.1 or later__
 
 Supported GraphQL file extension: `.gql` or `.graphql`
 
@@ -31,7 +31,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.2.2'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.3.1'
     }
 }
 
@@ -62,7 +62,7 @@ buildScript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.2.2'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.3.1'
     }
 }
 
@@ -113,6 +113,8 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.json.Json
 
 object ViewerDocument {
     private val document: String = """
@@ -123,12 +125,12 @@ object ViewerDocument {
             |}
             |""".trimMargin()
 
+    @UnstableDefault
     object Query {
         /**
          * Generate Json string of [Request]
          */
-        fun requestBody(): String = kotlinx.serialization.json.Json.stringify(serializer(),
-                Request())
+        fun requestBody(json: Json = Json.plain): String = json.stringify(serializer(), Request())
 
         fun serializer(): KSerializer<Request> = Request.serializer()
 
