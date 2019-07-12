@@ -3,7 +3,7 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Version 0.3.0 *(2019-07-12)*
+Version 0.3.1 *(2019-07-12)*
 ---
 
 * `[UPDATED]`: Kotlin 1.3.41
