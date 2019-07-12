@@ -15,6 +15,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
 private const val PARAM_VARIABLES_NAME = "variables"
+private const val PARAM_JSON_NAME = "json"
 
 class OperationWrapperGenerator(
     private val documentProp: PropertySpec,
@@ -80,16 +81,22 @@ class OperationWrapperGenerator(
             spec.addParameter(generateParameterSpecFromVariable(variablesType))
         }
 
+        val jsonSpec = ParameterSpec.builder(PARAM_JSON_NAME, Json::class.asTypeName())
+            .defaultValue("%T.plain", Json::class.asClassName())
+            .build()
+
+        spec.addParameter(jsonSpec)
+
         if (variablesSpec != null) {
             spec.addStatement(
-                "return %L.stringify(serializer(), %N(variables = variables))",
-                Json::class.asClassName(),
+                "return %N.stringify(serializer(), %N(variables = variables))",
+                jsonSpec,
                 requestBodySpec
             )
         } else {
             spec.addStatement(
-                "return %L.stringify(serializer(), %N())",
-                Json::class.asClassName(),
+                "return %N.stringify(serializer(), %N())",
+                jsonSpec,
                 requestBodySpec
             )
         }
