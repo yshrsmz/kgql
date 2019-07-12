@@ -3,15 +3,17 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Version 0.3.0 *(WIP)*
+Version 0.3.0 *(2019-07-12)*
 ---
 
-* `[UPDATED]`: Kotlin 1.3.40
+* `[UPDATED]`: Kotlin 1.3.41
 * `[UPDATED]`: kotlinx.serialization 0.11.1
 * `[UPDATED]`: graphql-java 13.0
-* `[UPDATED]`: Android Gradle Plugin 3.4.1
-* `[ADDED]`: Support `.graphql` file extension.
-* TBD
+* `[UPDATED]`: Android Gradle Plugin 3.4.2
+* `[ADDED]`: Support `.graphql` file extension
+* `[ADDED]`: Add UnstableDefault annotation
+* `[ADDED]`: `requestBody` method now optionally take `kotlinx.serialization.json.Json` instance to customize serialization behavior
+
 
 Version 0.2.2 *(2019-04-18)*
 ---
