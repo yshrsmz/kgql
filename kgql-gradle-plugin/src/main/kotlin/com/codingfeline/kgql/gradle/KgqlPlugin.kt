@@ -89,12 +89,17 @@ open class KgqlPlugin : Plugin<Project> {
             val packageName = requireNotNull(extension.packageName) { "property packageName must be provided" }
             val sourceSet = extension.sourceSet ?: p.files("src/main/kgql")
             val typeMap = extension.typeMapper ?: mutableMapOf()
+            val schemaJson = extension.schemaJson ?: p.file("src/main/kgql/schema.json")
+            if (!schemaJson.exists()) {
+                throw IllegalArgumentException("schema.json is not provided.")
+            }
 
             val task = p.tasks.register("generateKgqlInterface", KgqlTask::class.java) {
                 it.packageName = packageName
                 it.sourceFolders = sourceSet.files
                 it.outputDirectory = outputDirectory
                 it.typeMap = typeMap
+                it.schemaJson = schemaJson
                 it.source(sourceSet)
                 it.include(KgqlFileType.EXTENSIONS.map { ext -> "**${File.separatorChar}*.$ext" })
                 it.group = "kgql"
@@ -172,6 +177,10 @@ open class KgqlPlugin : Plugin<Project> {
         val sourceSets = mutableListOf<List<String>>()
         val buildDirectory = listOf("generated", "source", "kgql").fold(project.buildDir, ::File)
         val typeMap = extension.typeMapper ?: mutableMapOf()
+        val schemaJson = extension.schemaJson ?: project.file("src/main/kgql/schema.json")
+        if (!schemaJson.exists()) {
+            throw IllegalArgumentException("schema.json is not provided.")
+        }
 
         variants.all { variant ->
             val taskName = "generate${variant.name.capitalize()}KgqlInterface"
@@ -179,6 +188,7 @@ open class KgqlPlugin : Plugin<Project> {
                 task.group = "kgql"
                 task.outputDirectory = buildDirectory
                 task.typeMap = typeMap
+                task.schemaJson = schemaJson
                 task.description = "Generate Android interface for working with GraphQL documents"
                 task.source(variant.sourceSets.map { "src/${it.name}/${KgqlFileType.FOLDER_NAME}" })
                 task.include(KgqlFileType.EXTENSIONS.map { ext -> "**${File.separatorChar}*.$ext" })

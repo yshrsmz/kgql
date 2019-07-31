@@ -1,7 +1,6 @@
 package com.codingfeline.kgql.compiler.generator
 
-import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
-import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
+import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.codingfeline.kgql.compiler.KgqlFile
 import com.codingfeline.kgql.compiler.Logger
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -15,22 +14,22 @@ object KgqlCompiler {
 
     fun compile(
         file: KgqlFile,
-        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>,
+        typeMapper: KgqlCustomTypeMapper,
         output: FileAppender,
         logger: Logger
     ) {
-        writeDocumentWrapperFile(file, typeMap, output, logger)
+        writeDocumentWrapperFile(file, typeMapper, output, logger)
     }
 
     fun writeDocumentWrapperFile(
         sourceFile: KgqlFile,
-        typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>,
+        typeMapper: KgqlCustomTypeMapper,
         output: FileAppender,
         logger: Logger
     ) {
         val packageName = sourceFile.packageName
         val outputDirectory = "${sourceFile.outputDirectory.absolutePath}/${packageName.replace(".", "/")}"
-        val documentWrapperType = DocumentWrapperGenerator(sourceFile, typeMap).generateType(logger)
+        val documentWrapperType = DocumentWrapperGenerator(sourceFile, typeMapper).generateType(logger)
         FileSpec.builder(sourceFile.packageName, sourceFile.source.nameWithoutExtension)
             .apply {
                 addType(documentWrapperType)

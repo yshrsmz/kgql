@@ -18,7 +18,8 @@ repositories {
 kgql {
     packageName = "com.sample"
     typeMapper = [
-            "UserProfile": "com.sample.data.UserProfile"
+            "UserProfile"            : "com.sample.data.UserProfile",
+            "CollaboratorAffiliation": "com.sample.data.CollaboratorAffiliation"
     ]
 }
 

@@ -32,7 +32,11 @@ class OperationWrapperGenerator(
             .addAnnotation(ClassName("kotlinx.serialization", "UnstableDefault"))
 
         if (hasVariables) {
-            variableSpec = VariableWrapperGenerator(operation.variableDefinitions, typeMapper).generateType()
+            variableSpec = VariablesWrapperGenerator(
+                operation.variableDefinitions,
+                ClassName.bestGuess(parentFQName).nestedClass(name),
+                typeMapper
+            ).generateType()
             objectSpec.addType(variableSpec)
         }
 
@@ -90,7 +94,7 @@ class OperationWrapperGenerator(
 
         if (variablesSpec != null) {
             spec.addStatement(
-                "return %N.stringify(serializer(), %N(variables = variables))",
+                "return %N.stringify(serializer(), %N(variables = variables.asJsonObject()))",
                 jsonSpec,
                 requestBodySpec
             )

@@ -1,7 +1,5 @@
 package com.codingfeline.kgql.compiler.generator
 
-import com.codingfeline.kgql.compiler.GraphQLCustomTypeFQName
-import com.codingfeline.kgql.compiler.GraphQLCustomTypeName
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.codingfeline.kgql.compiler.KgqlFile
 import com.codingfeline.kgql.compiler.Logger
@@ -14,12 +12,11 @@ import graphql.language.TypeName as GqlTypeName
 
 class DocumentWrapperGenerator(
     val sourceFile: KgqlFile,
-    typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
+    val typeMapper: KgqlCustomTypeMapper
 ) {
 
     val rawDocument = sourceFile.source.readText()
     val document = Parser().parseDocument(rawDocument)
-    val typeMapper = KgqlCustomTypeMapper(typeMap)
 
     val className = "${sourceFile.source.nameWithoutExtension.capitalize()}Document"
 

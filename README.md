@@ -22,6 +22,9 @@ kgql requires Gradle __5.3.1 or later__
 
 Supported GraphQL file extension: `.gql` or `.graphql`
 
+You need `schema.json` file which you can get via [introspection query](https://graphql.org/learn/introspection/).  
+You can use tools like [graphql-cli/graphql-cli](https://github.com/graphql-cli/graphql-cli).
+
 #### For Android Project
 
 ```gradle
@@ -50,6 +53,7 @@ kgql {
         // mapper for non-scalar type
         "UserProfile": "com.sample.data.UserProfile"
     ]
+    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql/schema.json"
 }
 ```
 
@@ -75,11 +79,12 @@ repositories {
 
 kgql {
     packageName = "com.sample"
-    sourceSet = files("src/main/kgql")
+    sourceSet = files("src/main/kgql") // defaults to "src/main/kgql"
     typeMapper = [
         // mapper for non-scalar type
         "UserProfile": "com.sample.data.UserProfile"
     ]
+    schemaJson = file("src/main/kgql/schema.json) // defaults to "src/main/kgql/schema.json"
 }
 ```
 

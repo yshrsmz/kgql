@@ -10,8 +10,11 @@ import graphql.language.NonNullType
 import graphql.language.Type
 
 class KgqlCustomTypeMapper(
-    val typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
+    val typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>,
+    enumNameSet: Set<String>
 ) {
+    val enumMap = enumNameSet.associate { it to typeMap[it] }
+
     fun get(type: Type<*>): TypeName {
         return when (type) {
             is NonNullType -> get(type.type).copy(nullable = false)
@@ -42,5 +45,21 @@ class KgqlCustomTypeMapper(
 
     fun hasCustomType(gqlTypeName: String): Boolean {
         return typeMap.containsKey(gqlTypeName)
+    }
+
+    /**
+     * Check if [type] is defined as Enum in GraphQL schema
+     */
+    fun isEnum(type: TypeName): Boolean {
+        return enumMap.containsValue(type.copy(nullable = false, annotations = emptyList()).toString())
+    }
+
+    fun isPrimitive(type: TypeName): Boolean {
+        return listOf(
+            String::class.asTypeName(),
+            Int::class.asTypeName(),
+            Float::class.asTypeName(),
+            Boolean::class.asTypeName()
+        ).contains(type.copy(nullable = false, annotations = emptyList()))
     }
 }

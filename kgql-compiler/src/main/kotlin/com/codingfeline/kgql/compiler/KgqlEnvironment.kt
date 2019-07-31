@@ -16,11 +16,14 @@ class KgqlEnvironment(
      * An output directory to place the generated class files
      */
     private val outputDirectory: File? = null,
-    private val typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
+    typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>,
+    enumNameSet: Set<String>
 ) {
 
+    private val typeMapper = KgqlCustomTypeMapper(typeMap, enumNameSet)
+
     sealed class CompilationStatus {
-        class Success : CompilationStatus()
+        object Success : CompilationStatus()
         class Failure(val errors: List<String>) : CompilationStatus()
     }
 
@@ -38,14 +41,15 @@ class KgqlEnvironment(
 
         forEachSourceFile { file ->
             try {
-                KgqlCompiler.compile(file, typeMap, writer, logger)
+                KgqlCompiler.compile(file, typeMapper, writer, logger)
             } catch (e: Throwable) {
+                println("error: $e")
                 e.message?.let { errors.add(it) }
             }
         }
 
         return if (errors.isEmpty()) {
-            CompilationStatus.Success()
+            CompilationStatus.Success
         } else {
             CompilationStatus.Failure(errors)
         }
