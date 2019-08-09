@@ -159,6 +159,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
+import io.ktor.http.ContentType
+import io.ktor.http.content.TextContent
 import io.ktor.http.Url
 import kotlinx.serialization.json.JSON
 import kotlinx.serialization.Serializable
@@ -191,7 +193,7 @@ class GitHubApi {
     suspend fun fetchLogin(): Viewer? {
 
         val response = client.post<String>(url = Url("https://api.github.com/graphql")) {
-            body = ViewerDocument.Query.requestBody()
+            body = TextContent(text = ViewerDocument.Query.requestBody(), contentType = ContentType.Application.Json)
 
             headers {
                 append("Authorization", "bearer $TOKEN")
