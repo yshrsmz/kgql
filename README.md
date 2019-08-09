@@ -83,6 +83,10 @@ kgql {
 }
 ```
 
+#### How to generate wrapper classes
+
+When you apply kgql plugin, `generateKgqlInterface` task is added to the project. Manually executing it is one way, but the task is integrated into project's build task, so it will be generated upon each build.
+
 
 ## [WIP]kgql-ktor
 
