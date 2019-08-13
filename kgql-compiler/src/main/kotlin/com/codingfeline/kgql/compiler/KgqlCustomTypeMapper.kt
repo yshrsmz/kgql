@@ -19,6 +19,8 @@ class KgqlCustomTypeMapper(
                 .plusParameter(get(type.type)).copy(nullable = true)
             else -> {
                 when ((type as graphql.language.TypeName).name) {
+                    // GraphQL embedded type
+                    "ID" -> String::class.asTypeName()
                     "String" -> String::class.asTypeName()
                     "Int" -> Int::class.asTypeName()
                     "Float" -> Float::class.asTypeName()

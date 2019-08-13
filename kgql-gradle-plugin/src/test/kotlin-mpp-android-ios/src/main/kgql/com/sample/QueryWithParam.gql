@@ -1,7 +1,8 @@
 query User(
+        $id: ID!,
         $login: String!,
         $name: Int,
-        $id: String = "",
+        $idstr: String = "",
         $company: String = null,
         $foo: Float,
         $logins: [String]) {

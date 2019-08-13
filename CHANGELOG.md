@@ -3,6 +3,12 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.3.2 *(2019-08-13)*
+---
+
+* `[FIXED]`: ID type is converted to Any [#27](https://github.com/yshrsmz/kgql/issues/27)
+
+
 Version 0.3.1 *(2019-07-12)*
 ---
 
