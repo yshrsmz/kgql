@@ -12,7 +12,7 @@ ext.deps = [
                 kotlin       : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
                 serialization: "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
                 dokka        : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
-                versions     : "com.github.ben-manes:gradle-versions-plugin:0.21.0",
+                versions     : "com.github.ben-manes:gradle-versions-plugin:0.22.0",
                 pluginPublish: "com.gradle.publish:plugin-publish-plugin:0.10.1"
         ],
         kotlin            : [
