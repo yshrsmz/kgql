@@ -3,6 +3,17 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.4.0 *(2019-09-02)*
+---
+
+* `[UPDATED]`: Kotlin 1.3.50
+* `[UPDATED]`: kotlinx.serialization 0.12.0
+* `[UPDATED]`: Android Gradle Plugin 3.5.0
+* `[UPDATED]`: Android target SDK version 29
+* `[UPDATED]`: Gradle 5.6.1
+* `[ADDED]`: `KgqlError` now provides other GraphQL error fields.
+
+
 Version 0.3.2 *(2019-08-13)*
 ---
 
