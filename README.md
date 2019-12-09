@@ -229,9 +229,6 @@ class GitHubApi {
 Have a look at `./sample` directory.
 
 ```
-# Publish the latest version of the plugin to mavenLocal()
-$ ./gradlew install
-
 # Try out the samples.
 # BuildKonfig will be generated in ./sample/build/kgql
 $ ./gradlew -p sample generateKgqlInterface
