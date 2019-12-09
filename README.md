@@ -25,18 +25,22 @@ Supported GraphQL file extension: `.gql` or `.graphql`
 #### For Android Project
 
 ```gradle
-buildScript {
+buildscript {
     repositories {
         jcenter()
+        google()
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.14.0'
         classpath 'com.codingfeline.kgql:gradle-plugin:0.4.2'
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.codingfeline.kgql'
 
 repositories {
@@ -56,21 +60,29 @@ kgql {
 #### For Kotlin Multiplatform Project
 
 ```gradle
-buildScript {
+buildscript {
     repositories {
         jcenter()
+        google()
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.14.0'
         classpath 'com.codingfeline.kgql:gradle-plugin:0.4.2'
     }
 }
 
 apply plugin: 'kotlin-multiplatform'
+apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.codingfeline.kgql'
 
 repositories {
      maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+}
+
+kotlin {
+    // kotlin configurations...
 }
 
 kgql {
@@ -211,6 +223,20 @@ class GitHubApi {
 }
 
 ```
+
+## Try out the sample
+
+Have a look at `./sample` directory.
+
+```
+# Publish the latest version of the plugin to mavenLocal()
+$ ./gradlew install
+
+# Try out the samples.
+# BuildKonfig will be generated in ./sample/build/kgql
+$ ./gradlew -p sample generateKgqlInterface
+```
+
 
 ## Credits
 
