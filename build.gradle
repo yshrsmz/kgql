@@ -8,15 +8,6 @@ buildscript {
         google()
         jcenter()
         gradlePluginPortal()
-        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
-        maven {
-            url 'https://dl.bintray.com/kotlin/kotlin-eap'
-            content {
-                excludeGroup "Kotlin/Native"
-            }
-        }
-        maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
-
 
         dependencies {
             classpath deps.plugins.kotlin
@@ -35,8 +26,6 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
-        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
 
     group = GROUP
