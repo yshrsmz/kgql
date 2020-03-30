@@ -36,7 +36,7 @@ open class KgqlPlugin : Plugin<Project> {
             when (it) {
                 is KotlinBasePluginWrapper -> kotlin = true
                 is SerializationGradleSubplugin -> serialization = true
-                is BasePlugin<*> -> android = true
+                is BasePlugin -> android = true
             }
         }
 

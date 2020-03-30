@@ -11,9 +11,10 @@ repositories {
     maven {
         url "file://${projectDir.absolutePath}/../../../../build/localMaven"
     }
+    jcenter()
     google()
     mavenCentral()
-    maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
+//    maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
 }
 
 android {
@@ -38,6 +39,10 @@ kgql {
 }
 
 kotlin {
+
+    android()
+    js()
+    ios()
     sourceSets {
         commonMain {
             dependencies {
@@ -57,30 +62,30 @@ kotlin {
                 implementation deps.kotlin.serialization.js
             }
         }
-        nativeMain {
+        iosMain {
             dependencies {
                 implementation deps.kotlin.serialization.native
             }
         }
-        nativeTest {}
+        iosTest {}
     }
-    targets {
-        fromPreset(presets.android, 'android')
-        fromPreset(presets.js, 'js')
-        fromPreset(presets.iosArm64, 'iosArm64') {
-            binaries {
-                framework()
-            }
-        }
-        fromPreset(presets.iosX64, 'iosX64') {
-            binaries {
-                framework()
-            }
-        }
-    }
-
-    configure([targets.iosX64, targets.iosArm64]) {
-        compilations.main.source(sourceSets.nativeMain)
-        compilations.test.source(sourceSets.nativeTest)
-    }
+//    targets {
+//        fromPreset(presets.android, 'android')
+//        fromPreset(presets.js, 'js')
+//        fromPreset(presets.iosArm64, 'iosArm64') {
+//            binaries {
+//                framework()
+//            }
+//        }
+//        fromPreset(presets.iosX64, 'iosX64') {
+//            binaries {
+//                framework()
+//            }
+//        }
+//    }
+//
+//    configure([targets.iosX64, targets.iosArm64]) {
+//        compilations.main.source(sourceSets.nativeMain)
+//        compilations.test.source(sourceSets.nativeTest)
+//    }
 }

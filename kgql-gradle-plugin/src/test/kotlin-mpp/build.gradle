@@ -10,9 +10,10 @@ repositories {
     maven {
         url "file://${projectDir.absolutePath}/../../../../build/localMaven"
     }
+    jcenter()
     mavenCentral()
-    maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+//    maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
+//    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
 }
 
 kgql {
@@ -25,16 +26,16 @@ kgql {
 kotlin {
     jvm()
     js()
-    iosArm64() {
+    ios() {
         binaries {
             framework()
         }
     }
-    iosX64() {
-        binaries {
-            framework()
-        }
-    }
+//    iosX64() {
+//        binaries {
+//            framework()
+//        }
+//    }
 
     sourceSets {
         commonMain {
@@ -55,16 +56,16 @@ kotlin {
                 implementation deps.kotlin.serialization.js
             }
         }
-        nativeMain {
+        iosMain {
             dependencies {
                 implementation deps.kotlin.serialization.native
             }
         }
-        nativeTest {}
+        iosTest {}
 
-        [iosX64(), iosArm64()].forEach { t ->
-            t.compilations.main.source(sourceSets.nativeMain)
-            t.compilations.test.source(sourceSets.nativeTest)
-        }
+//        [iosX64(), iosArm64()].forEach { t ->
+//            t.compilations.main.source(sourceSets.nativeMain)
+//            t.compilations.test.source(sourceSets.nativeTest)
+//        }
     }
 }

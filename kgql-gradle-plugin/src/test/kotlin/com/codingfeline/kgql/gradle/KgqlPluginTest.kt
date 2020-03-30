@@ -144,7 +144,7 @@ class KgqlPluginTest {
 
     @Test
     @Category(IosTest::class)
-    fun `The generate task is a dependency of multiplatform ios target`() {
+    fun `The generate task is a dependency of multiplatform ios target - Arm64`() {
         val fixtureRoot = File("src/test/kotlin-mpp")
         val runner = GradleRunner.create()
             .withProjectDir(fixtureRoot)
@@ -159,10 +159,21 @@ class KgqlPluginTest {
 
         assertThat(result.output).contains("generateKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
+    }
+
+    @Test
+    @Category(IosTest::class)
+    fun `The generate task is a dependency of multiplatform ios target - X64`() {
+        val fixtureRoot = File("src/test/kotlin-mpp")
+        val runner = GradleRunner.create()
+            .withProjectDir(fixtureRoot)
+            .withPluginClasspath()
+
+        val buildDir = File(fixtureRoot, "build/kgql")
 
         buildDir.delete()
-        result = runner
-            .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
+        var result = runner
+            .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace", "--debug")
             .build()
 
         assertThat(result.output).contains("generateKgqlInterface")
