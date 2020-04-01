@@ -3,7 +3,7 @@ buildscript {
         jcenter()
         google()
 //        mavenLocal()
-//        maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
+        maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
@@ -21,7 +21,7 @@ repositories {
     jcenter()
     google()
 //    mavenLocal()
-//    maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
+    maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
     maven { url "https://dl.bintray.com/yshrsmz/kgql" }
 }
 
