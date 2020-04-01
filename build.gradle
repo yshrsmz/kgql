@@ -8,15 +8,6 @@ buildscript {
         google()
         jcenter()
         gradlePluginPortal()
-        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
-        maven {
-            url 'https://dl.bintray.com/kotlin/kotlin-eap'
-            content {
-                excludeGroup "Kotlin/Native"
-            }
-        }
-        maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
-
 
         dependencies {
             classpath deps.plugins.kotlin
@@ -35,8 +26,6 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
-        maven { url 'https://dl.bintray.com/kotlin/kotlinx' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
 
     group = GROUP
@@ -62,6 +51,18 @@ def addDependency(Upload task, String groupId, String artifactId, String version
                 dependency.type = type
                 it.dependencies.add(dependency)
             }
+        }
+    }
+}
+
+// Workaround for https://youtrack.jetbrains.com/issue/KT-36721.
+// Put this snippet into your root buildscript.
+allprojects {
+    pluginManager.withPlugin("kotlin-multiplatform") {
+        def uniqueName = "${project.group}.${project.name}".toString()
+
+        project.kotlin.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget.class) {
+            compilations["main"].kotlinOptions.freeCompilerArgs += ["-module-name", uniqueName]
         }
     }
 }

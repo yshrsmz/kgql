@@ -18,7 +18,7 @@ kgql Gradle Plugin generates wrapper classes for provided GraphQL document files
 
 ### Setup
 
-kgql requires Gradle __5.3.1 or later__
+kgql requires Gradle __5.4.1 or later__
 
 Supported GraphQL file extension: `.gql` or `.graphql`
 
@@ -32,9 +32,9 @@ buildscript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.14.0'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.4.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.22.0'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.1'
     }
 }
 
@@ -67,9 +67,9 @@ buildscript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.14.0'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.4.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.22.0'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.1'
     }
 }
 
@@ -146,7 +146,7 @@ object ViewerDocument {
         /**
          * Generate Json string of [Request]
          */
-        fun requestBody(json: Json = Json.plain): String = json.stringify(serializer(), Request())
+        fun requestBody(json: Json): String = json.stringify(serializer(), Request())
 
         fun serializer(): KSerializer<Request> = Request.serializer()
 

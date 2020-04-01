@@ -3,6 +3,16 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+
+Version 0.5.1 *(2020-04-01)*
+---
+* `[UPDATED]`: Kotlin 1.3.71
+* `[UPDATED]`: kotlinx.serialization 0.20.0
+* `[UPDATED]`: Android Gradle Plugin 3.6.1
+* `[UPDATED]`: Gradle 5.6.4
+* `[BREAKING]`: `requestBody` method now requires `Json` instance, due to the changes in kotlinx.serialization
+
+
 Version 0.4.2 *(2019-12-07)*
 ---
 * `[UPDATED]`: Kotlin 1.3.61

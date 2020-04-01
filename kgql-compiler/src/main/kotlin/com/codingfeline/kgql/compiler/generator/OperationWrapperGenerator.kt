@@ -8,7 +8,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import graphql.language.OperationDefinition
 import kotlinx.serialization.KSerializer
@@ -83,7 +82,6 @@ class OperationWrapperGenerator(
         }
 
         val jsonSpec = ParameterSpec.builder(PARAM_JSON_NAME, Json::class.asTypeName())
-            .defaultValue("%T.plain", Json::class.asClassName())
             .build()
 
         spec.addParameter(jsonSpec)

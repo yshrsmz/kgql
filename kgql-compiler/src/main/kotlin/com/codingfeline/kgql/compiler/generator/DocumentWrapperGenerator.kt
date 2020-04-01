@@ -10,7 +10,6 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import graphql.language.OperationDefinition
 import graphql.parser.Parser
-import graphql.language.TypeName as GqlTypeName
 
 class DocumentWrapperGenerator(
     val sourceFile: KgqlFile,
