@@ -4,7 +4,7 @@ Change Log
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
 
-Version 0.5.0 *(2020-03-31)*
+Version 0.5.1 *(2020-04-01)*
 ---
 * `[UPDATED]`: Kotlin 1.3.71
 * `[UPDATED]`: kotlinx.serialization 0.20.0
