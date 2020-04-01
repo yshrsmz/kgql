@@ -22,7 +22,6 @@ dokka {
         global {}
         jvm {}
         js {}
-        iosArm32 {}
         iosArm64 {}
         iosX64 {}
     }

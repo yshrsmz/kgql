@@ -10,6 +10,7 @@ Version 0.5.1 *(2020-04-01)*
 * `[UPDATED]`: kotlinx.serialization 0.20.0
 * `[UPDATED]`: Android Gradle Plugin 3.6.1
 * `[UPDATED]`: Gradle 5.6.4
+* `[BREAKING]`: drop support for iosArm32
 * `[BREAKING]`: `requestBody` method now requires `Json` instance, due to the changes in kotlinx.serialization
 
 
