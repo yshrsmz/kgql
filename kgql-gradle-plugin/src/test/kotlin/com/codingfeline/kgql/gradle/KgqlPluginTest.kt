@@ -173,7 +173,7 @@ class KgqlPluginTest {
 
         buildDir.delete()
         var result = runner
-            .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace", "--debug")
+            .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
             .build()
 
         assertThat(result.output).contains("generateKgqlInterface")

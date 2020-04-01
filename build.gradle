@@ -54,3 +54,15 @@ def addDependency(Upload task, String groupId, String artifactId, String version
         }
     }
 }
+
+// Workaround for https://youtrack.jetbrains.com/issue/KT-36721.
+// Put this snippet into your root buildscript.
+allprojects {
+    pluginManager.withPlugin("kotlin-multiplatform") {
+        def uniqueName = "${project.group}.${project.name}".toString()
+
+        project.kotlin.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget.class) {
+            compilations["main"].kotlinOptions.freeCompilerArgs += ["-module-name", uniqueName]
+        }
+    }
+}
