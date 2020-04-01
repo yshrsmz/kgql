@@ -7,17 +7,7 @@ archivesBaseName = 'kgql-core'
 kotlin {
     jvm()
     js()
-    iosArm32() {
-        binaries {
-            framework()
-        }
-    }
-    iosArm64() {
-        binaries {
-            framework()
-        }
-    }
-    iosX64() {
+    ios {
         binaries {
             framework()
         }
@@ -59,17 +49,12 @@ kotlin {
                 implementation deps.kotlin.test.js
             }
         }
-        nativeMain {
+        iosMain {
             dependencies {
                 api deps.kotlin.serialization.native
             }
         }
-        nativeTest {
-        }
-
-        [iosX64(), iosArm32(), iosArm64()].forEach { t ->
-            t.compilations.main.source(sourceSets.nativeMain)
-            t.compilations.test.source(sourceSets.nativeTest)
+        iosTest {
         }
     }
 }
@@ -89,7 +74,7 @@ afterEvaluate {
     }
     tasks.create('installIosLocally') {
         dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
-        dependsOn 'publishIosArm32PublicationToTestRepository'
+//        dependsOn 'publishIosArm32PublicationToTestRepository'
         dependsOn 'publishIosArm64PublicationToTestRepository'
         dependsOn 'publishIosX64PublicationToTestRepository'
     }
