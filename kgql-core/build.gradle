@@ -7,7 +7,17 @@ archivesBaseName = 'kgql-core'
 kotlin {
     jvm()
     js()
-    ios {
+    iosArm32() {
+        binaries {
+            framework()
+        }
+    }
+    iosArm64() {
+        binaries {
+            framework()
+        }
+    }
+    iosX64() {
         binaries {
             framework()
         }
@@ -49,12 +59,17 @@ kotlin {
                 implementation deps.kotlin.test.js
             }
         }
-        iosMain {
+        nativeMain {
             dependencies {
                 api deps.kotlin.serialization.native
             }
         }
-        iosTest {
+        nativeTest {
+        }
+
+        [iosArm32(), iosArm64(), iosX64()].forEach { t ->
+            t.compilations.main.defaultSourceSet.dependsOn(sourceSets.nativeMain)
+            t.compilations.test.defaultSourceSet.dependsOn(sourceSets.nativeTest)
         }
     }
 }

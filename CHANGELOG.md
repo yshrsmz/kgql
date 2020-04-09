@@ -2,7 +2,9 @@ Change Log
 ===
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
-
+Version 0.5.2 *(NOT RELEASED)*
+---
+* `[ADDED]`: iosArm32 artifact is back
 
 Version 0.5.1 *(2020-04-01)*
 ---
