@@ -28,7 +28,6 @@ class OperationWrapperGenerator(
         var variableSpec: TypeSpec? = null
 
         val objectSpec = TypeSpec.objectBuilder(name = name)
-            .addAnnotation(ClassName("kotlinx.serialization", "UnstableDefault"))
 
         if (hasVariables) {
             variableSpec = VariableWrapperGenerator(operation.variableDefinitions, typeMapper).generateType()

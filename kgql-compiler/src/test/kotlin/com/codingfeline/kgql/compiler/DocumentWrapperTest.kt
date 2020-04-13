@@ -38,7 +38,6 @@ class DocumentWrapperTest {
             |import kotlinx.serialization.KSerializer
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
-            |import kotlinx.serialization.UnstableDefault
             |import kotlinx.serialization.json.Json
             |
             |internal object TestDocument {
@@ -50,7 +49,6 @@ class DocumentWrapperTest {
             |      |}
             |      |""${'"'}.trimMargin()
             |
-            |  @UnstableDefault
             |  object Query {
             |    /**
             |     * Generate Json string of [Request]
@@ -110,7 +108,6 @@ class DocumentWrapperTest {
             |import kotlinx.serialization.KSerializer
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
-            |import kotlinx.serialization.UnstableDefault
             |import kotlinx.serialization.json.Json
             |
             |internal object TestDocument {
@@ -130,7 +127,6 @@ class DocumentWrapperTest {
             |      |}
             |      ""${'"'}.trimMargin()
             |
-            |  @UnstableDefault
             |  object CodeOfConductQuery {
             |    /**
             |     * Generate Json string of [Request]
@@ -150,7 +146,6 @@ class DocumentWrapperTest {
             |    ) : KgqlRequestBody<Unit>
             |  }
             |
-            |  @UnstableDefault
             |  object TestQuery {
             |    /**
             |     * Generate Json string of [Request]
@@ -206,7 +201,6 @@ class DocumentWrapperTest {
                 |import kotlinx.serialization.KSerializer
                 |import kotlinx.serialization.SerialName
                 |import kotlinx.serialization.Serializable
-                |import kotlinx.serialization.UnstableDefault
                 |import kotlinx.serialization.json.Json
                 |
                 |internal object TestDocument {
@@ -223,7 +217,6 @@ class DocumentWrapperTest {
                 |      |}
                 |      ""${'"'}.trimMargin()
                 |
-                |  @UnstableDefault
                 |  object WithVariablesQuery {
                 |    /**
                 |     * Generate Json string of [Request]
