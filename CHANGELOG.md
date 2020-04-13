@@ -2,9 +2,14 @@ Change Log
 ===
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
+
 Version 0.5.2 *(NOT RELEASED)*
 ---
+* `[UPDATED]`: Android Gradle Plugin 3.6.2
+* `[UPDATED]`: Project Gradle Version is now 6.3
+* `[UPDATED]`: Use maven-publish plugin to publish jvm artifacts
 * `[ADDED]`: iosArm32 artifact is back
+* `[FIXED]`: Remove unnecessary `@UnstableDefault` annotation.
 
 Version 0.5.1 *(2020-04-01)*
 ---
