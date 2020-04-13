@@ -1,11 +1,14 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'maven-publish'
 
 sourceSets {
-    main.java.srcDir "src/generated/kotlin"
+    main.java.srcDir "gen"
 }
 
 dependencies {
-    implementation project(':kgql-core')
+    // workaround for https://youtrack.jetbrains.com/issue/KT-27059
+//    implementation project(':kgql-core')
+    implementation "${project.property("GROUP")}:core-jvm:${project.property("VERSION_NAME")}"
     implementation deps.kotlin.stdlib.jdk8
     implementation deps.kotlin.serialization.jvm
 
@@ -20,7 +23,7 @@ dependencies {
 }
 
 task pluginVersion {
-    def outputDir = file("src/generated/kotlin")
+    def outputDir = file("gen")
 
     inputs.property 'version', version
     outputs.dir outputDir
@@ -45,10 +48,20 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
-
-afterEvaluate {
-    // TODO work around https://youtrack.jetbrains.com/issue/KT-27059
-    addDependency(tasks.getByName('uploadArchives') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
-    addDependency(tasks.getByName('installLocally') as Upload, 'com.codingfeline.kgql', 'core-jvm', version, 'jar')
+// work around for https://youtrack.jetbrains.com/issue/KT-27059
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("${project.property("GROUP")}:core-jvm:${project.property("VERSION_NAME")}") with project(':kgql-core')
+    }
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = "$POM_ARTIFACT_ID"
+            from components.java
+        }
+    }
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

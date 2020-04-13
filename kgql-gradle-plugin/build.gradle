@@ -1,6 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
 apply plugin: "com.gradle.plugin-publish"
+apply plugin: "maven-publish"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -74,6 +75,17 @@ test {
             ":kgql-core:installLocally",
             ":kgql-core:installIosLocally"
     )
+}
+
+// work around for https://youtrack.jetbrains.com/issue/KT-27059
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("${project.property("GROUP")}:core-jvm:${project.property("VERSION_NAME")}") with project(':kgql-core')
+    }
+}
+
+publishing {
+    publications.all { publication -> publication.artifactId = "$POM_ARTIFACT_ID" }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

@@ -18,3 +18,9 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+// work around for https://youtrack.jetbrains.com/issue/KT-27059
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("${project.property("GROUP")}:core-jvm:${project.property("VERSION_NAME")}") with project(':kgql-core')
+    }
+}
