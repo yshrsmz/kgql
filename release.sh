@@ -2,6 +2,6 @@
 
 ./gradlew clean
 ./gradlew build
-./gradlew :kgql-core:publish
-./gradlew :kgql-compiler:uploadArchives
-./gradlew :kgql-gradle-plugin:uploadArchives :kgql-gradle-plugin:publishPlugins
+./gradlew :kgql-core:publishAllPublicationsToMavenRepository
+./gradlew :kgql-compiler:publishAllPublicationsToMavenRepository
+./gradlew :kgql-gradle-plugin:publishAllPublicationsToMavenRepository :kgql-gradle-plugin:publishPlugins
