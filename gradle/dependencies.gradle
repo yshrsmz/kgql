@@ -7,7 +7,7 @@ ext.versions = [
 
 ext.deps = [
         plugins   : [
-                android      : "com.android.tools.build:gradle:3.6.1",
+                android      : "com.android.tools.build:gradle:3.6.2",
                 kotlin       : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
                 serialization: "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
                 dokka        : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",

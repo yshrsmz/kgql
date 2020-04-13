@@ -12,8 +12,9 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 open class KgqlTask : SourceTask() {
+    @Suppress("unused")
     @Input
-    fun pluginVersion() = VERSION
+    val pluginVersion = VERSION
 
     @get:OutputDirectory
     var outputDirectory: File? = null

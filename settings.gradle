@@ -6,5 +6,4 @@ include ':test-util'
 
 rootProject.name = 'kgql'
 
-enableFeaturePreview('GRADLE_METADATA')
 //enableFeaturePreview('STABLE_PUBLISHING')

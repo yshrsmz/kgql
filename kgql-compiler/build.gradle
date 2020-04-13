@@ -9,8 +9,8 @@ dependencies {
     implementation deps.kotlin.stdlib.jdk8
     implementation deps.kotlin.serialization.jvm
 
-    compile deps.graphql
-    compile deps.antlr4
+    implementation deps.graphql
+    implementation deps.antlr4
 
     implementation deps.kotlinPoet
 

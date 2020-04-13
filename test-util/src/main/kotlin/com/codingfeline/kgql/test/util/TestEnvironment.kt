@@ -20,7 +20,7 @@ internal class TestEnvironment(private val outputDirectory: File = File("output"
             Files.find(
                 File(root).toPath(),
                 Int.MAX_VALUE,
-                BiPredicate { t: Path, u: BasicFileAttributes -> t.toString().endsWith(".gql") })
+                BiPredicate { t: Path, _: BasicFileAttributes -> t.toString().endsWith(".gql") })
                 .map { it.toFile() }
                 .collect(Collectors.toList())
         return KgqlEnvironment(files, "com.example", outputDirectory, typeMap)
