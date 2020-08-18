@@ -27,7 +27,10 @@ repositories {
 
 kotlin {
     jvm()
-    js()
+    js {
+        browser()
+        nodejs()
+    }
     ios {
         binaries {
             framework()

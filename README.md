@@ -232,6 +232,15 @@ Have a look at `./sample` directory.
 $ ./gradlew -p sample generateKgqlInterface
 ```
 
+### Try sample with snapshot
+
+```
+# Try out the samples.
+# BuildKonfig will be generated in ./sample/build/kgql
+$ ./gradlew clean publishAllPublicationsToTestRepository
+$ ./gradlew -p sample generateKgqlInterface
+```
+
 
 ## Credits
 
