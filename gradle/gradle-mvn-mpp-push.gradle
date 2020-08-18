@@ -17,13 +17,19 @@ def findProperty(String key) {
     [project.properties[key], System.getenv(key)].find { it != null }
 }
 
-dokka {
-    multiplatform {
-        global {}
-        jvm {}
-        js {}
-        iosArm64 {}
-        iosX64 {}
+dokkaHtml {
+    outputDirectory = "$buildDir/dokka"
+    dokkaSourceSets {
+        commonMain {}
+        jvmMain {
+            dependsOn(commonMain)
+        }
+        jsMain {
+            dependsOn(commonMain)
+        }
+        iosMain {
+            dependsOn(commonMain)
+        }
     }
 }
 
@@ -51,9 +57,9 @@ task emptySourcesJar(type: Jar) {
     archiveClassifier.set("sources")
 }
 
-task javadocsJar(type: Jar, dependsOn: dokka) {
+task javadocsJar(type: Jar, dependsOn: dokkaHtml) {
     archiveClassifier.set("javadoc")
-    from dokka.outputDirectory
+    from dokkaHtml.outputDirectory
 }
 
 //signing {

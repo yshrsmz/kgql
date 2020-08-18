@@ -8,7 +8,6 @@ dependencies {
     implementation project(':kgql-compiler')
 
     implementation deps.junit
-    implementation deps.kotlin.stdlib.jdk8
 }
 
 compileKotlin {

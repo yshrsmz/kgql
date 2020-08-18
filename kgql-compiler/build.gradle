@@ -9,8 +9,7 @@ dependencies {
     // workaround for https://youtrack.jetbrains.com/issue/KT-27059
 //    implementation project(':kgql-core')
     implementation "${project.property("GROUP")}:core-jvm:${project.property("VERSION_NAME")}"
-    implementation deps.kotlin.stdlib.jdk8
-    implementation deps.kotlin.serialization.jvm
+    implementation deps.kotlin.serialization.core
 
     implementation deps.graphql
     implementation deps.antlr4

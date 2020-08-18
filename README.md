@@ -129,7 +129,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 
 object ViewerDocument {
@@ -141,12 +140,11 @@ object ViewerDocument {
             |}
             |""".trimMargin()
 
-    @UnstableDefault
     object Query {
         /**
          * Generate Json string of [Request]
          */
-        fun requestBody(json: Json): String = json.stringify(serializer(), Request())
+        fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
 
         fun serializer(): KSerializer<Request> = Request.serializer()
 

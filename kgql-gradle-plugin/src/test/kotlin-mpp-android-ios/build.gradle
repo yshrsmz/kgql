@@ -41,30 +41,27 @@ kgql {
 kotlin {
 
     android()
-    js()
+    js {
+        browser()
+        nodejs()
+    }
     ios()
     sourceSets {
         commonMain {
             dependencies {
-                implementation deps.kotlin.stdlib.common
-                implementation deps.kotlin.serialization.common
+                implementation deps.kotlin.serialization.core
             }
         }
         androidMain {
             dependencies {
-                implementation deps.kotlin.stdlib.jdk7
-                implementation deps.kotlin.serialization.jvm
             }
         }
         jsMain {
             dependencies {
-                implementation deps.kotlin.stdlib.js
-                implementation deps.kotlin.serialization.js
             }
         }
         iosMain {
             dependencies {
-                implementation deps.kotlin.serialization.native
             }
         }
         iosTest {}
