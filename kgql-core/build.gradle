@@ -6,18 +6,11 @@ archivesBaseName = 'kgql-core'
 
 kotlin {
     jvm()
-    js()
-    iosArm32() {
-        binaries {
-            framework()
-        }
+    js {
+        browser()
+        nodejs()
     }
-    iosArm64() {
-        binaries {
-            framework()
-        }
-    }
-    iosX64() {
+    ios() {
         binaries {
             framework()
         }
@@ -26,8 +19,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation deps.kotlin.stdlib.common
-                api deps.kotlin.serialization.common
+                api deps.kotlin.serialization.core
             }
         }
         commonTest {
@@ -38,8 +30,6 @@ kotlin {
         }
         jvmMain {
             dependencies {
-                implementation deps.kotlin.stdlib.jdk7
-                api deps.kotlin.serialization.jvm
             }
         }
         jvmTest {
@@ -50,8 +40,6 @@ kotlin {
         }
         jsMain {
             dependencies {
-                implementation deps.kotlin.stdlib.js
-                api deps.kotlin.serialization.js
             }
         }
         jsTest {
@@ -59,75 +47,18 @@ kotlin {
                 implementation deps.kotlin.test.js
             }
         }
-        nativeMain {
+        iosMain {
             dependencies {
-                api deps.kotlin.serialization.native
             }
         }
-        nativeTest {
-        }
-
-        [iosArm32(), iosArm64(), iosX64()].forEach { t ->
-            t.compilations.main.defaultSourceSet.dependsOn(sourceSets.nativeMain)
-            t.compilations.test.defaultSourceSet.dependsOn(sourceSets.nativeTest)
+        iosTest {
         }
     }
 }
 
+// TODO work around for https://youtrack.jetbrains.com/issue/KT-27170
 configurations {
     compileClasspath
 }
 
-afterEvaluate {
-    // Alias the task names we use elsewhere to the new task names.
-    tasks.create('install').dependsOn('publishKotlinMultiplatformPublicationToMavenLocal')
-    tasks.create('installLocally') {
-        dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
-        dependsOn 'publishJvmPublicationToTestRepository'
-        dependsOn 'publishJsPublicationToTestRepository'
-        dependsOn 'publishMetadataPublicationToTestRepository'
-    }
-    tasks.create('installIosLocally') {
-        dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
-//        dependsOn 'publishIosArm32PublicationToTestRepository'
-        dependsOn 'publishIosArm64PublicationToTestRepository'
-        dependsOn 'publishIosX64PublicationToTestRepository'
-    }
-    // NOTE: We do not alias uploadArchives because CI runs it on Linux and we only want to run it on Mac OS.
-    //tasks.create('uploadArchives').dependsOn('publishKotlinMultiplatformPublicationToMavenRepository')
-
-//    tasks.create('publishToMavenRepository') {
-//        dependsOn 'publishKotlinMultiplatformPublicationToMavenRepository'
-//        dependsOn 'publishIosArm32PublicationToMavenRepository'
-//        dependsOn 'publishIosArm64PublicationToMavenRepository'
-//        dependsOn 'publishIosX64PublicationToMavenRepository'
-//        dependsOn 'publishJsPublicationToMavenRepository'
-//        dependsOn 'publishJvmPublicationToMavenRepository'
-//        dependsOn 'publishMetadataPublicationToMavenRepository'
-//    }
-//
-//    tasks.create('publishToTestRepository') {
-//        dependsOn 'publishKotlinMultiplatformPublicationToTestRepository'
-//        dependsOn 'publishIosArm32PublicationToMavenRepository'
-//        dependsOn 'publishIosArm64PublicationToTestRepository'
-//        dependsOn 'publishIosX64PublicationToTestRepository'
-//        dependsOn 'publishJsPublicationToTestRepository'
-//        dependsOn 'publishJvmPublicationToTestRepository'
-//        dependsOn 'publishMetadataPublicationToTestRepository'
-//    }
-}
-
-//apply from: "$rootDir/gradle/publish-mpp.gradle"
-apply from: "$rootDir/gradle/gradle-mvn-mpp-push.gradle"
-
-publishing {
-    publications.all { publication ->
-        if (publication.name == 'kotlinMultiplatform') {
-            // for our root metadata publication, set artifactId with a package and project name
-            publication.artifactId = "$POM_ARTIFACT_ID"
-        } else {
-            // for targets, set artifactId with a package, project name and target name (e.g. iosX64)
-            publication.artifactId = "$POM_ARTIFACT_ID-${publication.name}"
-        }
-    }
-}
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

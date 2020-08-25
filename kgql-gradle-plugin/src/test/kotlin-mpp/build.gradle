@@ -23,7 +23,10 @@ kgql {
 
 kotlin {
     jvm()
-    js()
+    js {
+        browser()
+        nodejs()
+    }
     ios() {
         binaries {
             framework()
@@ -33,25 +36,19 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation deps.kotlin.stdlib.common
-                implementation deps.kotlin.serialization.common
+                implementation deps.kotlin.serialization.core
             }
         }
         jvmMain {
             dependencies {
-                implementation deps.kotlin.stdlib.jdk8
-                implementation deps.kotlin.serialization.jvm
             }
         }
         jsMain {
             dependencies {
-                implementation deps.kotlin.stdlib.js
-                implementation deps.kotlin.serialization.js
             }
         }
         iosMain {
             dependencies {
-                implementation deps.kotlin.serialization.native
             }
         }
         iosTest {}

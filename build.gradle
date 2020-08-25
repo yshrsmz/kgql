@@ -16,6 +16,7 @@ buildscript {
             classpath deps.plugins.android
             classpath deps.plugins.versions
             classpath deps.plugins.pluginPublish
+            classpath deps.plugins.mavenPublish
         }
     }
 }
@@ -33,7 +34,7 @@ allprojects {
 }
 
 wrapper {
-    gradleVersion = '6.3'
+    gradleVersion = '6.6'
     distributionType = Wrapper.DistributionType.ALL
 }
 

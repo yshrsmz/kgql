@@ -53,7 +53,7 @@ class DocumentWrapperTest {
             |    /**
             |     * Generate Json string of [Request]
             |     */
-            |    fun requestBody(json: Json): String = json.stringify(serializer(), Request())
+            |    fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
             |
             |    fun serializer(): KSerializer<Request> = Request.serializer()
             |
@@ -131,7 +131,7 @@ class DocumentWrapperTest {
             |    /**
             |     * Generate Json string of [Request]
             |     */
-            |    fun requestBody(json: Json): String = json.stringify(serializer(), Request())
+            |    fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
             |
             |    fun serializer(): KSerializer<Request> = Request.serializer()
             |
@@ -150,7 +150,7 @@ class DocumentWrapperTest {
             |    /**
             |     * Generate Json string of [Request]
             |     */
-            |    fun requestBody(json: Json): String = json.stringify(serializer(), Request())
+            |    fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
             |
             |    fun serializer(): KSerializer<Request> = Request.serializer()
             |
@@ -221,7 +221,7 @@ class DocumentWrapperTest {
                 |    /**
                 |     * Generate Json string of [Request]
                 |     */
-                |    fun requestBody(variables: Variables, json: Json): String = json.stringify(serializer(),
+                |    fun requestBody(variables: Variables, json: Json): String = json.encodeToString(serializer(),
                 |        Request(variables = variables))
                 |
                 |    fun serializer(): KSerializer<Request> = Request.serializer()

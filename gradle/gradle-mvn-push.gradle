@@ -1,7 +1,13 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 
-apply plugin: 'maven-publish'
+apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: "org.jetbrains.dokka"
+
+dokka {
+    outputDirectory = "$buildDir/dokka"
+    outputFormat = "html"
+}
 
 // Load `secret.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
 if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
@@ -30,65 +36,22 @@ def getRepositoryPassword() {
     return findProperty("BINTRAY_API_KEY") ?: "no.bintray.api.key"
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    archiveClassifier.convention("sources")
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set("javadoc")
-    archiveClassifier.convention("javadoc")
-    from javadoc.destinationDir
-}
-
-publishing {
-    publications.all { p ->
-        artifact sourcesJar
-        artifact javadocJar
-
-        pom.withXml {
-            def root = asNode()
-
-            root.children().last() + {
-                resolveStrategy = Closure.DELEGATE_FIRST
-
-                description POM_DESCRIPTION
-                name POM_NAME
-                url POM_URL
-                licenses {
-                    license {
-                        name POM_LICENCE_NAME
-                        url POM_LICENCE_URL
-                        distribution POM_LICENCE_DIST
-                    }
-                }
-                scm {
-                    url POM_SCM_URL
-                    connection POM_SCM_CONNECTION
-                    developerConnection POM_SCM_DEV_CONNECTION
-                }
-                developers {
-                    developer {
-                        id POM_DEVELOPER_ID
-                        name POM_DEVELOPER_NAME
-                    }
-                }
-            }
+mavenPublish {
+    releaseSigningEnabled = false
+    targets {
+        uploadArchives {
+            releaseRepositoryUrl = getReleaseRepositoryUrl()
+            snapshotRepositoryUrl = getSnapshotRepositoryUrl()
+            repositoryUsername = getRepositoryUsername()
+            repositoryPassword = getRepositoryPassword()
+        }
+        installArchives {
+            releaseRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
+            snapshotRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
         }
     }
+}
 
-    repositories {
-        maven {
-            url getReleaseRepositoryUrl()
-            credentials {
-                username getRepositoryUsername()
-                password getRepositoryPassword()
-            }
-        }
-        maven {
-            name 'test'
-            url "file://${rootProject.buildDir}/localMaven"
-        }
-    }
+if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
+    apply from: rootProject.file("gradle/gradle-mvn-mpp-push.gradle")
 }

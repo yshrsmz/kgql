@@ -87,13 +87,13 @@ class OperationWrapperGenerator(
 
         if (variablesSpec != null) {
             spec.addStatement(
-                "return %N.stringify(serializer(), %N(variables = variables))",
+                "return %N.encodeToString(serializer(), %N(variables = variables))",
                 jsonSpec,
                 requestBodySpec
             )
         } else {
             spec.addStatement(
-                "return %N.stringify(serializer(), %N())",
+                "return %N.encodeToString(serializer(), %N())",
                 jsonSpec,
                 requestBodySpec
             )

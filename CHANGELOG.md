@@ -3,7 +3,16 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Version 0.5.2 *(NOT RELEASED)*
+Version 0.5.3 *(IN DEVELOPMENT)*
+---
+* `[UPDATED]`: Kotlin 1.4.0
+* `[UPDATED]`: Android Gradle Plugin 4.0.1
+* `[UPDATED]`: Gradle 6.6
+* `[REMOVED]`: iosArm32 is gone again
+* `[BREAKING]`: New JS IR backend
+
+
+Version 0.5.2 *(2020-04-13)*
 ---
 * `[UPDATED]`: Android Gradle Plugin 3.6.2
 * `[UPDATED]`: Project Gradle Version is now 6.3

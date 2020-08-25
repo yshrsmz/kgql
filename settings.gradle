@@ -2,7 +2,6 @@ include ':kgql-core'
 include ':kgql-compiler'
 include ':kgql-gradle-plugin'
 include ':test-util'
-//include ':library'
 
 rootProject.name = 'kgql'
 
