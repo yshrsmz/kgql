@@ -54,13 +54,4 @@ configurations.all {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            artifactId = "$POM_ARTIFACT_ID"
-            from components.java
-        }
-    }
-}
-
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

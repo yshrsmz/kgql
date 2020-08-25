@@ -73,8 +73,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 test {
     def os = System.getenv("TRAVIS_OS_NAME")
     dependsOn(
-            ":kgql-core:installLocally",
-            ":kgql-core:installIosLocally"
+            ":kgql-core:installArchives",
     )
 }
 
@@ -83,10 +82,6 @@ configurations.all {
     resolutionStrategy.dependencySubstitution {
         substitute module("${project.property("GROUP")}:core-jvm:${project.property("VERSION_NAME")}") with project(':kgql-core')
     }
-}
-
-publishing {
-    publications.all { publication -> publication.artifactId = "$POM_ARTIFACT_ID" }
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

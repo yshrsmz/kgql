@@ -8,7 +8,8 @@ Version 0.5.3 *(IN DEVELOPMENT)*
 * `[UPDATED]`: Kotlin 1.4.0
 * `[UPDATED]`: Android Gradle Plugin 4.0.1
 * `[UPDATED]`: Gradle 6.6
-* `[BREAKING]`: iosArm32 is gone again
+* `[REMOVED]`: iosArm32 is gone again
+* `[BREAKING]`: New JS IR backend
 
 
 Version 0.5.2 *(2020-04-13)*
