@@ -20,19 +20,19 @@ def findProperty(String key) {
     [project.properties[key], System.getenv(key)].find { it != null }
 }
 
-def getReleaseRepositoryUrl() {
+def getReleaseRepositoryUrlFromProperty() {
     return findProperty("RELEASE_REPOSITORY_URL") ?: "https://api.bintray.com/maven/$BINTRAY_ORG/$BINTRAY_REPOSITORY/$POM_ARTIFACT_ID"
 }
 
-def getSnapshotRepositoryUrl() {
+def getSnapshotRepositoryUrlFromProperty() {
     return findProperty("SNAPSHOT_REPOSITORY_URL") ?: "https://oss.jfrog.org/artifactory/oss-snapshot-local"
 }
 
-def getRepositoryUsername() {
+def getRepositoryUsernameFromProperty() {
     return findProperty("BINTRAY_USER") ?: "no.bintray.user"
 }
 
-def getRepositoryPassword() {
+def getRepositoryPasswordFromProperty() {
     return findProperty("BINTRAY_API_KEY") ?: "no.bintray.api.key"
 }
 
@@ -40,10 +40,10 @@ mavenPublish {
     releaseSigningEnabled = false
     targets {
         uploadArchives {
-            releaseRepositoryUrl = getReleaseRepositoryUrl()
-            snapshotRepositoryUrl = getSnapshotRepositoryUrl()
-            repositoryUsername = getRepositoryUsername()
-            repositoryPassword = getRepositoryPassword()
+            releaseRepositoryUrl = getReleaseRepositoryUrlFromProperty()
+            snapshotRepositoryUrl = null
+            repositoryUsername = getRepositoryUsernameFromProperty()
+            repositoryPassword = getRepositoryPasswordFromProperty()
         }
         installArchives {
             releaseRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()

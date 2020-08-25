@@ -3,7 +3,7 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Version 0.5.3 *(IN DEVELOPMENT)*
+Version 0.5.3 *(2020-08-25)*
 ---
 * `[UPDATED]`: Kotlin 1.4.0
 * `[UPDATED]`: Android Gradle Plugin 4.0.1

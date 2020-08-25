@@ -1,6 +1,5 @@
 apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
-apply plugin: 'maven-publish'
 
 archivesBaseName = 'kgql-core'
 

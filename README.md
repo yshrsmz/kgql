@@ -1,7 +1,7 @@
 kgql
 ===
 
-[ ![Download](https://api.bintray.com/packages/yshrsmz/kgql/gradle-plugin/images/download.svg) ](https://bintray.com/yshrsmz/kgql/gradle-plugin/_latestVersion)
+[![Download](https://api.bintray.com/packages/yshrsmz/kgql/gradle-plugin/images/download.svg)](https://bintray.com/yshrsmz/kgql/gradle-plugin/_latestVersion)
 
 GraphQL Document wrapper generator for Kotlin Multiplatform Project.  
 Currently available for JVM/Android/iOS
@@ -18,7 +18,7 @@ kgql Gradle Plugin generates wrapper classes for provided GraphQL document files
 
 ### Setup
 
-kgql requires Gradle __5.4.1 or later__
+kgql requires Gradle __6.5 or later__
 
 Supported GraphQL file extension: `.gql` or `.graphql`
 
@@ -32,9 +32,9 @@ buildscript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.22.0'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.3'
     }
 }
 
@@ -67,9 +67,9 @@ buildscript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:0.22.0'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.3'
     }
 }
 
@@ -237,7 +237,7 @@ $ ./gradlew -p sample generateKgqlInterface
 ```
 # Try out the samples.
 # BuildKonfig will be generated in ./sample/build/kgql
-$ ./gradlew clean publishAllPublicationsToTestRepository
+$ ./gradlew clean build installArchives
 $ ./gradlew -p sample generateKgqlInterface
 ```
 
