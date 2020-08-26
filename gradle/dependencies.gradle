@@ -20,6 +20,7 @@ ext.deps = [
                         jdk8: "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
                 ],
                 reflect      : "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
+                nativeUtils  : "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}",
                 serialization: [
                         core: "org.jetbrains.kotlinx:kotlinx-serialization-core:${versions.serialization}",
                 ],

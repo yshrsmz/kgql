@@ -98,13 +98,13 @@ class KgqlPluginTest {
             .withProjectDir(fixtureRoot)
             .withPluginClasspath()
 
-        val buildDir = File(fixtureRoot, "build/kgql")
+        val buildDir = File(fixtureRoot, "build/generated/kgql")
 
         buildDir.delete()
         val result = runner
             .withArguments("clean", "compileKotlinJs", "--stacktrace")
             .build()
-        assertThat(result.output).contains("generateKgqlInterface")
+        assertThat(result.output).contains("generateJsMainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 
@@ -115,13 +115,13 @@ class KgqlPluginTest {
             .withProjectDir(fixtureRoot)
             .withPluginClasspath()
 
-        val buildDir = File(fixtureRoot, "build/kgql")
+        val buildDir = File(fixtureRoot, "build/generated/kgql")
         buildDir.delete()
 
         val result = runner
             .withArguments("clean", "compileKotlinJvm", "--stacktrace")
             .build()
-        assertThat(result.output).contains("generateKgqlInterface")
+        assertThat(result.output).contains("generateJvmMainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 
@@ -132,14 +132,14 @@ class KgqlPluginTest {
             .withProjectDir(fixtureRoot)
             .withPluginClasspath()
 
-        val buildDir = File(fixtureRoot, "build/kgql")
+        val buildDir = File(fixtureRoot, "build/generated/kgql")
         buildDir.delete()
 
         val result = runner
             .withArguments("clean", "compileDebugKotlinAndroid", "--stacktrace", "--info")
             .build()
         assertThat(result.output).contains("BUILD SUCCESSFUL")
-        assertThat(result.output).contains("generateKgqlInterface")
+        assertThat(result.output).contains("generateAndroidDebugKgqlInterface")
     }
 
     @Test
@@ -150,14 +150,14 @@ class KgqlPluginTest {
             .withProjectDir(fixtureRoot)
             .withPluginClasspath()
 
-        val buildDir = File(fixtureRoot, "build/kgql")
+        val buildDir = File(fixtureRoot, "build/generated/kgql")
 
         buildDir.delete()
         var result = runner
             .withArguments("clean", "linkDebugFrameworkIosArm64", "--stacktrace")
             .build()
 
-        assertThat(result.output).contains("generateKgqlInterface")
+        assertThat(result.output).contains("generateIosArm64MainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 
@@ -169,14 +169,14 @@ class KgqlPluginTest {
             .withProjectDir(fixtureRoot)
             .withPluginClasspath()
 
-        val buildDir = File(fixtureRoot, "build/kgql")
+        val buildDir = File(fixtureRoot, "build/generated/kgql")
 
         buildDir.delete()
         var result = runner
             .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
             .build()
 
-        assertThat(result.output).contains("generateKgqlInterface")
+        assertThat(result.output).contains("generateIosX64MainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 }
