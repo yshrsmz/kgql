@@ -1,8 +1,8 @@
 ext.versions = [
-        compileSdk   : 29,
-        kotlin       : '1.4.0',
-        serialization: '1.0.0-RC',
-        dokka        : '0.9.18',
+        compileSdk   : 30,
+        kotlin       : '1.4.10',
+        serialization: '1.0.0-RC2',
+        dokka        : '1.4.10',
 ]
 
 ext.deps = [
@@ -11,9 +11,9 @@ ext.deps = [
                 kotlin       : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
                 serialization: "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
                 dokka        : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
-                versions     : "com.github.ben-manes:gradle-versions-plugin:0.29.0",
+                versions     : "com.github.ben-manes:gradle-versions-plugin:0.33.0",
                 pluginPublish: "com.gradle.publish:plugin-publish-plugin:0.12.0",
-                mavenPublish : "com.vanniktech:gradle-maven-publish-plugin:0.12.0"
+                mavenPublish : "com.vanniktech:gradle-maven-publish-plugin:0.13.0"
         ],
         kotlin    : [
                 stdlib       : [
@@ -22,7 +22,7 @@ ext.deps = [
                 reflect      : "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
                 nativeUtils  : "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}",
                 serialization: [
-                        core: "org.jetbrains.kotlinx:kotlinx-serialization-core:${versions.serialization}",
+                        core: "org.jetbrains.kotlinx:kotlinx-serialization-json:${versions.serialization}",
                 ],
                 test         : [
                         common           : "org.jetbrains.kotlin:kotlin-test-common:${versions.kotlin}",

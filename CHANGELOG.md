@@ -6,6 +6,9 @@ Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAK
 Unreleased
 ---
 * `[UPDATED]`: rewrite plugin
+* `[UPDATED]`: Kotlin 1.4.10
+* `[UPDATED]`: kotlinx.serialization 1.0.0-RC2
+
 
 
 Version 0.5.3 *(2020-08-25)*

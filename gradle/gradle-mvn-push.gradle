@@ -4,11 +4,6 @@ import java.nio.file.Paths
 apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: "org.jetbrains.dokka"
 
-dokka {
-    outputDirectory = "$buildDir/dokka"
-    outputFormat = "html"
-}
-
 // Load `secret.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
 if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
     def localProperties = new Properties()
@@ -50,8 +45,4 @@ mavenPublish {
             snapshotRepositoryUrl = file("${rootProject.buildDir}/localMaven").toURI().toString()
         }
     }
-}
-
-if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
-    apply from: rootProject.file("gradle/gradle-mvn-mpp-push.gradle")
 }
