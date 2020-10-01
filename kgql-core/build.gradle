@@ -18,7 +18,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api deps.kotlin.serialization.core
+                api deps.kotlin.serialization.json
             }
         }
         commonTest {

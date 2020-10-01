@@ -36,7 +36,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation deps.kotlin.serialization.core
+                implementation deps.kotlin.serialization.json
             }
         }
         jvmMain {

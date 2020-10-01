@@ -7,8 +7,8 @@ buildscript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.4.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.4.10'
         classpath 'com.codingfeline.kgql:gradle-plugin:+'
     }
 }
@@ -41,7 +41,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC2"
             }
         }
         jvmMain {

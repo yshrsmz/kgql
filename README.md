@@ -32,9 +32,9 @@ buildscript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC2'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.4'
     }
 }
 
@@ -67,9 +67,9 @@ buildscript {
         maven { url "https://dl.bintray.com/yshrsmz/kgql" }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC2'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.4'
     }
 }
 

@@ -22,7 +22,7 @@ ext.deps = [
                 reflect      : "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
                 nativeUtils  : "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}",
                 serialization: [
-                        core: "org.jetbrains.kotlinx:kotlinx-serialization-json:${versions.serialization}",
+                        json: "org.jetbrains.kotlinx:kotlinx-serialization-json:${versions.serialization}",
                 ],
                 test         : [
                         common           : "org.jetbrains.kotlin:kotlin-test-common:${versions.kotlin}",

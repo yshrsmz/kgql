@@ -3,7 +3,7 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Unreleased
+Version 0.5.4 *(2020-10-01)*
 ---
 * `[UPDATED]`: rewrite plugin
 * `[UPDATED]`: Kotlin 1.4.10
