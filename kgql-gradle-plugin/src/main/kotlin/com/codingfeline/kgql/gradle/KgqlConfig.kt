@@ -27,7 +27,7 @@ class KgqlConfig(
         val typeMap = typeMapper ?: mutableMapOf()
 
         sources.forEach { source ->
-            println(source)
+//            println(source)
             // Add source dependency on the generated code.
             if (common == null) {
                 source.sourceDirectorySet.srcDir(generatedSourceDirectory.toRelativeString(project.projectDir))
