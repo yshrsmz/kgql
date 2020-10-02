@@ -159,6 +159,9 @@ object ViewerDocument {
 }
 ```
 
+As you can see, generated code utilizes data class's default value.
+So in order to properly serialize, you need to set `encodeDefaults` to true in your `kotlinx.serialization.json.Json` instance.
+
 You can use this code with Ktor or any other HttpClient.
 
 Example usage with Ktor is below
@@ -200,8 +203,15 @@ data class ViewerResponse(
 
 class GitHubApi {
 
+    private val json = Json {
+        // encodeDefaults must be set to true
+        encodeDefaults = true 
+    }
+
     private val client = HttpClient {
-        install(JsonFeature)
+        install(JsonFeature) {
+            this.serializer = KotlinxSerializer(json = json)
+        }
     }
 
     suspend fun fetchLogin(): Viewer? {
