@@ -3,12 +3,19 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.5.5 *(2020-12-01)*
+---
+* `[UPDATED]`: Kotlin 1.4.20
+* `[UPDATED]`: kotlinx.serialization 1.0.1
+* `[UPDATED]`: gradle wrapper 6.7.1
+* `[ADDED]`: enabled explicit api
+
+
 Version 0.5.4 *(2020-10-01)*
 ---
 * `[UPDATED]`: rewrite plugin
 * `[UPDATED]`: Kotlin 1.4.10
 * `[UPDATED]`: kotlinx.serialization 1.0.0-RC2
-
 
 
 Version 0.5.3 *(2020-08-25)*

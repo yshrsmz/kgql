@@ -49,22 +49,22 @@ class DocumentWrapperTest {
             |      |}
             |      |""${'"'}.trimMargin()
             |
-            |  object Query {
+            |  public object Query {
             |    /**
             |     * Generate Json string of [Request]
             |     */
-            |    fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
+            |    public fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
             |
-            |    fun serializer(): KSerializer<Request> = Request.serializer()
+            |    public fun serializer(): KSerializer<Request> = Request.serializer()
             |
             |    @Serializable
-            |    data class Request(
+            |    public data class Request(
             |      @SerialName(value = "variables")
-            |      override val variables: Unit? = null,
+            |      public override val variables: Unit? = null,
             |      @SerialName(value = "operationName")
-            |      override val operationName: String? = null,
+            |      public override val operationName: String? = null,
             |      @SerialName(value = "query")
-            |      override val query: String = document
+            |      public override val query: String = document
             |    ) : KgqlRequestBody<Unit>
             |  }
             |}
@@ -127,41 +127,41 @@ class DocumentWrapperTest {
             |      |}
             |      ""${'"'}.trimMargin()
             |
-            |  object CodeOfConductQuery {
+            |  public object CodeOfConductQuery {
             |    /**
             |     * Generate Json string of [Request]
             |     */
-            |    fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
+            |    public fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
             |
-            |    fun serializer(): KSerializer<Request> = Request.serializer()
+            |    public fun serializer(): KSerializer<Request> = Request.serializer()
             |
             |    @Serializable
-            |    data class Request(
+            |    public data class Request(
             |      @SerialName(value = "variables")
-            |      override val variables: Unit? = null,
+            |      public override val variables: Unit? = null,
             |      @SerialName(value = "operationName")
-            |      override val operationName: String? = "CodeOfConduct",
+            |      public override val operationName: String? = "CodeOfConduct",
             |      @SerialName(value = "query")
-            |      override val query: String = document
+            |      public override val query: String = document
             |    ) : KgqlRequestBody<Unit>
             |  }
             |
-            |  object TestQuery {
+            |  public object TestQuery {
             |    /**
             |     * Generate Json string of [Request]
             |     */
-            |    fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
+            |    public fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
             |
-            |    fun serializer(): KSerializer<Request> = Request.serializer()
+            |    public fun serializer(): KSerializer<Request> = Request.serializer()
             |
             |    @Serializable
-            |    data class Request(
+            |    public data class Request(
             |      @SerialName(value = "variables")
-            |      override val variables: Unit? = null,
+            |      public override val variables: Unit? = null,
             |      @SerialName(value = "operationName")
-            |      override val operationName: String? = "Test",
+            |      public override val operationName: String? = "Test",
             |      @SerialName(value = "query")
-            |      override val query: String = document
+            |      public override val query: String = document
             |    ) : KgqlRequestBody<Unit>
             |  }
             |}
@@ -217,29 +217,29 @@ class DocumentWrapperTest {
                 |      |}
                 |      ""${'"'}.trimMargin()
                 |
-                |  object WithVariablesQuery {
+                |  public object WithVariablesQuery {
                 |    /**
                 |     * Generate Json string of [Request]
                 |     */
-                |    fun requestBody(variables: Variables, json: Json): String = json.encodeToString(serializer(),
-                |        Request(variables = variables))
+                |    public fun requestBody(variables: Variables, json: Json): String =
+                |        json.encodeToString(serializer(), Request(variables = variables))
                 |
-                |    fun serializer(): KSerializer<Request> = Request.serializer()
+                |    public fun serializer(): KSerializer<Request> = Request.serializer()
                 |
                 |    @Serializable
-                |    data class Variables(
+                |    public data class Variables(
                 |      @SerialName(value = "login")
-                |      val login: String
+                |      public val login: String
                 |    )
                 |
                 |    @Serializable
-                |    data class Request(
+                |    public data class Request(
                 |      @SerialName(value = "variables")
-                |      override val variables: Variables?,
+                |      public override val variables: Variables?,
                 |      @SerialName(value = "operationName")
-                |      override val operationName: String? = "WithVariables",
+                |      public override val operationName: String? = "WithVariables",
                 |      @SerialName(value = "query")
-                |      override val query: String = document
+                |      public override val query: String = document
                 |    ) : KgqlRequestBody<Variables>
                 |  }
                 |}
