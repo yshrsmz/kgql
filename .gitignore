@@ -56,3 +56,5 @@ playground.xcworkspace
 secret.properties
 
 !.idea/codeStyles/
+.envrc
+*-sec.asc

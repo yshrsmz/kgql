@@ -1,7 +1,7 @@
 kgql
 ===
 
-[![Download](https://api.bintray.com/packages/yshrsmz/kgql/gradle-plugin/images/download.svg)](https://bintray.com/yshrsmz/kgql/gradle-plugin/_latestVersion)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.codingfeline.kgql/gradle-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.codingfeline.kgql/gradle-plugin)
 
 GraphQL Document wrapper generator for Kotlin Multiplatform Project.  
 Currently available for JVM/Android/iOS
@@ -10,11 +10,9 @@ Currently available for JVM/Android/iOS
 
 kgql core classes
 
-
 ## kgql-gradle-plugin
 
 kgql Gradle Plugin generates wrapper classes for provided GraphQL document files.
-
 
 ### Setup
 
@@ -27,14 +25,14 @@ Supported GraphQL file extension: `.gql` or `.graphql`
 ```gradle
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
-        maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+        jcenter()
     }
     dependencies {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
         classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC2'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.4'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.5'
     }
 }
 
@@ -44,7 +42,7 @@ apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.codingfeline.kgql'
 
 repositories {
-     maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+     mavenCentral()
 }
 
 kgql {
@@ -62,9 +60,9 @@ kgql {
 ```gradle
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
-        maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+        jcenter()
     }
     dependencies {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
@@ -78,7 +76,7 @@ apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.codingfeline.kgql'
 
 repositories {
-     maven { url "https://dl.bintray.com/yshrsmz/kgql" }
+     mavenCentral()
 }
 
 kotlin {
@@ -97,14 +95,12 @@ kgql {
 
 #### How to generate wrapper classes
 
-When you apply kgql plugin, `generateKgqlInterface` task is added to the project. Manually executing it is one way, but the task is integrated into project's build task, so it will be generated upon each build.
-
+When you apply kgql plugin, `generateKgqlInterface` task is added to the project. Manually executing it is one way, but
+the task is integrated into project's build task, so it will be generated upon each build.
 
 ## [WIP]kgql-ktor
 
 ktor extensions for kgql
-
-
 
 ## How it works
 
@@ -152,15 +148,15 @@ object ViewerDocument {
         data class Request(
             @SerialName(value = "variables") @Optional override val variables: Unit? = null,
             @Optional @SerialName(value = "operationName") override val operationName: String? =
-                    null,
+                null,
             @SerialName(value = "query") override val query: String = document
         ) : KgqlRequestBody<Unit>
     }
 }
 ```
 
-As you can see, generated code utilizes data class's default value.
-So in order to properly serialize, you need to set `encodeDefaults` to true in your `kotlinx.serialization.json.Json` instance.
+As you can see, generated code utilizes data class's default value. So in order to properly serialize, you need to
+set `encodeDefaults` to true in your `kotlinx.serialization.json.Json` instance.
 
 You can use this code with Ktor or any other HttpClient.
 
@@ -198,14 +194,14 @@ data class Viewer(
 data class ViewerResponse(
     override val data: ViewerWrapper?,
     override val errors: List<KgqlError>?
-): KgqlResponse<ViewerWrapper>
+) : KgqlResponse<ViewerWrapper>
 
 
 class GitHubApi {
 
     private val json = Json {
         // encodeDefaults must be set to true
-        encodeDefaults = true 
+        encodeDefaults = true
     }
 
     private val client = HttpClient {
@@ -251,7 +247,7 @@ $ ./gradlew clean build installArchives
 $ ./gradlew -p sample generateKgqlInterface
 ```
 
-
 ## Credits
 
-This library is highly inspired by [squareup/sqldelight](https://github.com/squareup/sqldelight) and the gradle plugin and basic idea is heavily based on it. Thanks for this.
+This library is highly inspired by [squareup/sqldelight](https://github.com/squareup/sqldelight) and the gradle plugin
+and basic idea is heavily based on it. Thanks for this.
