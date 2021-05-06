@@ -1,3 +1,6 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
 apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
@@ -36,4 +39,11 @@ allprojects {
 wrapper {
     gradleVersion = '7.0'
     distributionType = Wrapper.DistributionType.ALL
+}
+
+// Load `secret.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
+if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream("$project.rootDir/secret.properties"))
+    localProperties.each { prop -> project.ext.set(prop.key, prop.value) }
 }

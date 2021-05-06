@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-./gradlew clean build uploadArchives :kgql-gradle-plugin:publishPlugins --no-daemon --no-parallel
+./gradlew clean build publish :kgql-gradle-plugin:publishPlugins --no-daemon --no-parallel
