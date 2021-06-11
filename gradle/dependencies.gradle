@@ -1,18 +1,18 @@
 ext.versions = [
         compileSdk   : 30,
-        kotlin       : '1.4.32',
-        serialization: '1.1.0',
+        kotlin       : '1.5.10',
+        serialization: '1.2.1',
         dokka        : '1.4.32',
 ]
 
 ext.deps = [
         plugins   : [
-                android      : "com.android.tools.build:gradle:4.1.2",
+                android      : "com.android.tools.build:gradle:4.2.1",
                 kotlin       : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
                 serialization: "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
                 dokka        : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
-                versions     : "com.github.ben-manes:gradle-versions-plugin:0.38.0",
-                pluginPublish: "com.gradle.publish:plugin-publish-plugin:0.14.0",
+                versions     : "com.github.ben-manes:gradle-versions-plugin:0.39.0",
+                pluginPublish: "com.gradle.publish:plugin-publish-plugin:0.15.0",
                 mavenPublish : "com.vanniktech:gradle-maven-publish-plugin:0.14.2"
         ],
         kotlin    : [

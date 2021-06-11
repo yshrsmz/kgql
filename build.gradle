@@ -37,7 +37,7 @@ allprojects {
 }
 
 wrapper {
-    gradleVersion = '7.0'
+    gradleVersion = '6.9'
     distributionType = Wrapper.DistributionType.ALL
 }
 
