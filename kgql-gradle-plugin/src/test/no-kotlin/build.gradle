@@ -6,5 +6,7 @@ repositories {
     maven {
         url "file://${projectDir.absolutePath}/../../../../build/localMaven"
     }
+    mavenCentral()
+    google()
     jcenter()
 }

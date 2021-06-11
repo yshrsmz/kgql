@@ -5,7 +5,7 @@ archivesBaseName = 'kgql-core'
 
 kotlin {
     jvm()
-    js {
+    js(IR) {
         browser()
         nodejs()
     }

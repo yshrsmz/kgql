@@ -1,9 +1,10 @@
 buildscript {
     repositories {
-        jcenter()
+        maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
+        mavenCentral()
         google()
 //        mavenLocal()
-        maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
+//        jcenter()
     }
     dependencies {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'

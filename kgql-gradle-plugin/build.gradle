@@ -73,7 +73,8 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 test {
     def os = System.getenv("TRAVIS_OS_NAME")
     dependsOn(
-            ":kgql-core:installArchives",
+            ":kgql-core:publishAllPublicationsToTestMavenRepository",
+            ":kgql-compiler:publishAllPublicationsToTestMavenRepository",
     )
 }
 
