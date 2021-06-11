@@ -4,7 +4,7 @@ kgql
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.codingfeline.kgql/gradle-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.codingfeline.kgql/gradle-plugin)
 
 GraphQL Document wrapper generator for Kotlin Multiplatform Project.  
-Currently available for JVM/Android/iOS
+Currently, available for JVM/Android/iOS
 
 ## core
 
@@ -30,9 +30,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC2'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.5'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.2.1'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.6.0'
     }
 }
 
@@ -65,9 +65,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.0.0-RC2'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.5.4'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.2.1'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.6.0'
     }
 }
 
