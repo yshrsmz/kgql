@@ -43,13 +43,12 @@ tasks.getByName('pluginUnderTestMetadata')
 dependencies {
     implementation project(':kgql-compiler')
 
-    compileOnly gradleApi()
-    implementation deps.kotlin.stdlib.jdk8
-    implementation deps.kotlin.reflect
     implementation deps.kotlin.nativeUtils
     implementation deps.plugins.kotlin
     implementation deps.plugins.serialization
     implementation deps.plugins.android
+
+    compileOnly gradleApi()
 
     testImplementation deps.junit
     testImplementation deps.truth

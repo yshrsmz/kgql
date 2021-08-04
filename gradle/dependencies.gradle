@@ -1,13 +1,13 @@
 ext.versions = [
         compileSdk   : 30,
-        kotlin       : '1.5.10',
-        serialization: '1.2.1',
-        dokka        : '1.4.32',
+        kotlin       : '1.5.21',
+        serialization: '1.2.2',
+        dokka        : '1.5.0',
 ]
 
 ext.deps = [
         plugins   : [
-                android      : "com.android.tools.build:gradle:4.2.1",
+                android      : "com.android.tools.build:gradle:4.2.2",
                 kotlin       : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
                 serialization: "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
                 dokka        : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}",
@@ -17,7 +17,8 @@ ext.deps = [
         ],
         kotlin    : [
                 stdlib       : [
-                        jdk8: "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
+                        common: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+                        jdk8  : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
                 ],
                 reflect      : "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
                 nativeUtils  : "org.jetbrains.kotlin:kotlin-native-utils:${versions.kotlin}",
@@ -32,10 +33,10 @@ ext.deps = [
                         js               : "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
                 ]
         ],
-        graphql   : "com.graphql-java:graphql-java:16.2",
+        graphql   : "com.graphql-java:graphql-java:17.0",
         antlr4    : "org.antlr:antlr4:4.8",
-        kotlinPoet: 'com.squareup:kotlinpoet:1.8.0',
+        kotlinPoet: 'com.squareup:kotlinpoet:1.9.0',
 
         junit     : "junit:junit:4.13.2",
-        truth     : "com.google.truth:truth:1.1.2"
+        truth     : "com.google.truth:truth:1.1.3"
 ]

@@ -10,7 +10,6 @@ buildscript {
         mavenCentral()
         google()
         gradlePluginPortal()
-        jcenter()
 
         dependencies {
             classpath deps.plugins.kotlin
@@ -29,7 +28,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 
     group = GROUP
@@ -37,7 +35,7 @@ allprojects {
 }
 
 wrapper {
-    gradleVersion = '6.9'
+    gradleVersion = '7.0.2'
     distributionType = Wrapper.DistributionType.ALL
 }
 
@@ -46,4 +44,15 @@ if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
     def localProperties = new Properties()
     localProperties.load(new FileInputStream("$project.rootDir/secret.properties"))
     localProperties.each { prop -> project.ext.set(prop.key, prop.value) }
+}
+
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
 }

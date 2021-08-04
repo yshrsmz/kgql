@@ -3,6 +3,14 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.7.0 *(TBD)*
+---
+
+* `[UPDATED]`: Kotlin 1.5.21
+* `[UPDATED]`: Android Gradle Plugin 4.2.2
+* `[UPDATED]`: kotlinx.serialization 1.2.2
+* `[UPDATED]`: gradle wrapper 7.0.2
+
 Version 0.6.0 *(2021-06-11)*
 ---
 
