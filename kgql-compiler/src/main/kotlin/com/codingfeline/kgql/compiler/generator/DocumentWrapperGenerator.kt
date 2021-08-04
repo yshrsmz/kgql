@@ -12,15 +12,15 @@ import graphql.language.OperationDefinition
 import graphql.parser.Parser
 
 class DocumentWrapperGenerator(
-    val sourceFile: KgqlFile,
+    private val sourceFile: KgqlFile,
     typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
 ) {
 
-    val rawDocument = sourceFile.source.readText()
-    val document = Parser().parseDocument(rawDocument)
-    val typeMapper = KgqlCustomTypeMapper(typeMap)
+    private val rawDocument = sourceFile.source.readText()
+    private val document = Parser().parseDocument(rawDocument)
+    private val typeMapper = KgqlCustomTypeMapper(typeMap)
 
-    val className = "${sourceFile.source.nameWithoutExtension.capitalize()}Document"
+    private val className = "${sourceFile.source.nameWithoutExtension.capitalize()}Document"
 
     fun generateType(logger: Logger): TypeSpec {
         logger("Generating $className...")
@@ -39,8 +39,7 @@ class DocumentWrapperGenerator(
         objectType.addProperty(documentProp)
 
         val operationWrapperGenerator = OperationWrapperGenerator(documentProp, typeMapper, fqName)
-        val operations = document.definitions.filter { it is OperationDefinition }
-            .map { it as OperationDefinition }
+        val operations = document.definitions.filterIsInstance<OperationDefinition>()
             .map { operationWrapperGenerator.generateObject(it) }
 
         objectType.addTypes(operations)

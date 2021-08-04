@@ -20,7 +20,7 @@ class KgqlEnvironment(
 ) {
 
     sealed class CompilationStatus {
-        class Success : CompilationStatus()
+        object Success : CompilationStatus()
         class Failure(val errors: List<String>) : CompilationStatus()
     }
 
@@ -45,7 +45,7 @@ class KgqlEnvironment(
         }
 
         return if (errors.isEmpty()) {
-            CompilationStatus.Success()
+            CompilationStatus.Success
         } else {
             CompilationStatus.Failure(errors)
         }

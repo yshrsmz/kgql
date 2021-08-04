@@ -10,7 +10,7 @@ import graphql.language.NonNullType
 import graphql.language.Type
 
 class KgqlCustomTypeMapper(
-    val typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
+    private val typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>
 ) {
     fun get(type: Type<*>): TypeName {
         return when (type) {

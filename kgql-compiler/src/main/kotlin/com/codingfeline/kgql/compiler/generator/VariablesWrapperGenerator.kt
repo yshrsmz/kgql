@@ -18,7 +18,7 @@ class VariableWrapperGenerator(
     fun generateType(): TypeSpec {
         val classSpec = TypeSpec.classBuilder("Variables")
             .addModifiers(KModifier.DATA)
-            .addAnnotation(Serializable::class.java)
+            .addAnnotation(Serializable::class)
             .primaryConstructor(generateConstructor(variables))
             .addProperties(generateProperties(variables))
 

@@ -22,7 +22,7 @@ object KgqlCompiler {
         writeDocumentWrapperFile(file, typeMap, output, logger)
     }
 
-    fun writeDocumentWrapperFile(
+    private fun writeDocumentWrapperFile(
         sourceFile: KgqlFile,
         typeMap: Map<GraphQLCustomTypeName, GraphQLCustomTypeFQName>,
         output: FileAppender,
