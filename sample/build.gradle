@@ -3,12 +3,12 @@ buildscript {
         maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
         mavenCentral()
         google()
+        gradlePluginPortal()
 //        mavenLocal()
-//        jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.5.10'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.5.21'
         classpath 'com.codingfeline.kgql:gradle-plugin:+'
     }
 }
@@ -18,10 +18,10 @@ apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.codingfeline.kgql'
 
 repositories {
-    jcenter()
+    maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
+    mavenCentral()
     google()
 //    mavenLocal()
-    maven { url "file://${projectDir.absolutePath}/../build/localMaven" }
 }
 
 kotlin {
@@ -40,7 +40,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.1"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.2"
             }
         }
         jvmMain {
