@@ -125,7 +125,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 object ViewerDocument {
     private val document: String = """
@@ -138,9 +137,9 @@ object ViewerDocument {
 
     object Query {
         /**
-         * Generate Json string of [Request]
+         * Create an instance of [Request] which then you can encode to JSON string
          */
-        fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
+        fun requestBody(): Request = Request()
 
         fun serializer(): KSerializer<Request> = Request.serializer()
 
@@ -212,8 +211,9 @@ class GitHubApi {
 
     suspend fun fetchLogin(): Viewer? {
 
+        val body = json.encodeToString(ViewerDocument.Query.serializer(), ViewerDocument.Query.requestBody())
         val response = client.post<String>(url = Url("https://api.github.com/graphql")) {
-            body = TextContent(text = ViewerDocument.Query.requestBody(), contentType = ContentType.Application.Json)
+            body = TextContent(text = body, contentType = ContentType.Application.Json)
 
             headers {
                 append("Authorization", "bearer $TOKEN")

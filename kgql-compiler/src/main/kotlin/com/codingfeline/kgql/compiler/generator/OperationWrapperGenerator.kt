@@ -11,10 +11,8 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import graphql.language.OperationDefinition
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.json.Json
 
 private const val PARAM_VARIABLES_NAME = "variables"
-private const val PARAM_JSON_NAME = "json"
 
 class OperationWrapperGenerator(
     private val documentProp: PropertySpec,
@@ -44,7 +42,7 @@ class OperationWrapperGenerator(
         objectSpec.addType(requestBodySpec)
 
         val operationFunSpec = generateOperationFunction(
-            objectName = name,
+            parentObjectName = name,
             variablesSpec = variableSpec,
             requestBodySpec = requestBodySpec
         )
@@ -63,45 +61,34 @@ class OperationWrapperGenerator(
     }
 
     private fun generateOperationFunction(
-        objectName: String,
+        parentObjectName: String,
         variablesSpec: TypeSpec?,
         requestBodySpec: TypeSpec
     ): FunSpec {
-        val variablesType: TypeName = if (variablesSpec == null) {
-            Unit::class.asTypeName()
-        } else {
-            ClassName.bestGuess("$parentFQName.$objectName.${variablesSpec.name}")
-        }
+        val variablesType: TypeName = variablesSpec.typeNameOrUnit(parentObjectName)
 
         val spec = FunSpec.builder("requestBody")
-            .returns(String::class)
+            .returns(requestBodySpec.typeNameOrUnit(parentObjectName))
 
         if (variablesSpec != null) {
             spec.addParameter(generateParameterSpecFromVariable(variablesType))
         }
 
-        val jsonSpec = ParameterSpec.builder(PARAM_JSON_NAME, Json::class.asTypeName())
-            .build()
-
-        spec.addParameter(jsonSpec)
-
         if (variablesSpec != null) {
             spec.addStatement(
-                "return %N.encodeToString(serializer(), %N(variables = variables))",
-                jsonSpec,
+                "return %N(variables = variables)",
                 requestBodySpec
             )
         } else {
             spec.addStatement(
-                "return %N.encodeToString(serializer(), %N())",
-                jsonSpec,
+                "return %N()",
                 requestBodySpec
             )
         }
 
         spec.addKdoc(
             """
-            |Generate Json string of [%N]
+            |Create an instance of [%N] which then you can encode to JSON string
         """.trimMargin(), requestBodySpec
         )
 

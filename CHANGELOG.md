@@ -10,6 +10,7 @@ Version 0.7.0 *(TBD)*
 * `[UPDATED]`: Android Gradle Plugin 4.2.2
 * `[UPDATED]`: kotlinx.serialization 1.2.2
 * `[UPDATED]`: gradle wrapper 7.0.2
+* `[BREAKING]`: `requestBody` function now returns Request instance. You should encode it on your own
 
 Version 0.6.0 *(2021-06-11)*
 ---

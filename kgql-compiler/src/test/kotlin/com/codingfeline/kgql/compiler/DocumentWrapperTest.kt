@@ -38,7 +38,6 @@ class DocumentWrapperTest {
             |import kotlinx.serialization.KSerializer
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
-            |import kotlinx.serialization.json.Json
             |
             |internal object TestDocument {
             |  private val document: String = ""${'"'}
@@ -51,9 +50,9 @@ class DocumentWrapperTest {
             |
             |  public object Query {
             |    /**
-            |     * Generate Json string of [Request]
+            |     * Create an instance of [Request] which then you can encode to JSON string
             |     */
-            |    public fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
+            |    public fun requestBody(): Request = Request()
             |
             |    public fun serializer(): KSerializer<Request> = Request.serializer()
             |
@@ -108,7 +107,6 @@ class DocumentWrapperTest {
             |import kotlinx.serialization.KSerializer
             |import kotlinx.serialization.SerialName
             |import kotlinx.serialization.Serializable
-            |import kotlinx.serialization.json.Json
             |
             |internal object TestDocument {
             |  private val document: String = ""${'"'}
@@ -129,9 +127,9 @@ class DocumentWrapperTest {
             |
             |  public object CodeOfConductQuery {
             |    /**
-            |     * Generate Json string of [Request]
+            |     * Create an instance of [Request] which then you can encode to JSON string
             |     */
-            |    public fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
+            |    public fun requestBody(): Request = Request()
             |
             |    public fun serializer(): KSerializer<Request> = Request.serializer()
             |
@@ -148,9 +146,9 @@ class DocumentWrapperTest {
             |
             |  public object TestQuery {
             |    /**
-            |     * Generate Json string of [Request]
+            |     * Create an instance of [Request] which then you can encode to JSON string
             |     */
-            |    public fun requestBody(json: Json): String = json.encodeToString(serializer(), Request())
+            |    public fun requestBody(): Request = Request()
             |
             |    public fun serializer(): KSerializer<Request> = Request.serializer()
             |
@@ -201,7 +199,6 @@ class DocumentWrapperTest {
                 |import kotlinx.serialization.KSerializer
                 |import kotlinx.serialization.SerialName
                 |import kotlinx.serialization.Serializable
-                |import kotlinx.serialization.json.Json
                 |
                 |internal object TestDocument {
                 |  private val document: String = ""${'"'}
@@ -219,10 +216,9 @@ class DocumentWrapperTest {
                 |
                 |  public object WithVariablesQuery {
                 |    /**
-                |     * Generate Json string of [Request]
+                |     * Create an instance of [Request] which then you can encode to JSON string
                 |     */
-                |    public fun requestBody(variables: Variables, json: Json): String =
-                |        json.encodeToString(serializer(), Request(variables = variables))
+                |    public fun requestBody(variables: Variables): Request = Request(variables = variables)
                 |
                 |    public fun serializer(): KSerializer<Request> = Request.serializer()
                 |
