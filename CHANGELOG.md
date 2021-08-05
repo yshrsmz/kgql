@@ -3,7 +3,7 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Version 0.7.0 *(TBD)*
+Version 0.7.0 *(2021/08/05)*
 ---
 
 * `[UPDATED]`: Kotlin 1.5.21
