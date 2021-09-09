@@ -17,7 +17,7 @@ open class KgqlTask : SourceTask() {
     val pluginVersion = VERSION
 
     @get:OutputDirectory
-    var outputDirectory: File? = null
+    lateinit var outputDirectory: File
 
     @Input
     lateinit var sourceFolders: Iterable<File>

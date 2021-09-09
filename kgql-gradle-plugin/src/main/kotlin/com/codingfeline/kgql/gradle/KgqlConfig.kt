@@ -20,7 +20,6 @@ class KgqlConfig(
 
     internal fun registerTask() {
         val common = sources.singleOrNull { it.sourceSets.singleOrNull() == "commonMain" }
-        common?.sourceDirectorySet?.srcDir(generatedSourceDirectory.toRelativeString(project.projectDir))
 
         val packageName = requireNotNull(packageName) { "property packageName must be provided" }
         val sourceSet = sourceSet ?: project.files("src/main/kgql")
@@ -49,7 +48,7 @@ class KgqlConfig(
 
             project.tasks.named("generateKgqlInterface").configure { it.dependsOn(task) }
 
-            source.registerTaskDependency(task)
+            source.sourceDirectorySet.srcDir(task.map { it.outputDirectory })
         }
     }
 }

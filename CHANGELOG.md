@@ -7,6 +7,7 @@ Version 0.8.0 *(TBD)*
 ---
 
 * `[ADDED]`: expose `operationName` from Query object
+* `[UPDATED]`: propagate task dependency by source set dependency
 
 Version 0.7.0 *(2021/08/05)*
 ---
