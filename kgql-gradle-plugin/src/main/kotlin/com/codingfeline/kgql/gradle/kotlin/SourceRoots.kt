@@ -4,14 +4,11 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.codingfeline.kgql.gradle.KgqlConfig
-import com.codingfeline.kgql.gradle.KgqlTask
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSetContainer
-import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
@@ -37,10 +34,7 @@ internal fun KgqlConfig.sources(): List<Source> {
             type = KotlinPlatformType.jvm,
             name = "main",
             sourceSets = listOf("main"),
-            sourceDirectorySet = sourceSets.getByName("main").kotlin!!,
-            registerTaskDependency = { task ->
-                project.tasks.named("compileKotlin").configure { it.dependsOn(task) }
-            }
+            sourceDirectorySet = sourceSets.getByName("main").kotlin!!
         )
     )
 }
@@ -54,10 +48,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
                     val compilation = target.compilations.single { it.name == source.name }
                     return@map source.copy(
                         name = "${target.name}${source.name.capitalize()}",
-                        sourceSets = source.sourceSets.map { "${target.name}${it.capitalize()}" } + "commonMain",
-                        registerTaskDependency = { task ->
-                            compilation.compileKotlinTask.dependsOn(task)
-                        }
+                        sourceSets = source.sourceSets.map { "${target.name}${it.capitalize()}" } + "commonMain"
                     )
                 }
         }
@@ -73,11 +64,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
                 name = "${target.name}${compilation.name.capitalize()}",
                 variantName = (compilation as? KotlinJvmAndroidCompilation)?.name,
                 sourceDirectorySet = compilation.defaultSourceSet.kotlin,
-                sourceSets = compilation.allKotlinSourceSets.map { it.name },
-                registerTaskDependency = { task ->
-                    (target as? KotlinNativeTarget)?.binaries?.forEach { it.linkTask.dependsOn(task) }
-                    compilation.compileKotlinTask.dependsOn(task)
-                }
+                sourceSets = compilation.allKotlinSourceSets.map { it.name }
 
             )
         }
@@ -100,12 +87,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
             variantName = variant.name,
             sourceDirectorySet = sourceSets[variant.name]
                 ?: throw IllegalStateException("Couldn't find ${variant.name} in $sourceSets"),
-            sourceSets = variant.sourceSets.map { it.name },
-            registerTaskDependency = { task ->
-                // TODO: Lazy task configuration
-                variant.registerJavaGeneratingTask(task.get(), task.get().outputDirectory)
-                project.tasks.named("compile${variant.name.capitalize()}Kotlin").dependsOn(task)
-            }
+            sourceSets = variant.sourceSets.map { it.name }
         )
     }
 }
@@ -117,8 +99,7 @@ internal data class Source(
     val sourceDirectorySet: SourceDirectorySet,
     val name: String,
     val variantName: String? = null,
-    val sourceSets: List<String>,
-    val registerTaskDependency: (TaskProvider<KgqlTask>) -> Unit
+    val sourceSets: List<String>
 ) {
     fun closestMatch(sources: Collection<Source>): Source? {
         var matches = sources.filter {
