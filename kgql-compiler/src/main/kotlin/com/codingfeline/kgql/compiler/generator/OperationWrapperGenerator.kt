@@ -3,6 +3,7 @@ package com.codingfeline.kgql.compiler.generator
 import com.codingfeline.kgql.compiler.KgqlCustomTypeMapper
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import com.squareup.kotlinpoet.PropertySpec
@@ -27,6 +28,16 @@ class OperationWrapperGenerator(
 
         val objectSpec = TypeSpec.objectBuilder(name = name)
 
+        val operationNamePropSpec = PropertySpec.builder(
+            "operationName",
+            String::class.asTypeName().copy(nullable = true)
+        )
+            .addModifiers(KModifier.PUBLIC)
+            .initializer("%S", operation.name)
+            .build()
+
+        objectSpec.addProperty(operationNamePropSpec)
+
         if (hasVariables) {
             variableSpec = VariableWrapperGenerator(operation.variableDefinitions, typeMapper).generateType()
             objectSpec.addType(variableSpec)
@@ -34,8 +45,9 @@ class OperationWrapperGenerator(
 
         val requestBodySpec =
             RequestBodyGenerator(
-                operation = operation,
-                parentObjectFqName = "$parentFQName.$name",
+                operationNameProp = operationNamePropSpec,
+                parentDocumentFqName = parentFQName,
+                parentObjectName = name,
                 variablesSpec = variableSpec,
                 documentProp = documentProp
             ).generateType()
