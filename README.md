@@ -32,7 +32,7 @@ buildscript {
     dependencies {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
         classpath 'org.jetbrains.kotlin:kotlin-serialization:1.2.2'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.7.0'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.8.0'
     }
 }
 
@@ -67,7 +67,7 @@ buildscript {
     dependencies {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
         classpath 'org.jetbrains.kotlin:kotlin-serialization:1.2.2'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.7.0'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.8.0'
     }
 }
 
