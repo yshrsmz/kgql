@@ -49,6 +49,8 @@ class DocumentWrapperTest {
             |      |""${'"'}.trimMargin()
             |
             |  public object Query {
+            |    public val operationName: String? = null
+            |
             |    /**
             |     * Create an instance of [Request] which then you can encode to JSON string
             |     */
@@ -61,7 +63,7 @@ class DocumentWrapperTest {
             |      @SerialName(value = "variables")
             |      public override val variables: Unit? = null,
             |      @SerialName(value = "operationName")
-            |      public override val operationName: String? = null,
+            |      public override val operationName: String? = Query.operationName,
             |      @SerialName(value = "query")
             |      public override val query: String = document
             |    ) : KgqlRequestBody<Unit>
@@ -126,6 +128,8 @@ class DocumentWrapperTest {
             |      ""${'"'}.trimMargin()
             |
             |  public object CodeOfConductQuery {
+            |    public val operationName: String? = "CodeOfConduct"
+            |
             |    /**
             |     * Create an instance of [Request] which then you can encode to JSON string
             |     */
@@ -138,13 +142,15 @@ class DocumentWrapperTest {
             |      @SerialName(value = "variables")
             |      public override val variables: Unit? = null,
             |      @SerialName(value = "operationName")
-            |      public override val operationName: String? = "CodeOfConduct",
+            |      public override val operationName: String? = CodeOfConductQuery.operationName,
             |      @SerialName(value = "query")
             |      public override val query: String = document
             |    ) : KgqlRequestBody<Unit>
             |  }
             |
             |  public object TestQuery {
+            |    public val operationName: String? = "Test"
+            |
             |    /**
             |     * Create an instance of [Request] which then you can encode to JSON string
             |     */
@@ -157,7 +163,7 @@ class DocumentWrapperTest {
             |      @SerialName(value = "variables")
             |      public override val variables: Unit? = null,
             |      @SerialName(value = "operationName")
-            |      public override val operationName: String? = "Test",
+            |      public override val operationName: String? = TestQuery.operationName,
             |      @SerialName(value = "query")
             |      public override val query: String = document
             |    ) : KgqlRequestBody<Unit>
@@ -215,6 +221,8 @@ class DocumentWrapperTest {
                 |      ""${'"'}.trimMargin()
                 |
                 |  public object WithVariablesQuery {
+                |    public val operationName: String? = "WithVariables"
+                |
                 |    /**
                 |     * Create an instance of [Request] which then you can encode to JSON string
                 |     */
@@ -233,7 +241,7 @@ class DocumentWrapperTest {
                 |      @SerialName(value = "variables")
                 |      public override val variables: Variables?,
                 |      @SerialName(value = "operationName")
-                |      public override val operationName: String? = "WithVariables",
+                |      public override val operationName: String? = WithVariablesQuery.operationName,
                 |      @SerialName(value = "query")
                 |      public override val query: String = document
                 |    ) : KgqlRequestBody<Variables>

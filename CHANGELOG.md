@@ -3,6 +3,11 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.8.0 *(TBD)*
+---
+
+* `[ADDED]`: expose `operationName` from Query object
+
 Version 0.7.0 *(2021/08/05)*
 ---
 

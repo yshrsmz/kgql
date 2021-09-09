@@ -10,12 +10,12 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
-import graphql.language.OperationDefinition
 import kotlinx.serialization.Serializable
 
 class RequestBodyGenerator(
-    val operation: OperationDefinition,
-    val parentObjectFqName: String,
+    val operationNameProp: PropertySpec,
+    val parentDocumentFqName: String,
+    val parentObjectName: String,
     val variablesSpec: TypeSpec?,
     val documentProp: PropertySpec
 ) {
@@ -50,10 +50,14 @@ class RequestBodyGenerator(
                     .builder(
                         "operationName",
                         String::class.asTypeName().copy(nullable = true),
-                        KModifier.OVERRIDE
+                        KModifier.OVERRIDE,
                     )
                     .addAnnotation(generateSerialName("operationName"))
-                    .defaultValue(operation.name?.let { "\"${operation.name}\"" } ?: "null")
+                    .defaultValue(
+                        "%L.%N",
+                        parentObjectName,
+                        operationNameProp
+                    )
                     .build()
             )
             .addParameter(
@@ -101,7 +105,7 @@ class RequestBodyGenerator(
         return if (this == null) {
             Unit::class.asTypeName()
         } else {
-            ClassName.bestGuess("$parentObjectFqName.$name")
+            ClassName.bestGuess("$parentDocumentFqName.$parentObjectName.$name")
         }
     }
 }
