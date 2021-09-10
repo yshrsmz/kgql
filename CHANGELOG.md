@@ -3,7 +3,7 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Version 0.8.1 *(TBD)*
+Version 0.8.1 *(2021/09/10)*
 ---
 
 * `[FIXED]`: Duplicate content roots warning
