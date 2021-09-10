@@ -19,7 +19,6 @@ class KgqlConfig(
     private val sources by lazy { sources() }
 
     internal fun registerTask() {
-        val common = sources.singleOrNull { it.sourceSets.singleOrNull() == "commonMain" }
 
         val packageName = requireNotNull(packageName) { "property packageName must be provided" }
         val sourceSet = sourceSet ?: project.files("src/main/kgql")
@@ -28,9 +27,6 @@ class KgqlConfig(
         sources.forEach { source ->
 //            println(source)
             // Add source dependency on the generated code.
-            if (common == null) {
-                source.sourceDirectorySet.srcDir(generatedSourceDirectory.toRelativeString(project.projectDir))
-            }
 
             val task = project.tasks.register(
                 "generate${source.name.capitalize()}KgqlInterface",
