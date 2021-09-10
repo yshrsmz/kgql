@@ -3,6 +3,11 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.8.2 *(2021/09/10)*
+---
+
+* `[FIXED]`: Set source compatibility to Java 8
+
 Version 0.8.1 *(2021/09/10)*
 ---
 
