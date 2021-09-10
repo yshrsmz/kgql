@@ -104,7 +104,7 @@ class KgqlPluginTest {
         val result = runner
             .withArguments("clean", "compileKotlinJs", "--stacktrace")
             .build()
-        assertThat(result.output).contains("generateJsMainKgqlInterface")
+        assertThat(result.output).contains("generateCommonMainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 
@@ -121,7 +121,7 @@ class KgqlPluginTest {
         val result = runner
             .withArguments("clean", "compileKotlinJvm", "--stacktrace")
             .build()
-        assertThat(result.output).contains("generateJvmMainKgqlInterface")
+        assertThat(result.output).contains("generateCommonMainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 
@@ -139,7 +139,7 @@ class KgqlPluginTest {
             .withArguments("clean", "compileDebugKotlinAndroid", "--stacktrace", "--info")
             .build()
         assertThat(result.output).contains("BUILD SUCCESSFUL")
-        assertThat(result.output).contains("generateAndroidDebugKgqlInterface")
+        assertThat(result.output).contains("generateCommonMainKgqlInterface")
     }
 
     @Test
@@ -153,11 +153,11 @@ class KgqlPluginTest {
         val buildDir = File(fixtureRoot, "build/generated/kgql")
 
         buildDir.delete()
-        var result = runner
+        val result = runner
             .withArguments("clean", "linkDebugFrameworkIosArm64", "--stacktrace")
             .build()
 
-        assertThat(result.output).contains("generateIosArm64MainKgqlInterface")
+        assertThat(result.output).contains("generateCommonMainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 
@@ -172,11 +172,11 @@ class KgqlPluginTest {
         val buildDir = File(fixtureRoot, "build/generated/kgql")
 
         buildDir.delete()
-        var result = runner
+        val result = runner
             .withArguments("clean", "linkDebugFrameworkIosX64", "--stacktrace")
             .build()
 
-        assertThat(result.output).contains("generateIosX64MainKgqlInterface")
+        assertThat(result.output).contains("generateCommonMainKgqlInterface")
         assertThat(buildDir.exists()).isTrue()
     }
 }
