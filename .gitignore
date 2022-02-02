@@ -55,6 +55,7 @@ playground.xcworkspace
 
 secret.properties
 
+kotlin-js-store/
 !.idea/codeStyles/
 .envrc
 *-sec.asc
