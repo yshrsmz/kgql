@@ -16,7 +16,7 @@ kgql Gradle Plugin generates wrapper classes for provided GraphQL document files
 
 ### Setup
 
-kgql requires Gradle __6.5 or later__
+kgql requires Gradle __7.0 or later__
 
 Supported GraphQL file extension: `.gql` or `.graphql`
 
@@ -30,9 +30,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.2.2'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.8.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.3.2'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.9.0'
     }
 }
 
@@ -65,9 +65,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.2.2'
-        classpath 'com.codingfeline.kgql:gradle-plugin:0.8.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.3.2'
+        classpath 'com.codingfeline.kgql:gradle-plugin:0.9.0'
     }
 }
 
