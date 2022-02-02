@@ -3,6 +3,14 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.9.0 *(2022/02/02)*
+---
+
+* `[UPDATED]`: Kotlin 1.6.10
+* `[UPDATED]`: GradLe wrapper 7.2
+* `[UPDATED]`: kotlinx.serialization 1.3.2
+* `[ADDED]`: HMPP support
+
 Version 0.8.2 *(2021/09/10)*
 ---
 

@@ -30,8 +30,8 @@ open class KgqlTask : SourceTask() {
 
     @TaskAction
     fun generateKgqlFiles() {
-        outputDirectory?.deleteRecursively()
-        outputDirectory?.mkdirs()
+        outputDirectory.deleteRecursively()
+        outputDirectory.mkdirs()
 
         val environment = KgqlEnvironment(
             sourceFiles = source.toList(),
@@ -47,6 +47,9 @@ open class KgqlTask : SourceTask() {
                 logger.log(LogLevel.ERROR, "")
                 generationStatus.errors.forEach { logger.log(LogLevel.ERROR, it) }
                 throw KgqlException("Generation failed; see the generator error output for details.")
+            }
+            KgqlEnvironment.CompilationStatus.Success -> {
+                // no-op
             }
         }
     }
