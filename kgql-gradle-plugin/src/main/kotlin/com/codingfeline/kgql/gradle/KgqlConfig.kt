@@ -44,7 +44,7 @@ class KgqlConfig(
 
             project.tasks.named("generateKgqlInterface").configure { it.dependsOn(task) }
 
-            source.sourceDirectorySet.srcDir(task.map { it.outputDirectory })
+            source.sourceDirectorySet.srcDirs(task.map { it.outputDirectory })
         }
     }
 }

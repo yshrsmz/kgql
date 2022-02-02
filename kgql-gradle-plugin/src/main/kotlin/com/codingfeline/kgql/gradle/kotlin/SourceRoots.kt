@@ -46,6 +46,12 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
             return@mapNotNull null
         }
 
+        if (compilation.defaultSourceSet.dependsOn.isNotEmpty()) {
+            // skip non-commonMain compilation
+            // commonMain has no dependent SourceSet
+            return@mapNotNull null
+        }
+
         val targetName = if (target is KotlinMetadataTarget) "common" else target.name
         Source(
             type = target.platformType,
@@ -56,6 +62,7 @@ private fun KotlinMultiplatformExtension.sources(project: Project): List<Source>
             sourceSets = compilation.allKotlinSourceSets.map { it.name }
         )
     }
+        .distinct()
 }
 
 private fun BaseExtension.sources(project: Project): List<Source> {
