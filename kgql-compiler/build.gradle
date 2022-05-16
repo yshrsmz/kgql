@@ -41,6 +41,7 @@ val VERSION = "${project.version}"
 afterEvaluate {
     tasks.named('compileKotlin').configure { dependsOn('pluginVersion') }
     tasks.named('dokkaHtml').configure { dependsOn('pluginVersion') }
+    tasks.named('javaSourcesJar').configure { dependsOn('pluginVersion') }
 }
 
 compileKotlin {
