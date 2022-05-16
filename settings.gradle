@@ -1,3 +1,11 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+    }
+}
+
 include ':kgql-core'
 include ':kgql-compiler'
 include ':kgql-gradle-plugin'
