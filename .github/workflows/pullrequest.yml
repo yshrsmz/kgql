@@ -25,6 +25,8 @@ jobs:
           java-version: '11'
 
       - name: Execute test cases
+        env:
+          ORG_GRADLE_PROJECT_RELEASE_SIGNING_ENABLED: false
         run: ./gradlew test
 
       - name: Upload test results
