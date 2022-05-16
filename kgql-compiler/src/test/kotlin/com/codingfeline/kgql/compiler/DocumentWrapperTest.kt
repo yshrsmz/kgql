@@ -65,7 +65,7 @@ class DocumentWrapperTest {
             |      @SerialName(value = "operationName")
             |      public override val operationName: String? = Query.operationName,
             |      @SerialName(value = "query")
-            |      public override val query: String = document
+            |      public override val query: String = document,
             |    ) : KgqlRequestBody<Unit>
             |  }
             |}
@@ -144,7 +144,7 @@ class DocumentWrapperTest {
             |      @SerialName(value = "operationName")
             |      public override val operationName: String? = CodeOfConductQuery.operationName,
             |      @SerialName(value = "query")
-            |      public override val query: String = document
+            |      public override val query: String = document,
             |    ) : KgqlRequestBody<Unit>
             |  }
             |
@@ -165,7 +165,7 @@ class DocumentWrapperTest {
             |      @SerialName(value = "operationName")
             |      public override val operationName: String? = TestQuery.operationName,
             |      @SerialName(value = "query")
-            |      public override val query: String = document
+            |      public override val query: String = document,
             |    ) : KgqlRequestBody<Unit>
             |  }
             |}
@@ -233,7 +233,7 @@ class DocumentWrapperTest {
                 |    @Serializable
                 |    public data class Variables(
                 |      @SerialName(value = "login")
-                |      public val login: String
+                |      public val login: String,
                 |    )
                 |
                 |    @Serializable
@@ -243,7 +243,7 @@ class DocumentWrapperTest {
                 |      @SerialName(value = "operationName")
                 |      public override val operationName: String? = WithVariablesQuery.operationName,
                 |      @SerialName(value = "query")
-                |      public override val query: String = document
+                |      public override val query: String = document,
                 |    ) : KgqlRequestBody<Variables>
                 |  }
                 |}

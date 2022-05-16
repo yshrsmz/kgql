@@ -15,6 +15,7 @@ repositories {
 }
 
 android {
+    namespace = "com.example.kgql"
     compileSdkVersion libs.versions.compileSdk.get() as int
 
     lintOptions {

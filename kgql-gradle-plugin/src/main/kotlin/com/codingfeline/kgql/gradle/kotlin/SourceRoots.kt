@@ -72,7 +72,7 @@ private fun BaseExtension.sources(project: Project): List<Source> {
         else -> throw IllegalStateException("Unknown Android plugin $this")
     }
 
-    val sourceSets = sourceSets.associate { sourceSet -> sourceSet.name to sourceSet.kotlin }
+    val sourceSets = sourceSets.associate { sourceSet -> sourceSet.name to sourceSet.kotlinSourceDirectorySet }
 
     return variants.map { variant ->
         Source(

@@ -34,8 +34,7 @@ class RequestBodyGenerator(
         val variablesParameterSpec = ParameterSpec
             .builder(
                 "variables",
-                variablesType.copy(nullable = true),
-                KModifier.OVERRIDE
+                variablesType.copy(nullable = true)
             )
             .addAnnotation(generateSerialName("variables"))
 
@@ -50,7 +49,6 @@ class RequestBodyGenerator(
                     .builder(
                         "operationName",
                         String::class.asTypeName().copy(nullable = true),
-                        KModifier.OVERRIDE,
                     )
                     .addAnnotation(generateSerialName("operationName"))
                     .defaultValue(
@@ -65,7 +63,6 @@ class RequestBodyGenerator(
                     .builder(
                         "query",
                         String::class,
-                        KModifier.OVERRIDE
                     )
                     .defaultValue(documentProp.name)
                     .addAnnotation(generateSerialName("query"))
