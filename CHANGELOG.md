@@ -3,10 +3,13 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
-Version 0.10.0 *(TBD)*
+Version 0.10.0 *(2022/05/16)*
 ---
 
+* `[UPDATED]`: Kotlin 1.6.21
 * `[UPDATED]`: Gradle wrapper 7.4.2
+* `[UPDATED]`: Android Gradle Plugin 7.1.3
+* `[UPDATED]`: Android compileSdk 31
 
 Version 0.9.0 *(2022/02/02)*
 ---
