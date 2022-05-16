@@ -1,26 +1,15 @@
 import java.nio.file.Files
 import java.nio.file.Paths
 
-apply plugin: 'com.github.ben-manes.versions'
-
-buildscript {
-    apply from: "$rootDir/gradle/dependencies.gradle"
-
-    repositories {
-        mavenCentral()
-        google()
-        gradlePluginPortal()
-
-        dependencies {
-            classpath deps.plugins.kotlin
-            classpath deps.plugins.serialization
-            classpath deps.plugins.dokka
-            classpath deps.plugins.android
-            classpath deps.plugins.versions
-            classpath deps.plugins.pluginPublish
-            classpath deps.plugins.mavenPublish
-        }
-    }
+plugins {
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.dokka) apply false
+    alias(libs.plugins.pluginPublish) apply false
+    alias(libs.plugins.mavenPublish) apply false
+    alias(libs.plugins.versions)
 }
 
 
@@ -47,7 +36,7 @@ allprojects {
 
 
 wrapper {
-    gradleVersion = '7.2'
+    gradleVersion = '7.4.2'
     distributionType = Wrapper.DistributionType.ALL
 }
 

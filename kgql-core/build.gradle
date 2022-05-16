@@ -1,5 +1,7 @@
-apply plugin: 'kotlin-multiplatform'
-apply plugin: 'kotlinx-serialization'
+plugins {
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
+}
 
 archivesBaseName = 'kgql-core'
 
@@ -20,13 +22,13 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api deps.kotlin.serialization.json
+                api libs.kotlin.serialization.json
             }
         }
         commonTest {
             dependencies {
-                implementation deps.kotlin.test.common
-                implementation deps.kotlin.test.commonAnnotations
+                implementation libs.kotlin.test.common
+                implementation libs.kotlin.test.annotations
             }
         }
         jvmMain {
@@ -35,8 +37,7 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation deps.kotlin.test.jvm
-                implementation deps.kotlin.test.junit
+                implementation libs.kotlin.test.junit
             }
         }
         jsMain {
@@ -45,7 +46,6 @@ kotlin {
         }
         jsTest {
             dependencies {
-                implementation deps.kotlin.test.js
             }
         }
         iosMain {

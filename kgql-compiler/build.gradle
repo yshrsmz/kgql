@@ -1,4 +1,6 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+}
 
 sourceSets {
     main.java.srcDir "gen"
@@ -6,14 +8,14 @@ sourceSets {
 
 dependencies {
     implementation project(':kgql-core')
-    implementation deps.kotlin.serialization.json
+    implementation libs.kotlin.serialization.json
 
-    implementation deps.graphql
+    implementation libs.graphql
 
-    implementation deps.kotlinPoet
+    implementation libs.kotlinPoet
 
-    testImplementation deps.junit
-    testImplementation deps.truth
+    testImplementation libs.junit
+    testImplementation libs.truth
     testImplementation project(':test-util')
 }
 

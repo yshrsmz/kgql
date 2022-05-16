@@ -1,6 +1,8 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'java-gradle-plugin'
-apply plugin: "com.gradle.plugin-publish"
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.pluginPublish)
+    id("java-gradle-plugin")
+}
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,19 +45,19 @@ tasks.getByName('pluginUnderTestMetadata')
 dependencies {
     implementation project(':kgql-compiler')
 
-    implementation deps.kotlin.nativeUtils
-    implementation deps.plugins.kotlin
-    implementation deps.plugins.serialization
-    implementation deps.plugins.android
+    implementation libs.kotlin.nativeUtils
+    implementation libs.kotlin.plugin
+    implementation libs.kotlin.plugin.serialization
+    implementation libs.android.plugin
 
     compileOnly gradleApi()
 
-    testImplementation deps.junit
-    testImplementation deps.truth
+    testImplementation libs.junit
+    testImplementation libs.truth
 
-    fixtureClasspath deps.plugins.kotlin
-    fixtureClasspath deps.plugins.serialization
-    fixtureClasspath deps.plugins.android
+    fixtureClasspath libs.kotlin.plugin
+    fixtureClasspath libs.kotlin.plugin.serialization
+    fixtureClasspath libs.android.plugin
 }
 
 compileKotlin {

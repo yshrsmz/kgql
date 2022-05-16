@@ -7,7 +7,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 dependencies {
     implementation project(':kgql-compiler')
 
-    implementation deps.junit
+    implementation libs.junit
 }
 
 compileKotlin {

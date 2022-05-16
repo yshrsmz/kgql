@@ -3,6 +3,11 @@ Change Log
 
 Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAKING]`
 
+Version 0.10.0 *(TBD)*
+---
+
+* `[UPDATED]`: Gradle wrapper 7.4.2
+
 Version 0.9.0 *(2022/02/02)*
 ---
 
