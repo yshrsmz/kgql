@@ -1,20 +1,15 @@
 RELEASING
 ===
 
-You need `secret.properties` in the project root directory:
+These environment variables should be available:
 
 ```
-gradle.publish.key=
-gradle.publish.secret=
-```
-
-Also, these environment variables should be available:
-
-```
-export ORG_GRADLE_PROJECT_mavenCentralRepositoryUsername=
-export ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword=
-export ORG_GRADLE_PROJECT_signingKey=
-export ORG_GRADLE_PROJECT_signingKeyPassword=
+export ORG_GRADLE_PROJECT_mavenCentralUsername=
+export ORG_GRADLE_PROJECT_mavenCentralPassword=
+export ORG_GRADLE_PROJECT_signingInMemoryKey=
+export ORG_GRADLE_PROJECT_signingInMemoryKeyPassword=
+export ORG_GRADLE_PROJECT_gradle.publish.key=
+export ORG_GRADLE_PROJECT_gradle.publish.secret=
 ```
 
 1. Change the version in `gradle.properties` to a non-SNAPSHOT version
