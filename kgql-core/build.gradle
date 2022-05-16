@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.mavenPublish)
+    alias(libs.plugins.dokka)
 }
 
 archivesBaseName = 'kgql-core'

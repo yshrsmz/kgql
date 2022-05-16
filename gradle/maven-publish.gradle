@@ -1,31 +1,8 @@
-apply plugin: "com.vanniktech.maven.publish"
-apply plugin: 'org.jetbrains.dokka'
-
-def getGpgKey() {
-    return hasProperty("signingKey") ? signingKey : ""
-}
-
-def getGpgPassword() {
-    return hasProperty("signingKeyPassword") ? signingKeyPassword : ""
-}
-
-mavenPublish {
-    releaseSigningEnabled = !getGpgKey().isEmpty() && !getGpgPassword().isEmpty()
-}
-
 publishing {
     repositories {
         maven {
             name = "testMaven"
             url = "${rootProject.buildDir}/localMaven"
         }
-    }
-}
-
-signing {
-    def signingKey = getGpgKey()
-    def password = getGpgPassword()
-    if (!signingKey.isEmpty() && !password.isEmpty()) {
-        useInMemoryPgpKeys(signingKey, password)
     }
 }

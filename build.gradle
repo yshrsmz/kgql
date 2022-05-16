@@ -1,6 +1,3 @@
-import java.nio.file.Files
-import java.nio.file.Paths
-
 plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.jvm) apply false
@@ -38,13 +35,6 @@ allprojects {
 wrapper {
     gradleVersion = '7.4.2'
     distributionType = Wrapper.DistributionType.ALL
-}
-
-// Load `secret.properties` file, if it exists. You can put your bintrayUser and bintrayApiKey values there, that file is ignored by git
-if (Files.exists(Paths.get("$project.rootDir/secret.properties"))) {
-    def localProperties = new Properties()
-    localProperties.load(new FileInputStream("$project.rootDir/secret.properties"))
-    localProperties.each { prop -> project.ext.set(prop.key, prop.value) }
 }
 
 def isNonStable = { String version ->
