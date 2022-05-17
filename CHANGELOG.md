@@ -6,10 +6,16 @@ Badges: `[UPDATED]`, `[FIXED]`, `[ADDED]`, `[DEPRECATED]`, `[REMOVED]`,  `[BREAK
 Version 0.10.0 *(2022/05/16)*
 ---
 
+* `[FIXED]`: revert graphql-java version to 17.3, to fix incompatibility with Android Gradle Plugin
+
+Version 0.10.0 *(2022/05/16)*
+---
+
 * `[UPDATED]`: Kotlin 1.6.21
 * `[UPDATED]`: Gradle wrapper 7.4.2
 * `[UPDATED]`: Android Gradle Plugin 7.1.3
 * `[UPDATED]`: Android compileSdk 31
+* `[UPDATED]`: graphql-java 18.1
 
 Version 0.9.0 *(2022/02/02)*
 ---
