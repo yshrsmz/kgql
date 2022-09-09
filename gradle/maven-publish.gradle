@@ -6,3 +6,7 @@ publishing {
         }
     }
 }
+
+afterEvaluate {
+    publishing.publications.every { println(it.name) }
+}

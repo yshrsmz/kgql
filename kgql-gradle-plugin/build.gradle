@@ -13,20 +13,15 @@ targetCompatibility = JavaVersion.VERSION_1_8
 pluginBundle {
     website = POM_URL
     vcsUrl = 'https://github.com/yshrsmz/kgql.git'
-    description = POM_DESCRIPTION
     tags = ['GraphQL', 'Kotlin', 'Kotlin Multiplatform']
-
-    plugins {
-        kgql {
-            displayName = POM_NAME
-        }
-    }
 }
 
 gradlePlugin {
     plugins {
         kgql {
             id = "com.codingfeline.kgql"
+            displayName = POM_NAME
+            description = POM_DESCRIPTION
             implementationClass = "com.codingfeline.kgql.gradle.KgqlPlugin"
         }
     }

@@ -13,11 +13,8 @@ kotlin {
         browser()
         nodejs()
     }
-    ios() {
-        binaries {
-            framework()
-        }
-    }
+    ios()
+    iosSimulatorArm64()
 
     explicitApi()
 
@@ -33,29 +30,14 @@ kotlin {
                 implementation libs.kotlin.test.annotations
             }
         }
-        jvmMain {
-            dependencies {
-            }
-        }
-        jvmTest {
-            dependencies {
-                implementation libs.kotlin.test.junit
-            }
-        }
-        jsMain {
-            dependencies {
-            }
-        }
-        jsTest {
-            dependencies {
-            }
-        }
-        iosMain {
-            dependencies {
-            }
-        }
-        iosTest {
-        }
+        jvmMain {}
+        jvmTest {}
+        jsMain {}
+        jsTest {}
+        iosMain {}
+        iosTest {}
+        iosSimulatorArm64Main.dependsOn(iosMain)
+        iosSimulatorArm64Test.dependsOn(iosTest)
     }
 }
 
