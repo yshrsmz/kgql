@@ -12,6 +12,7 @@ Version 0.11.0 *(2022/09/09)*
 * `[UPDATED]`: Android compile sdK 33
 * `[UPDATED]`: kotlinx.serialization 1.4.0
 * `[UPDATED]`: graphql-java 19.2
+* `[ADDED]`: iosSimulatorArm64 support
 
 Version 0.10.１ *(2022/05/16)*
 ---
