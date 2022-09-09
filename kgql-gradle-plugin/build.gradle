@@ -9,40 +9,22 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-
 pluginBundle {
     website = POM_URL
     vcsUrl = 'https://github.com/yshrsmz/kgql.git'
-    description = POM_DESCRIPTION
     tags = ['GraphQL', 'Kotlin', 'Kotlin Multiplatform']
-
-    plugins {
-        kgql {
-            displayName = POM_NAME
-        }
-    }
 }
 
 gradlePlugin {
     plugins {
         kgql {
             id = "com.codingfeline.kgql"
+            displayName = POM_NAME
+            description = POM_DESCRIPTION
             implementationClass = "com.codingfeline.kgql.gradle.KgqlPlugin"
         }
     }
 }
-
-configurations {
-    fixtureClasspath
-}
-
-// Append any extra dependencies to the test fixtures via a custom configuration classpath. This
-// allows us to apply additional plugins in a fixture while still leveraging dependency resolution
-// and de-duplication semantics.
-tasks.getByName('pluginUnderTestMetadata')
-        .getPluginClasspath()
-        .from(configurations.fixtureClasspath)
-
 
 dependencies {
     implementation project(':kgql-compiler')
@@ -56,10 +38,6 @@ dependencies {
 
     testImplementation libs.junit
     testImplementation libs.truth
-
-    fixtureClasspath libs.kotlin.plugin
-    fixtureClasspath libs.kotlin.plugin.serialization
-    fixtureClasspath libs.android.plugin
 }
 
 compileKotlin {

@@ -1,6 +1,5 @@
 package com.codingfeline.kgql.gradle
 
-import com.android.builder.model.AndroidProject.FD_GENERATED
 import com.codingfeline.kgql.compiler.KgqlFileType
 import com.codingfeline.kgql.gradle.kotlin.sources
 import org.gradle.api.Project
@@ -14,7 +13,7 @@ class KgqlConfig(
     var typeMapper: MutableMap<String, String>? = null
 ) {
     private val generatedSourceDirectory
-        get() = File(project.buildDir, "$FD_GENERATED/kgql")
+        get() = File(project.buildDir, "generated/kgql")
 
     private val sources by lazy { sources() }
 
